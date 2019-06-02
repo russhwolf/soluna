@@ -1,13 +1,6 @@
-import com.russhwolf.math.TAU
-import com.russhwolf.math.acos
-import com.russhwolf.math.asDegrees
-import com.russhwolf.math.asRadians
-import com.russhwolf.math.asin
-import com.russhwolf.math.atan
-import com.russhwolf.math.atan2
-import com.russhwolf.math.cos
-import com.russhwolf.math.sin
-import com.russhwolf.math.tan
+package com.russhwolf.math
+
+import com.russhwolf.test.assertNearEquals
 import kotlin.math.sqrt
 import kotlin.math.ulp
 import kotlin.test.Test
@@ -49,7 +42,7 @@ class DegreeMathTest {
         330.0 to -0.5,
         360.0 to 0.0,
         tolerance = 2e1.ulp
-    ) { sin(it.asDegrees()) }
+    ) { sin(it.deg) }
 
     @Test
     fun cosTest() = multipleAssert(
@@ -87,7 +80,7 @@ class DegreeMathTest {
         330.0 to sqrt(3.0) / 2.0,
         360.0 to 1.0,
         tolerance = 2e1.ulp
-    ) { cos(it.asDegrees()) }
+    ) { cos(it.deg) }
 
     @Test
     fun tanTest() = multipleAssert(
@@ -121,7 +114,7 @@ class DegreeMathTest {
         330.0 to -1 / sqrt(3.0),
         360.0 to 0.0,
         tolerance = 2e3.ulp
-    ) { tan(it.asDegrees()) }
+    ) { tan(it.deg) }
 
     @Test
     fun asinTest() = multipleAssert(
@@ -197,7 +190,7 @@ class DegreeMathTest {
         362.0 to 2.0,
         722.0 to 2.0,
         tolerance = 2e0.ulp
-    ) { it.asDegrees().coercedValue }
+    ) { it.deg.coercedValue }
 
     @Test
     fun radianValues() = multipleAssert(
@@ -207,7 +200,9 @@ class DegreeMathTest {
         TAU + 0.2 to 0.2,
         2 * TAU + 0.2 to 0.2,
         tolerance = 2e1.ulp
-    ) { it.asRadians().coercedValue }
+    ) { it.rad.coercedValue }
+
+    // TODO operator tests
 }
 
 fun multipleAssert(vararg values: Pair<Double, Double>, tolerance: Double, operator: (Double) -> Double) =

@@ -1,3 +1,5 @@
+package com.russhwolf.test
+
 import kotlin.math.abs
 import kotlin.math.ulp
 import kotlin.test.assertTrue
