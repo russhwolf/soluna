@@ -1,6 +1,6 @@
 package com.russhwolf.math
 
-import com.russhwolf.test.assertNearEquals
+import com.russhwolf.test.multipleAssert
 import kotlin.math.sqrt
 import kotlin.math.ulp
 import kotlin.test.Test
@@ -159,7 +159,7 @@ class DegreeMathTest {
     ) { atan(it).value }
 
     @Test
-    fun atan2Test() = multipleAssert2(
+    fun atan2Test() = multipleAssert(
         -0.0 to -1.0 to -180.0,
         -1 / sqrt(3.0) to -1.0 to -150.0,
         -1.0 to -1.0 to -135.0,
@@ -204,13 +204,3 @@ class DegreeMathTest {
 
     // TODO operator tests
 }
-
-fun multipleAssert(vararg values: Pair<Double, Double>, tolerance: Double, operator: (Double) -> Double) =
-    values.forEach { (a, b) -> assertNearEquals(expected = b, actual = operator(a), tolerance = tolerance) }
-
-fun multipleAssert2(
-    vararg values: Pair<Pair<Double, Double>, Double>,
-    tolerance: Double,
-    operator: (Pair<Double, Double>) -> Double
-) =
-    values.forEach { (a, b) -> assertNearEquals(expected = b, actual = operator(a), tolerance = tolerance) }

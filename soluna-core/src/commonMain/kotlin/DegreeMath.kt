@@ -13,6 +13,7 @@ import kotlin.math.tan
 
 internal const val TAU: Double = 2 * PI
 private val DEG_PER_RAD: Double = Degree.MAX.value / Radian.MAX.value
+private val DEG_PER_HOUR: Double = Degree.MAX.value / HourAngle.MAX.value
 
 internal interface AngleUnit<T : AngleUnit<T>> : Comparable<T> {
     val value: Double
@@ -37,6 +38,14 @@ internal inline class Radian(override val value: Double) : AngleUnit<Radian> {
     }
 }
 
+internal inline class HourAngle(override val value: Double) : AngleUnit<HourAngle> {
+    override val coercedValue: Double get() = value.coerceInLoopingRange(max = MAX.value)
+
+    companion object {
+        internal val MAX = 24.hour
+    }
+}
+
 private tailrec fun Double.coerceInLoopingRange(min: Double = 0.0, max: Double): Double {
     val range = max - min
     if (range <= 0) throw IllegalArgumentException("max=$max must be larger than min=$min")
@@ -57,13 +66,18 @@ internal fun atan2(y: Double, x: Double) = atan2(y, x).rad.toDegrees()
 
 internal inline fun Radian.toDegrees() = (value * DEG_PER_RAD).deg
 internal inline fun Degree.toRadians() = (value / DEG_PER_RAD).rad
+internal inline fun HourAngle.toDegrees() = (value * DEG_PER_HOUR).deg
+internal inline fun Degree.toHourAngle() = (value / DEG_PER_HOUR).hour
 internal inline val Double.deg get() = Degree(this)
 internal inline val Double.rad get() = Radian(this)
+internal inline val Double.hour get() = HourAngle(this)
 internal inline val Int.deg get() = toDouble().deg
+internal inline val Int.hour get() = toDouble().hour
 
 private inline fun <reified T : AngleUnit<T>> Double.asUnit(): T = when (T::class) {
     Degree::class -> this.deg
     Radian::class -> this.rad
+    HourAngle::class -> this.hour
     else -> throw IllegalArgumentException()
 } as T
 
@@ -77,6 +91,8 @@ internal inline operator fun <reified T : AngleUnit<T>> T.div(other: Double): T 
 internal inline operator fun <reified T : AngleUnit<T>> T.div(other: T): Double = (value / other.value)
 internal inline operator fun <reified T : AngleUnit<T>> T.unaryMinus(): T = (-value).asUnit()
 internal inline operator fun <reified T : AngleUnit<T>> T.rangeTo(that: T) = ClosedAngleUnitRange(this, that)
+
+internal inline fun <reified T : AngleUnit<T>> abs(x: T): T = x.value.asUnit()
 
 internal class ClosedAngleUnitRange<T : AngleUnit<T>>(
     override val start: T,

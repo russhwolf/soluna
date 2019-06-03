@@ -29,19 +29,19 @@ internal fun julianDayNumber(
 }
 
 // Based on table 15.14 (p. 617)
-internal sealed class Calendar {
-    internal abstract val y: Int
-    internal abstract val j: Int
-    internal abstract val m: Int
-    internal abstract val n: Int
-    internal abstract val r: Int
-    internal abstract val p: Int
-    internal abstract val q: Int
-    internal abstract val v: Int
-    internal abstract val u: Int
-    internal abstract val s: Int
-    internal abstract val t: Int
-    internal abstract val w: Int
+internal interface Calendar {
+    val y: Int
+    val j: Int
+    val m: Int
+    val n: Int
+    val r: Int
+    val p: Int
+    val q: Int
+    val v: Int
+    val u: Int
+    val s: Int
+    val t: Int
+    val w: Int
 
     operator fun component1() = y
     operator fun component2() = j
@@ -57,17 +57,17 @@ internal sealed class Calendar {
     operator fun component12() = w
 }
 
-internal sealed class LeapDayCalendar : Calendar() {
-    internal abstract val A: Int
-    internal abstract val B: Int
-    internal abstract val C: Int
+internal interface LeapDayCalendar : Calendar {
+    val A: Int
+    val B: Int
+    val C: Int
 
     operator fun component13() = A
     operator fun component14() = B
     operator fun component15() = C
 }
 
-internal object JulianCalendar : Calendar() {
+internal object JulianCalendar : Calendar {
     override val y: Int = 4716
     override val j: Int = 1401
     override val m: Int = 2
@@ -82,19 +82,7 @@ internal object JulianCalendar : Calendar() {
     override val w: Int = 2
 }
 
-internal object GregorianCalendar : LeapDayCalendar() {
-    override val y: Int = 4716
-    override val j: Int = 1401
-    override val m: Int = 2
-    override val n: Int = 12
-    override val r: Int = 4
-    override val p: Int = 1461
-    override val q: Int = 0
-    override val v: Int = 3
-    override val u: Int = 5
-    override val s: Int = 153
-    override val t: Int = 2
-    override val w: Int = 2
+internal object GregorianCalendar : Calendar by JulianCalendar, LeapDayCalendar {
     override val A: Int = 184
     override val B: Int = 274227
     override val C: Int = -38
