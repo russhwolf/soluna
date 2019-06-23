@@ -1,9 +1,8 @@
 plugins {
-    id("org.jetbrains.kotlin.multiplatform") version "1.3.40-eap-67"
+    id("org.jetbrains.kotlin.multiplatform") version "1.3.40"
     id("maven-publish")
 }
 repositories {
-    maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
     mavenCentral()
 }
 group = "com.example"
