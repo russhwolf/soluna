@@ -3,13 +3,6 @@
 package com.russhwolf.math
 
 import kotlin.math.PI
-import kotlin.math.acos
-import kotlin.math.asin
-import kotlin.math.atan
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.tan
 
 internal const val TAU: Double = 2 * PI
 private val DEG_PER_RAD: Double = Degree.MAX.value / Radian.MAX.value
@@ -56,13 +49,13 @@ private tailrec fun Double.coerceInLoopingRange(min: Double = 0.0, max: Double):
     }
 }
 
-internal fun sin(degrees: Degree) = sin(degrees.toRadians().value)
-internal fun cos(degrees: Degree) = cos(degrees.toRadians().value)
-internal fun tan(degrees: Degree) = tan(degrees.toRadians().value)
-internal fun asin(value: Double) = asin(value).rad.toDegrees()
-internal fun acos(value: Double) = acos(value).rad.toDegrees()
-internal fun atan(value: Double) = atan(value).rad.toDegrees()
-internal fun atan2(y: Double, x: Double) = atan2(y, x).rad.toDegrees()
+internal fun sin(degrees: Degree) = kotlin.math.sin(degrees.toRadians().value)
+internal fun cos(degrees: Degree) = kotlin.math.cos(degrees.toRadians().value)
+internal fun tan(degrees: Degree) = kotlin.math.tan(degrees.toRadians().value)
+internal fun asin(value: Double) = kotlin.math.asin(value).rad.toDegrees()
+internal fun acos(value: Double) = kotlin.math.acos(value).rad.toDegrees()
+internal fun atan(value: Double) = kotlin.math.atan(value).rad.toDegrees()
+internal fun atan2(y: Double, x: Double) = kotlin.math.atan2(y, x).rad.toDegrees()
 
 internal inline fun Radian.toDegrees() = (value * DEG_PER_RAD).deg
 internal inline fun Degree.toRadians() = (value / DEG_PER_RAD).rad
@@ -72,13 +65,14 @@ internal inline val Double.deg get() = Degree(this)
 internal inline val Double.rad get() = Radian(this)
 internal inline val Double.hour get() = HourAngle(this)
 internal inline val Int.deg get() = toDouble().deg
+internal inline val Int.rad get() = toDouble().rad
 internal inline val Int.hour get() = toDouble().hour
 
 private inline fun <reified T : AngleUnit<T>> Double.asUnit(): T = when (T::class) {
     Degree::class -> this.deg
     Radian::class -> this.rad
     HourAngle::class -> this.hour
-    else -> throw IllegalArgumentException()
+    else -> throw IllegalArgumentException("Invalid unit ${T::class}")
 } as T
 
 internal inline operator fun <reified T : AngleUnit<T>> T.plus(other: T): T = (value + other.value).asUnit()
@@ -88,11 +82,12 @@ internal inline operator fun <reified T : AngleUnit<T>> T.times(other: Int): T =
 internal inline operator fun <reified T : AngleUnit<T>> Double.times(other: T): T = (this * other.value).asUnit()
 internal inline operator fun <reified T : AngleUnit<T>> Int.times(other: T): T = (this * other.value).asUnit()
 internal inline operator fun <reified T : AngleUnit<T>> T.div(other: Double): T = (value / other).asUnit()
+internal inline operator fun <reified T : AngleUnit<T>> T.div(other: Int): T = (value / other.toDouble()).asUnit()
 internal inline operator fun <reified T : AngleUnit<T>> T.div(other: T): Double = (value / other.value)
 internal inline operator fun <reified T : AngleUnit<T>> T.unaryMinus(): T = (-value).asUnit()
 internal inline operator fun <reified T : AngleUnit<T>> T.rangeTo(that: T) = ClosedAngleUnitRange(this, that)
 
-internal inline fun <reified T : AngleUnit<T>> abs(x: T): T = x.value.asUnit()
+internal inline fun <reified T : AngleUnit<T>> abs(x: T): T = kotlin.math.abs(x.value).asUnit()
 
 internal class ClosedAngleUnitRange<T : AngleUnit<T>>(
     override val start: T,

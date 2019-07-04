@@ -11,6 +11,13 @@ version = "0.0.1"
 kotlin {
     jvm()
     sourceSets {
+        all {
+            languageSettings.apply {
+                enableLanguageFeature("InlineClasses")
+                progressiveMode = true
+            }
+        }
+
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
