@@ -8,4 +8,4 @@ rootProject.name = "Soluna"
 
 enableFeaturePreview("GRADLE_METADATA")
 
-include(":soluna-core")
+include(":soluna-core", ":soluna-calendar")
