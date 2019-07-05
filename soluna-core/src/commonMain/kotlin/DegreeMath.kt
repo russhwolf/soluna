@@ -2,21 +2,19 @@
 
 package com.russhwolf.math
 
-import kotlin.math.PI
-
-internal const val TAU: Double = 2 * PI
+internal const val TAU: Double = 2 * kotlin.math.PI
 private val DEG_PER_RAD: Double = Degree.MAX.value / Radian.MAX.value
 private val DEG_PER_HOUR: Double = Degree.MAX.value / HourAngle.MAX.value
 
 internal interface AngleUnit<T : AngleUnit<T>> : Comparable<T> {
     val value: Double
-    val coercedValue: Double
+    fun coerceInRange(): T
 
     override fun compareTo(other: T): Int = value.compareTo(other.value)
 }
 
 internal inline class Degree(override val value: Double) : AngleUnit<Degree> {
-    override val coercedValue: Double get() = value.coerceInLoopingRange(max = MAX.value)
+    override fun coerceInRange(): Degree = value.coerceInLoopingRange(max = MAX.value).deg
 
     companion object {
         internal val MAX = 360.deg
@@ -24,7 +22,7 @@ internal inline class Degree(override val value: Double) : AngleUnit<Degree> {
 }
 
 internal inline class Radian(override val value: Double) : AngleUnit<Radian> {
-    override val coercedValue: Double get() = value.coerceInLoopingRange(max = MAX.value)
+    override fun coerceInRange(): Radian = value.coerceInLoopingRange(max = MAX.value).rad
 
     companion object {
         internal val MAX = TAU.rad
@@ -32,7 +30,7 @@ internal inline class Radian(override val value: Double) : AngleUnit<Radian> {
 }
 
 internal inline class HourAngle(override val value: Double) : AngleUnit<HourAngle> {
-    override val coercedValue: Double get() = value.coerceInLoopingRange(max = MAX.value)
+    override fun coerceInRange(): HourAngle = value.coerceInLoopingRange(max = MAX.value).hour
 
     companion object {
         internal val MAX = 24.hour

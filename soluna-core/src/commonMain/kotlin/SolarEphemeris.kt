@@ -4,6 +4,7 @@ package com.russhwolf.soluna
 
 import com.russhwolf.math.Degree
 import com.russhwolf.math.HourAngle
+import com.russhwolf.math.TAU
 import com.russhwolf.math.abs
 import com.russhwolf.math.acos
 import com.russhwolf.math.asin
@@ -14,8 +15,8 @@ import com.russhwolf.math.div
 import com.russhwolf.math.hour
 import com.russhwolf.math.minus
 import com.russhwolf.math.plus
+import com.russhwolf.math.rad
 import com.russhwolf.math.sin
-import com.russhwolf.math.tan
 import com.russhwolf.math.times
 import com.russhwolf.math.toDegrees
 import com.russhwolf.math.toHourAngle
@@ -29,13 +30,13 @@ fun sunTimes(
     offset: Double, // Hours
     latitude: Double, // Degrees
     longitude: Double // Degrees
-): Pair<Double, Double> {
+): Pair<Double?, Double?> {
     val JD = julianDayNumber(year, month, day)
-    val h = -(50.0 / 60.0).deg
-    val riseTime = timeAtAltitude(::solarEphemeris, latitude.deg, longitude.deg, JD, offset.hour, +1, h)
-    val setTime = timeAtAltitude(::solarEphemeris, latitude.deg, longitude.deg, JD, offset.hour, -1, h)
+    val size = { _: Degree -> (50.0 / 60.0).deg }
+    val riseTime = timeAtAltitude(::solarEphemeris, size, latitude.deg, longitude.deg, JD, offset.hour, +1)
+    val setTime = timeAtAltitude(::solarEphemeris, size, latitude.deg, longitude.deg, JD, offset.hour, -1)
 
-    return riseTime.value to setTime.value
+    return riseTime?.value to setTime?.value
 }
 
 fun moonTimes(
@@ -45,27 +46,21 @@ fun moonTimes(
     offset: Double, // Hours
     latitude: Double, // Degrees
     longitude: Double // Degrees
-): Pair<Double, Double> {
+): Pair<Double?, Double?> {
+    val lunarEphemerisAtLocation = { JD: Int, UT: HourAngle -> lunarEphemeris(JD, UT, latitude.deg, longitude.deg) }
+    val size = { pi: Degree -> (34.0 / 60.0).deg + 0.7275 * pi }
     val JD = julianDayNumber(year, month, day)
 
-    val T = (JD + 0.5 + offset / 24 - 2_451_545.0) / 36_525.0
-    val pi = 0.9508.deg +
-            0.0518.deg * cos(135.0.deg + 477_198.87.deg * T) + 0.0095.deg * cos(259.3.deg - 413_335.36.deg * T) +
-            0.0078.deg * cos(235.7.deg + 890_534.22.deg * T) + 0.0028.deg * cos(269.9.deg + 954_397.74.deg * T)
-    val h = -(34.0 / 60.0).deg + 0.7275 * pi
+    val riseTime = timeAtAltitude(lunarEphemerisAtLocation, size, latitude.deg, longitude.deg, JD, offset.hour, +1)
+    val setTime = timeAtAltitude(lunarEphemerisAtLocation, size, latitude.deg, longitude.deg, JD, offset.hour, -1)
 
-    val lunarEphemerisAtLocation = { JD: Int, UT: HourAngle -> lunarEphemeris(JD, UT, latitude.deg, longitude.deg) }
-
-    val riseTime = timeAtAltitude(lunarEphemerisAtLocation, latitude.deg, longitude.deg, JD, offset.hour, +1, h)
-    val setTime = timeAtAltitude(lunarEphemerisAtLocation, latitude.deg, longitude.deg, JD, offset.hour, -1, h)
-
-    return riseTime.value to setTime.value
+    return riseTime?.value to setTime?.value
 }
 
 internal fun solarEphemeris(
     JD: Int, // Julian date
     UT: HourAngle // Time, in hours
-): Pair<Degree, Degree> {
+): EphemerisPoint {
     // Based on Section 12.3.1.1 (p. 513)
 
     // Centuries since J2000.0 (eq. 12.6)
@@ -94,7 +89,7 @@ internal fun solarEphemeris(
     // Declination
     val delta = asin(sin(epsilon) * sin(lambda))
 
-    return GHA to delta
+    return EphemerisPoint(GHA, delta)
 }
 
 internal fun lunarEphemeris(
@@ -102,9 +97,9 @@ internal fun lunarEphemeris(
     UT: HourAngle,
     latitude: Degree,
     longitude: Degree
-): Pair<Degree, Degree> {
+): EphemerisPoint {
     // Centuries since J2000.0 (eq. 12.6)
-    val T = (JD + UT / HourAngle.MAX - 2_451_545.0) / 36_525.0
+    val T = (JD + 0.5 + UT / HourAngle.MAX - 2_451_545.0) / 36_525.0
 
     // Remaining formula from page D22 of Astronomical Almanac 2019
     val lambda = 218.32.deg + 481_267.881.deg * T +
@@ -128,12 +123,13 @@ internal fun lunarEphemeris(
     val delta = asin(n)
 
     val r = 1 / sin(pi)
-
     val x = r * l
     val y = r * m
     val z = r * n
 
+    @Suppress("UnnecessaryVariable")
     val phi_prime = latitude
+    @Suppress("UnnecessaryVariable")
     val lambda_prime = longitude
 
     val T_nu = (JD - 2451545.0) / 36_525
@@ -146,27 +142,33 @@ internal fun lunarEphemeris(
     val r_prime = sqrt(x_prime * x_prime + y_prime * y_prime + z_prime * z_prime)
     val alpha_prime = atan2(y_prime, x_prime)
     val delta_prime = asin(z_prime / r_prime)
+    val pi_prime = asin(1 / r_prime)
 
-    return alpha_prime to delta_prime
+    // Earth Rotation Angle (eq 3.3, p. 78)
+    val Theta = TAU * (0.779_057_273_264_0 + 1.002_737_811_911_354_48 * T * 36525).rad
+
+    // Hour Angle via Earth Rotation Angle and Right Ascension (is this right?) (eq. 3.15, p. 80)
+    val GHA = (Theta.toDegrees() - alpha_prime).coerceInRange()
+
+    return EphemerisPoint(GHA, delta_prime, pi_prime)
 }
 
-internal fun timeAtAltitude(
-    ephemeris: (Int, HourAngle) -> Pair<Degree, Degree>,
+private fun timeAtAltitude(
+    ephemeris: (Int, HourAngle) -> EphemerisPoint,
+    size: (Degree) -> Degree,
     phi: Degree, // Latitude
     lambda: Degree, // Longitude, NOT lambda FROM solarEphemeris()
     JD: Int,
     offset: HourAngle,
-    sign: Int, // +1 for rise, -1 for set
-    h: Degree // Altitude to solve for
-): HourAngle {
+    sign: Int // +1 for rise, -1 for set
+): HourAngle? {
     // Based on section 12.3.3 (p. 515)
-    var UT0 = 12.hour - offset
+    var UT0 = 12.hour + offset
 
-    var diff = Double.MAX_VALUE.hour
-    for (i in 1..100) {
-        if (abs(diff) < 0.008.hour) break
-
-        val (GHA, delta) = ephemeris(JD, UT0)
+    var converged = false
+    for (i in 1..10) {
+        val (GHA, delta, pi) = ephemeris(JD, UT0)
+        val h = -size(pi)
 
         // Hour angle (eq 12.11 and 12.12)
         val cos_t = (sin(h) - sin(phi) * sin(delta)) / (cos(phi) * cos(delta))
@@ -177,9 +179,15 @@ internal fun timeAtAltitude(
         }
 
         // Update guess (eq. 12.10)
-        diff = -(GHA + lambda + sign * t).toHourAngle()
+        val diff = -(GHA + lambda + sign * t).toHourAngle()
         UT0 += diff
+
+        if (abs(diff) < 0.008.hour) {
+            converged = true
+            break
+        }
     }
+    if (!converged) return null
 
     // TODO add correction described in 12.13 for high latitudes
 
@@ -189,5 +197,4 @@ internal fun timeAtAltitude(
     return UT0
 }
 
-// Refraction (eq. 12.14, p. 516)
-private fun R(h_alpha: Degree) = 0.0167.deg / tan(h_alpha + 7.31.deg / (h_alpha.value + 4.4))
+internal data class EphemerisPoint(val GHA: Degree, val delta: Degree, val pi: Degree = 0.deg)

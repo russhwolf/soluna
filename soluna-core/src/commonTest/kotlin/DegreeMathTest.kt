@@ -193,7 +193,7 @@ class DegreeMathTest {
         362.0 expects 2.0,
         722.0 expects 2.0,
         tolerance = 2e0.ulp
-    ) { it.deg.coercedValue }
+    ) { it.deg.coerceInRange().value }
 
     @Test
     fun radianValues() = multipleAssert(
@@ -203,7 +203,7 @@ class DegreeMathTest {
         TAU + 0.2 expects 0.2,
         2 * TAU + 0.2 expects 0.2,
         tolerance = 2e1.ulp
-    ) { it.rad.coercedValue }
+    ) { it.rad.coerceInRange().value }
 
     @Test
     fun angleUnitPlus() {

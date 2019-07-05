@@ -10,30 +10,34 @@ import kotlin.test.Test
 class SolarEphemerisTest {
     @Test
     fun hello() {
-        sunTimes(
-            year = 2019,
-            month = 6,
-            day = 2,
-            offset = -4.0,
-            latitude = 42.3875968,
-            longitude = -71.0994968
-        ).toList().forEach { it.printTime() }
-
-        moonTimes(
-            year = 2019,
-            month = 6,
-            day = 2,
-            offset = -4.0,
-            latitude = 42.3875968,
-            longitude = -71.0994968
-        ).toList().forEach { it.printTime() }
+        (1..31).forEach { day ->
+            sunTimes(
+                year = 2019,
+                month = 7,
+                day = day,
+                offset = -4.0,
+                latitude = 42.3875968,
+                longitude = -71.0994968
+            ).also { (rise, set) -> println("$day: ${rise?.timeString()} ${set?.timeString()}") }
+        }
+        println()
+        (1..31).forEach { day ->
+            moonTimes(
+                year = 2019,
+                month = 7,
+                day = day,
+                offset = -4.0,
+                latitude = 42.3875968,
+                longitude = -71.0994968
+            ).also { (rise, set) -> println("$day: ${rise?.timeString()} ${set?.timeString()}") }
+        }
     }
 
-    private fun Double.printTime() {
+    private fun Double.timeString(): String {
         val hours = floor(this).toInt()
         val minutes = ((this - hours) * 60).roundToInt()
 
-        println("$hours:$minutes")
+        return "$hours:$minutes"
     }
 
     @Ignore
