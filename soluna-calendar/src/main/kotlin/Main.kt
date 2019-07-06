@@ -12,23 +12,22 @@ import java.awt.image.BufferedImage
 import java.io.File
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.Month
 import java.time.Year
 import java.time.YearMonth
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.temporal.WeekFields
-import java.util.Locale
 import javax.imageio.ImageIO
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
 fun main() {
-    val month = Month.JUNE
+    val month = Month.JULY
     val year = 2019
     val latitude = 42.3875968
     val longitude = -71.0994968
@@ -102,20 +101,21 @@ private class CalendarRenderer(
         val previousTransform = transform
         for (i in 1..numberOfDays) {
             val date = LocalDate.of(year, month, i)
+            val (riseTime, setTime) = sunTimes(year, month.value, i, 0.0, latitude, longitude)
+            val riseDate = riseTime?.toDateTime(date, timeZone)
+            val setDate = setTime?.toDateTime(date, timeZone)
+
             val weekDayValue = date.get(weekFields.dayOfWeek())
             val weekValue = date.get(weekFields.weekOfMonth())
-            // TODO this offset does not correctly take into account the time of DST change
-            val offset = timeZone.rules.getOffset(LocalDateTime.of(year, month, i, 12, 0)).totalSeconds / 3600.0
-            val (riseTime, setTime) = sunTimes(year, month.value, i, offset, latitude, longitude)
 
             font = dateFont
             translate(cellX(weekDayValue), cellY(weekValue) + fontMetrics.ascent)
             drawString("$i", 0, 0)
             font = timeFont
             translate(0.0, MARGIN_INTERNAL * 2 + fontMetrics.ascent)
-            drawString("Sunrise: ${riseTime?.timeString() ?: "None"}", 0, 0)
+            drawString("Sunrise: ${riseDate?.formatTime() ?: "None"}", 0, 0)
             translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
-            drawString("Sunset: ${setTime?.timeString() ?: "None"}", 0, 0)
+            drawString("Sunset: ${setDate?.formatTime() ?: "None"}", 0, 0)
             transform = previousTransform
         }
     }
@@ -171,11 +171,15 @@ private class CalendarRenderer(
 
     private fun cellX(dayOfWeek: Int) = MARGIN_HORIZONTAL + CELL_WIDTH * (dayOfWeek - 1) + MARGIN_INTERNAL
     private fun cellY(weekOfMonth: Int) = MARGIN_HEADER + CELL_HEIGHT * (weekOfMonth - 1) + MARGIN_INTERNAL
-    private fun Double.timeString(): String {
+    private fun Double.toDateTime(localDate: LocalDate, timeZone: ZoneId): ZonedDateTime {
         val hours = floor(this).toInt()
         val minutes = ((this - hours) * 60).roundToInt()
-        val localTime = LocalTime.of(hours, minutes)
-        return DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(Locale.US).format(localTime)
+        val utcDateTime = ZonedDateTime.of(localDate, LocalTime.of(hours, minutes), ZoneId.of("UTC"))
+        return utcDateTime.withZoneSameInstant(timeZone)
+    }
+
+    private fun ZonedDateTime.formatTime(): String {
+        return DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(toLocalTime())
     }
 
     private fun Double.latitudeString(): String = positionString(if (this < 0) "S" else "N")
