@@ -16,6 +16,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.Month
 import java.time.Year
+import java.time.YearMonth
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -61,6 +62,7 @@ private class CalendarRenderer(
 
     private val baseFont =
         Font.createFont(0, Thread.currentThread().contextClassLoader.getResourceAsStream("Roboto-Medium.ttf"))
+    private val titleFont = baseFont.deriveFont(FONT_SIZE_TITLE)
     private val dateFont = baseFont.deriveFont(FONT_SIZE_DATE)
     private val timeFont = baseFont.deriveFont(FONT_SIZE_TIME)
 
@@ -71,6 +73,7 @@ private class CalendarRenderer(
             color = Color.BLACK
             drawGrid()
             drawCellContents()
+            drawTitle()
         }
     }
 
@@ -103,16 +106,24 @@ private class CalendarRenderer(
             translate(cellX(weekDayValue), cellY(weekValue) + fontMetrics.ascent)
             drawString("$i", 0, 0)
             font = timeFont
-            translate(0.0, CELL_MARGIN * 2 + fontMetrics.ascent)
+            translate(0.0, MARGIN_CELL * 2 + fontMetrics.ascent)
             drawString("Sunrise: ${riseTime?.timeString() ?: "None"}", 0, 0)
-            translate(0.0, CELL_MARGIN / 2 + fontMetrics.ascent)
+            translate(0.0, MARGIN_CELL / 2 + fontMetrics.ascent)
             drawString("Sunset: ${setTime?.timeString() ?: "None"}", 0, 0)
             transform = previousTransform
         }
     }
 
-    private fun cellX(dayOfWeek: Int) = MARGIN_HORIZONTAL + CELL_WIDTH * (dayOfWeek - 1) + CELL_MARGIN
-    private fun cellY(weekOfMonth: Int) = MARGIN_HEADER + CELL_HEIGHT * (weekOfMonth - 1) + CELL_MARGIN
+    private fun Graphics2D.drawTitle() {
+        font = titleFont
+        val yearMonth = YearMonth.of(year, month)
+        val titleString = yearMonth.format(DateTimeFormatter.ofPattern("MMMM, yyyy"))
+        val width = fontMetrics.stringWidth(titleString)
+        drawString(titleString, (PAGE_WIDTH - width).toFloat() / 2, (MARGIN_HEADER - MARGIN_TITLE).toFloat())
+    }
+
+    private fun cellX(dayOfWeek: Int) = MARGIN_HORIZONTAL + CELL_WIDTH * (dayOfWeek - 1) + MARGIN_CELL
+    private fun cellY(weekOfMonth: Int) = MARGIN_HEADER + CELL_HEIGHT * (weekOfMonth - 1) + MARGIN_CELL
     private fun Double.timeString(): String {
         val hours = floor(this).toInt()
         val minutes = ((this - hours) * 60).roundToInt()
@@ -126,11 +137,13 @@ private class CalendarRenderer(
         private const val MARGIN_HORIZONTAL = 200.0
         private const val MARGIN_HEADER = 500.0
         private const val MARGIN_FOOTER = 300.0
+        private const val MARGIN_CELL = 15.0
+        private const val MARGIN_TITLE = 80.0
         private const val ROWS = 6
         private const val COLUMNS = 7
         private const val STROKE_WIDTH_INNER = 10f
         private const val STROKE_WIDTH_OUTER = 15f
-        private const val CELL_MARGIN = 15.0
+        private const val FONT_SIZE_TITLE = 144f
         private const val FONT_SIZE_DATE = 48f
         private const val FONT_SIZE_TIME = 36f
 
