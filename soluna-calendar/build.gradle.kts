@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+    implementation(project(":soluna-core"))
 }
 
 tasks.withType<KotlinCompile> {
