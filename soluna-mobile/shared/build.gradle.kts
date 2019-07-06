@@ -1,17 +1,14 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+
 plugins {
-    id("org.jetbrains.kotlin.multiplatform") version "1.3.40"
-    id("maven-publish")
+    kotlin("multiplatform") version "1.3.40"
+    id("com.android.library") version "3.4.1"
 }
-repositories {
-    mavenCentral()
-}
-group = "com.example"
-version = "0.0.1"
 
 kotlin {
-    jvm()
-    iosArm64()
-    iosX64()
+    android()
+    iosArm64("ios")
+    iosX64("iosSim")
     sourceSets {
         all {
             languageSettings.apply {
@@ -23,6 +20,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
+                implementation(project(":soluna-core"))
             }
         }
         val commonTest by getting {
@@ -31,12 +29,12 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
             }
         }
-        val jvmMain by getting {
+        val androidMain by getting {
             dependencies {
                 implementation(kotlin("stdlib"))
             }
         }
-        val jvmTest by getting {
+        val androidTest by getting {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
@@ -44,3 +42,22 @@ kotlin {
         }
     }
 }
+
+android {
+    compileSdkVersion(28)
+    defaultConfig {
+        minSdkVersion(15)
+    }
+}
+
+tasks.create("iosTest") {
+    dependsOn("linkDebugTestIosSim")
+    doLast {
+        val testBinaryPath =
+            (kotlin.targets["iosSim"] as KotlinNativeTarget).binaries.getTest("DEBUG").outputFile.absolutePath
+        exec {
+            commandLine("xcrun", "simctl", "spawn", "iPhone Xʀ", testBinaryPath)
+        }
+    }
+}
+tasks["check"].dependsOn("iosTest")

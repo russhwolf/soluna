@@ -1,0 +1,3 @@
+allprojects {
+    configurations.create("compileClasspath")
+}
