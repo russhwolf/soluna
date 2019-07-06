@@ -101,9 +101,12 @@ private class CalendarRenderer(
         val previousTransform = transform
         for (i in 1..numberOfDays) {
             val date = LocalDate.of(year, month, i)
-            val (riseTime, setTime) = sunTimes(year, month.value, i, 0.0, latitude, longitude)
-            val riseDate = riseTime?.toDateTime(date, timeZone)
-            val setDate = setTime?.toDateTime(date, timeZone)
+            val (sunRiseTime, sunSetTime) = sunTimes(year, month.value, i, 0.0, latitude, longitude)
+            val sunRiseDate = sunRiseTime?.toDateTime(date, timeZone)
+            val sunSetDate = sunSetTime?.toDateTime(date, timeZone)
+//            val (moonRiseTime, moonSetTime) = moonTimes(year, month.value, i, 0.0, latitude, longitude)
+//            val moonRiseDate = moonRiseTime?.toDateTime(date, timeZone)
+//            val moonSetDate = moonSetTime?.toDateTime(date, timeZone)
 
             val weekDayValue = date.get(weekFields.dayOfWeek())
             val weekValue = date.get(weekFields.weekOfMonth())
@@ -112,10 +115,14 @@ private class CalendarRenderer(
             translate(cellX(weekDayValue), cellY(weekValue) + fontMetrics.ascent)
             drawString("$i", 0, 0)
             font = timeFont
-            translate(0.0, MARGIN_INTERNAL * 2 + fontMetrics.ascent)
-            drawString("Sunrise: ${riseDate?.formatTime() ?: "None"}", 0, 0)
+            translate(0.0, MARGIN_INTERNAL + fontMetrics.ascent)
+            drawString("Sunrise: ${sunRiseDate?.formatTime() ?: "None"}", 0, 0)
             translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
-            drawString("Sunset: ${setDate?.formatTime() ?: "None"}", 0, 0)
+            drawString("Sunset: ${sunSetDate?.formatTime() ?: "None"}", 0, 0)
+//            translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
+//            drawString("Moonrise: ${moonRiseDate?.formatTime() ?: "None"}", 0, 0)
+//            translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
+//            drawString("Moonset: ${moonSetDate?.formatTime() ?: "None"}", 0, 0)
             transform = previousTransform
         }
     }
