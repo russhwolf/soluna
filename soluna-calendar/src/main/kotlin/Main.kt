@@ -23,6 +23,7 @@ import java.time.format.FormatStyle
 import java.time.temporal.WeekFields
 import java.util.Locale
 import javax.imageio.ImageIO
+import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
@@ -65,6 +66,7 @@ private class CalendarRenderer(
     private val titleFont = baseFont.deriveFont(FONT_SIZE_TITLE)
     private val dateFont = baseFont.deriveFont(FONT_SIZE_DATE)
     private val timeFont = baseFont.deriveFont(FONT_SIZE_TIME)
+    private val footerFont = timeFont
 
     init {
         graphics.apply {
@@ -74,6 +76,8 @@ private class CalendarRenderer(
             drawGrid()
             drawCellContents()
             drawTitle()
+            drawLeftFooter()
+            drawRightFooter()
         }
     }
 
@@ -106,9 +110,9 @@ private class CalendarRenderer(
             translate(cellX(weekDayValue), cellY(weekValue) + fontMetrics.ascent)
             drawString("$i", 0, 0)
             font = timeFont
-            translate(0.0, MARGIN_CELL * 2 + fontMetrics.ascent)
+            translate(0.0, MARGIN_INTERNAL * 2 + fontMetrics.ascent)
             drawString("Sunrise: ${riseTime?.timeString() ?: "None"}", 0, 0)
-            translate(0.0, MARGIN_CELL / 2 + fontMetrics.ascent)
+            translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
             drawString("Sunset: ${setTime?.timeString() ?: "None"}", 0, 0)
             transform = previousTransform
         }
@@ -118,12 +122,35 @@ private class CalendarRenderer(
         font = titleFont
         val yearMonth = YearMonth.of(year, month)
         val titleString = yearMonth.format(DateTimeFormatter.ofPattern("MMMM, yyyy"))
-        val width = fontMetrics.stringWidth(titleString)
-        drawString(titleString, (PAGE_WIDTH - width).toFloat() / 2, (MARGIN_HEADER - MARGIN_TITLE).toFloat())
+        val stringWidth = fontMetrics.stringWidth(titleString)
+        drawString(titleString, (PAGE_WIDTH - stringWidth).toFloat() / 2, (MARGIN_HEADER - MARGIN_TITLE).toFloat())
     }
 
-    private fun cellX(dayOfWeek: Int) = MARGIN_HORIZONTAL + CELL_WIDTH * (dayOfWeek - 1) + MARGIN_CELL
-    private fun cellY(weekOfMonth: Int) = MARGIN_HEADER + CELL_HEIGHT * (weekOfMonth - 1) + MARGIN_CELL
+    private fun Graphics2D.drawLeftFooter() {
+        font = footerFont
+        val previousTransform = transform
+        translate(
+            MARGIN_HORIZONTAL + MARGIN_INTERNAL,
+            MARGIN_HEADER + rows * CELL_HEIGHT + fontMetrics.ascent + MARGIN_INTERNAL
+        )
+        drawString(FOOTER_LEFT_FORMAT.format(latitude.latitudeString(), longitude.longitudeString(), timeZone.id), 0, 0)
+        transform = previousTransform
+    }
+
+    private fun Graphics2D.drawRightFooter() {
+        font = footerFont
+        val previousTransform = transform
+        val stringWidth = fontMetrics.stringWidth(FOOTER_RIGHT)
+        translate(
+            PAGE_WIDTH - MARGIN_HORIZONTAL - stringWidth - MARGIN_INTERNAL,
+            MARGIN_HEADER + rows * CELL_HEIGHT + fontMetrics.ascent + MARGIN_INTERNAL
+        )
+        drawString(FOOTER_RIGHT, 0, 0)
+        transform = previousTransform
+    }
+
+    private fun cellX(dayOfWeek: Int) = MARGIN_HORIZONTAL + CELL_WIDTH * (dayOfWeek - 1) + MARGIN_INTERNAL
+    private fun cellY(weekOfMonth: Int) = MARGIN_HEADER + CELL_HEIGHT * (weekOfMonth - 1) + MARGIN_INTERNAL
     private fun Double.timeString(): String {
         val hours = floor(this).toInt()
         val minutes = ((this - hours) * 60).roundToInt()
@@ -131,13 +158,17 @@ private class CalendarRenderer(
         return DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(Locale.US).format(localTime)
     }
 
+    private fun Double.latitudeString(): String = positionString(if (this < 0) "S" else "N")
+    private fun Double.longitudeString(): String = positionString(if (this < 0) "W" else "E")
+    private fun Double.positionString(direction: String): String = "%1.3f°$direction".format(abs(this))
+
     companion object {
         internal const val PAGE_WIDTH = 3300.0
         internal const val PAGE_HEIGHT = 2550.0
         private const val MARGIN_HORIZONTAL = 200.0
         private const val MARGIN_HEADER = 500.0
         private const val MARGIN_FOOTER = 300.0
-        private const val MARGIN_CELL = 15.0
+        private const val MARGIN_INTERNAL = 15.0
         private const val MARGIN_TITLE = 80.0
         private const val ROWS = 6
         private const val COLUMNS = 7
@@ -149,5 +180,8 @@ private class CalendarRenderer(
 
         private const val CELL_WIDTH = (PAGE_WIDTH - 2 * MARGIN_HORIZONTAL) / COLUMNS
         private const val CELL_HEIGHT = (PAGE_HEIGHT - (MARGIN_HEADER + MARGIN_FOOTER)) / ROWS
+
+        private const val FOOTER_LEFT_FORMAT = "Times computed for %s, %s using timezone %s"
+        private const val FOOTER_RIGHT = "Copyright © 2019 Russell Wolf. All rights reserved"
     }
 }
