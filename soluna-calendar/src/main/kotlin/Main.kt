@@ -28,7 +28,7 @@ import kotlin.math.floor
 import kotlin.math.roundToInt
 
 fun main() {
-    val month = Month.JULY
+    val month = Month.JUNE
     val year = 2019
     val latitude = 42.3875968
     val longitude = -71.0994968
@@ -63,9 +63,10 @@ private class CalendarRenderer(
 
     private val baseFont =
         Font.createFont(0, Thread.currentThread().contextClassLoader.getResourceAsStream("Roboto-Medium.ttf"))
-    private val titleFont = baseFont.deriveFont(FONT_SIZE_TITLE)
-    private val dateFont = baseFont.deriveFont(FONT_SIZE_DATE)
-    private val timeFont = baseFont.deriveFont(FONT_SIZE_TIME)
+    private val titleFont = baseFont.deriveFont(144f)
+    private val dateFont = baseFont.deriveFont(64f)
+    private val weekdayFont = baseFont.deriveFont(72f)
+    private val timeFont = baseFont.deriveFont(36f)
     private val footerFont = timeFont
 
     init {
@@ -76,6 +77,7 @@ private class CalendarRenderer(
             drawGrid()
             drawCellContents()
             drawTitle()
+            drawWeekdayLabels()
             drawLeftFooter()
             drawRightFooter()
         }
@@ -123,7 +125,25 @@ private class CalendarRenderer(
         val yearMonth = YearMonth.of(year, month)
         val titleString = yearMonth.format(DateTimeFormatter.ofPattern("MMMM, yyyy"))
         val stringWidth = fontMetrics.stringWidth(titleString)
-        drawString(titleString, (PAGE_WIDTH - stringWidth).toFloat() / 2, (MARGIN_HEADER - MARGIN_TITLE).toFloat())
+        drawString(
+            titleString,
+            (PAGE_WIDTH - stringWidth).toFloat() / 2,
+            (MARGIN_HEADER - MARGIN_TITLE - getFontMetrics(weekdayFont).ascent - MARGIN_COLUMN_HEADER).toFloat()
+        )
+    }
+
+    private fun Graphics2D.drawWeekdayLabels() {
+        font = weekdayFont
+        val previousTransform = transform
+        val formatter = DateTimeFormatter.ofPattern("eeee")
+        translate(MARGIN_HORIZONTAL, MARGIN_HEADER - MARGIN_COLUMN_HEADER)
+        for (i in 1..COLUMNS) {
+            val dayOfWeek = weekFields.firstDayOfWeek.plus((i - 1).toLong())
+            val dayString = formatter.format(dayOfWeek)
+            val stringWidth = fontMetrics.stringWidth(dayString)
+            drawString(dayString, CELL_WIDTH.toFloat() * (i - 0.5f) - stringWidth / 2, 0f)
+        }
+        transform = previousTransform
     }
 
     private fun Graphics2D.drawLeftFooter() {
@@ -166,17 +186,15 @@ private class CalendarRenderer(
         internal const val PAGE_WIDTH = 3300.0
         internal const val PAGE_HEIGHT = 2550.0
         private const val MARGIN_HORIZONTAL = 200.0
-        private const val MARGIN_HEADER = 500.0
-        private const val MARGIN_FOOTER = 300.0
+        private const val MARGIN_HEADER = 550.0
+        private const val MARGIN_FOOTER = 250.0
         private const val MARGIN_INTERNAL = 15.0
-        private const val MARGIN_TITLE = 80.0
+        private const val MARGIN_TITLE = 50.0
+        private const val MARGIN_COLUMN_HEADER = 40.0
         private const val ROWS = 6
         private const val COLUMNS = 7
         private const val STROKE_WIDTH_INNER = 10f
         private const val STROKE_WIDTH_OUTER = 15f
-        private const val FONT_SIZE_TITLE = 144f
-        private const val FONT_SIZE_DATE = 48f
-        private const val FONT_SIZE_TIME = 36f
 
         private const val CELL_WIDTH = (PAGE_WIDTH - 2 * MARGIN_HORIZONTAL) / COLUMNS
         private const val CELL_HEIGHT = (PAGE_HEIGHT - (MARGIN_HEADER + MARGIN_FOOTER)) / ROWS
