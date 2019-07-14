@@ -1,12 +1,16 @@
 package com.russhwolf.soluna.mobile
 
+import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.Reminder
+import com.russhwolf.soluna.mobile.db.SelectAllLocations
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.squareup.sqldelight.EnumColumnAdapter
 import com.squareup.sqldelight.db.SqlDriver
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @RunWith(AndroidJUnit4::class)
@@ -22,18 +26,59 @@ class SolunaDbTest {
     }
 
     @Test
-    fun add_location() {
-        val initialLocations = database.locationQueries.selectAll().executeAsList()
-        assertTrue { initialLocations.isEmpty() }
+    fun locationQueries_happyPath() {
+        val initialLocations = database.locationQueries.selectAllLocations().executeAsList()
+        assertTrue(initialLocations.isEmpty())
 
-        database.locationQueries.insert("test location", 42.3956001, -71.1387674, "America/New_York")
+        database.locationQueries.insertLocation(
+            label = "Test Location",
+            latitude = 42.3956001,
+            longitude = -71.1387674,
+            timeZone = "America/New_York"
+        )
 
-        val updatedLocations = database.locationQueries.selectAll().executeAsList()
-        assertTrue { updatedLocations.size == 1 }
-        assertTrue { updatedLocations[0].label == "test location" }
-        assertTrue { updatedLocations[0].latitude == 42.3956001 }
-        assertTrue { updatedLocations[0].longitude == -71.1387674 }
-        assertTrue { updatedLocations[0].timeZone == "America/New_York" }
+        val updatedLocations = database.locationQueries.selectAllLocations().executeAsList()
+        assertEquals(1, updatedLocations.size)
+        assertEquals(
+            expected = SelectAllLocations.Impl(
+                id = 1,
+                label = "Test Location"
+            ),
+            actual = updatedLocations[0]
+        )
+
+        val location = database.locationQueries.selectLocationByLabel("Test Location").executeAsOne()
+        assertEquals(
+            expected = Location.Impl(
+                id = 1,
+                label = "Test Location",
+                latitude = 42.3956001,
+                longitude = -71.1387674,
+                timeZone = "America/New_York"
+            ),
+            actual = location
+        )
+
+        database.locationQueries.updateLocationLabelById("Updated Location", location.id)
+
+        val updatedLocation = database.locationQueries.selectLocationByLabel("Updated Location").executeAsOne()
+        assertEquals(
+            expected = Location.Impl(
+                id = 1,
+                label = "Updated Location",
+                latitude = 42.3956001,
+                longitude = -71.1387674,
+                timeZone = "America/New_York"
+            ),
+            actual = updatedLocation
+        )
+
+        val oldLocation = database.locationQueries.selectLocationByLabel("Test Location").executeAsOneOrNull()
+        assertNull(oldLocation)
+
+        database.locationQueries.deleteLocationById(updatedLocation.id)
+        val finalLocations = database.locationQueries.selectAllLocations().executeAsList()
+        assertTrue(finalLocations.isEmpty())
     }
 
     @AfterTest

@@ -6,22 +6,22 @@ CREATE TABLE location (
     timeZone TEXT NOT NULL
 );
 
-selectAll:
-SELECT * FROM location;
+selectAllLocations:
+SELECT id, label FROM location;
 
-selectByLabel:
-SELECT * FROM location
+selectLocationByLabel:
+SELECT id, label, latitude, longitude, timeZone FROM location
 WHERE label = ?;
 
-insert:
+insertLocation:
 INSERT INTO location(label, latitude, longitude, timeZone)
 VALUES (?, ?, ?, ?);
 
-deleteById:
+deleteLocationById:
 DELETE FROM location
 WHERE id = ?;
 
-updateLabelForId:
+updateLocationLabelById:
 UPDATE location
 SET label = ?
 WHERE id = ?;
