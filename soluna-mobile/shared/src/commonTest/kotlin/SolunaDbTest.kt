@@ -3,6 +3,8 @@ package com.russhwolf.soluna.mobile
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.Reminder
 import com.russhwolf.soluna.mobile.db.SelectAllLocations
+import com.russhwolf.soluna.mobile.db.SelectAllReminders
+import com.russhwolf.soluna.mobile.db.SelectRemindersByLocationLabel
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.squareup.sqldelight.EnumColumnAdapter
 import com.squareup.sqldelight.db.SqlDriver
@@ -76,9 +78,143 @@ class SolunaDbTest {
         val oldLocation = database.locationQueries.selectLocationByLabel("Test Location").executeAsOneOrNull()
         assertNull(oldLocation)
 
-        database.locationQueries.deleteLocationById(updatedLocation.id)
+        database.locationQueries.deleteLocationById(1)
         val finalLocations = database.locationQueries.selectAllLocations().executeAsList()
         assertTrue(finalLocations.isEmpty())
+    }
+
+    @Test
+    fun reminderQueries_happyPath() {
+        database.locationQueries.insertLocation(
+            label = "Location 1",
+            latitude = 42.3956001,
+            longitude = -71.1387674,
+            timeZone = "America/New_York"
+        )
+        database.locationQueries.insertLocation(
+            label = "Location 2",
+            latitude = 27.7790026,
+            longitude = -82.7949071,
+            timeZone = "America/New_York"
+        )
+
+        val initialReminders = database.reminderQueries.selectAllReminders().executeAsList()
+        assertTrue(initialReminders.isEmpty())
+
+        database.reminderQueries.insertReminder(
+            locationId = 1,
+            type = ReminderType.Sunset,
+            minutesBefore = 15,
+            enabled = true
+        )
+        database.reminderQueries.insertReminder(
+            locationId = 2,
+            type = ReminderType.Sunrise,
+            minutesBefore = 15,
+            enabled = false
+        )
+        database.reminderQueries.insertReminder(
+            locationId = 2,
+            type = ReminderType.Sunset,
+            minutesBefore = 30,
+            enabled = true
+        )
+
+        val insertedReminders = database.reminderQueries.selectAllReminders().executeAsList()
+        assertEquals(
+            expected = listOf(
+                SelectAllReminders.Impl(
+                    id = 1,
+                    label = "Location 1",
+                    type = ReminderType.Sunset,
+                    minutesBefore = 15,
+                    enabled = true
+                ),
+                SelectAllReminders.Impl(
+                    id = 2,
+                    label = "Location 2",
+                    type = ReminderType.Sunrise,
+                    minutesBefore = 15,
+                    enabled = false
+                ),
+                SelectAllReminders.Impl(
+                    id = 3,
+                    label = "Location 2",
+                    type = ReminderType.Sunset,
+                    minutesBefore = 30,
+                    enabled = true
+                )
+            ),
+            actual = insertedReminders
+        )
+
+        val insertedRemindersForLocation1 =
+            database.reminderQueries.selectRemindersByLocationLabel("Location 1").executeAsList()
+        assertEquals(
+            expected = listOf(
+                SelectRemindersByLocationLabel.Impl(
+                    id = 1,
+                    type = ReminderType.Sunset,
+                    minutesBefore = 15,
+                    enabled = true
+                )
+            ),
+            actual = insertedRemindersForLocation1
+        )
+
+        database.reminderQueries.updateReminderEnabledById(false, 1)
+        database.reminderQueries.updateReminderMinutesBeforeById(45, 3)
+
+        val updatedReminders = database.reminderQueries.selectAllReminders().executeAsList()
+        assertEquals(
+            expected = listOf(
+                SelectAllReminders.Impl(
+                    id = 1,
+                    label = "Location 1",
+                    type = ReminderType.Sunset,
+                    minutesBefore = 15,
+                    enabled = false
+                ),
+                SelectAllReminders.Impl(
+                    id = 2,
+                    label = "Location 2",
+                    type = ReminderType.Sunrise,
+                    minutesBefore = 15,
+                    enabled = false
+                ),
+                SelectAllReminders.Impl(
+                    id = 3,
+                    label = "Location 2",
+                    type = ReminderType.Sunset,
+                    minutesBefore = 45,
+                    enabled = true
+                )
+            ),
+            actual = updatedReminders
+        )
+
+        database.reminderQueries.deleteReminderById(2)
+
+        val updatedRemindersAfterDelete = database.reminderQueries.selectAllReminders().executeAsList()
+        assertEquals(
+            expected = listOf(
+                SelectAllReminders.Impl(
+                    id = 1,
+                    label = "Location 1",
+                    type = ReminderType.Sunset,
+                    minutesBefore = 15,
+                    enabled = false
+                ),
+                SelectAllReminders.Impl(
+                    id = 3,
+                    label = "Location 2",
+                    type = ReminderType.Sunset,
+                    minutesBefore = 45,
+                    enabled = true
+                )
+            ),
+            actual = updatedRemindersAfterDelete
+        )
     }
 
     @AfterTest
