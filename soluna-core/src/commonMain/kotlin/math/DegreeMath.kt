@@ -1,6 +1,6 @@
 @file:Suppress("NOTHING_TO_INLINE")
 
-package com.russhwolf.math
+package com.russhwolf.soluna.math
 
 internal const val TAU: Double = 2 * kotlin.math.PI
 private val DEG_PER_RAD: Double = Degree.MAX.value / Radian.MAX.value

@@ -2,25 +2,25 @@
 
 package com.russhwolf.soluna
 
-import com.russhwolf.math.Degree
-import com.russhwolf.math.HourAngle
-import com.russhwolf.math.TAU
-import com.russhwolf.math.abs
-import com.russhwolf.math.acos
-import com.russhwolf.math.asin
-import com.russhwolf.math.atan2
-import com.russhwolf.math.cos
-import com.russhwolf.math.deg
-import com.russhwolf.math.div
-import com.russhwolf.math.hour
-import com.russhwolf.math.minus
-import com.russhwolf.math.plus
-import com.russhwolf.math.rad
-import com.russhwolf.math.sin
-import com.russhwolf.math.times
-import com.russhwolf.math.toDegrees
-import com.russhwolf.math.toHourAngle
-import com.russhwolf.math.unaryMinus
+import com.russhwolf.soluna.math.Degree
+import com.russhwolf.soluna.math.HourAngle
+import com.russhwolf.soluna.math.TAU
+import com.russhwolf.soluna.math.abs
+import com.russhwolf.soluna.math.acos
+import com.russhwolf.soluna.math.asin
+import com.russhwolf.soluna.math.atan2
+import com.russhwolf.soluna.math.cos
+import com.russhwolf.soluna.math.deg
+import com.russhwolf.soluna.math.div
+import com.russhwolf.soluna.math.hour
+import com.russhwolf.soluna.math.minus
+import com.russhwolf.soluna.math.plus
+import com.russhwolf.soluna.math.rad
+import com.russhwolf.soluna.math.sin
+import com.russhwolf.soluna.math.times
+import com.russhwolf.soluna.math.toDegrees
+import com.russhwolf.soluna.math.toHourAngle
+import com.russhwolf.soluna.math.unaryMinus
 import kotlin.math.sqrt
 
 fun sunTimes(

@@ -1,7 +1,7 @@
 package com.russhwolf.soluna
 
-import com.russhwolf.math.hour
-import com.russhwolf.test.assertNearEquals
+import com.russhwolf.soluna.math.hour
+import com.russhwolf.soluna.test.assertNearEquals
 import kotlin.math.floor
 import kotlin.math.roundToInt
 import kotlin.test.Ignore

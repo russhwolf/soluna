@@ -1,4 +1,4 @@
-package com.russhwolf.test
+package com.russhwolf.soluna.test
 
 import kotlin.math.abs
 import kotlin.math.ulp

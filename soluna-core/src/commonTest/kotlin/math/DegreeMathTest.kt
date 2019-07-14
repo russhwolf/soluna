@@ -1,7 +1,7 @@
-package com.russhwolf.math
+package com.russhwolf.soluna.math
 
-import com.russhwolf.test.expects
-import com.russhwolf.test.multipleAssert
+import com.russhwolf.soluna.test.expects
+import com.russhwolf.soluna.test.multipleAssert
 import kotlin.math.sqrt
 import kotlin.math.ulp
 import kotlin.test.Test
