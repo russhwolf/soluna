@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("multiplatform")
@@ -44,6 +45,11 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
+                implementation("com.squareup.sqldelight:android-driver:1.1.4")
+
+                implementation("androidx.test:core:1.2.0")
+                implementation("androidx.test.ext:junit:1.1.1")
+                implementation("org.robolectric:robolectric:4.0")
             }
         }
         val iosMain by getting {
@@ -59,6 +65,10 @@ kotlin {
     }
 }
 
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
 sqldelight {
     database("SolunaDb") {
         packageName = "com.russhwolf.soluna.mobile.db"
@@ -69,6 +79,13 @@ android {
     compileSdkVersion(28)
     defaultConfig {
         minSdkVersion(15)
+    }
+
+    testOptions.unitTests.isIncludeAndroidResources = true
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
 
