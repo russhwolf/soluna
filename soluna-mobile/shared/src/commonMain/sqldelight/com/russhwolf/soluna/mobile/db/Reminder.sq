@@ -1,0 +1,31 @@
+import com.russhwolf.soluna.mobile.ReminderType;
+
+CREATE TABLE reminder (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    locationId INTEGER NOT NULL,
+    type TEXT as ReminderType NOT NULL,
+    time INTEGER as Int NOT NULL,
+    enabled INTEGER as Boolean NOT NULL DEFAULT 1,
+    FOREIGN KEY(locationId) REFERENCES location(id),
+    UNIQUE (locationId, type)
+);
+
+selectAll:
+SELECT * FROM reminder;
+
+selectByLocation:
+SELECT * FROM reminder
+WHERE locationId = ?;
+
+insert:
+INSERT INTO reminder(id, locationId, type, time, enabled)
+VALUES (?, ?, ?, ?, ?);
+
+deleteById:
+DELETE FROM reminder
+WHERE id = ?;
+
+updateEnabledForId:
+UPDATE reminder
+SET enabled = ?
+WHERE id = ?;

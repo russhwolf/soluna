@@ -9,10 +9,19 @@ CREATE TABLE location (
 selectAll:
 SELECT * FROM location;
 
-selectWithLabel:
+selectByLabel:
 SELECT * FROM location
 WHERE label = ?;
 
 insert:
 INSERT INTO location(label, latitude, longitude, timeZone)
 VALUES (?, ?, ?, ?);
+
+deleteById:
+DELETE FROM location
+WHERE id = ?;
+
+updateLabelForId:
+UPDATE location
+SET label = ?
+WHERE id = ?;
