@@ -6,8 +6,9 @@ pluginManagement {
     }
     resolutionStrategy {
         eachPlugin {
-            if (requested.id.id.startsWith("com.android")) {
-                useModule("com.android.tools.build:gradle:${requested.version}")
+            when {
+                requested.id.id.startsWith("com.android") -> useModule("com.android.tools.build:gradle:${requested.version}")
+                requested.id.id == "com.squareup.sqldelight" -> useModule("com.squareup.sqldelight:gradle-plugin:${requested.version}")
             }
         }
     }

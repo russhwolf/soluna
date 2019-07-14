@@ -1,18 +1,23 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
-    kotlin("multiplatform") version "1.3.40"
-    id("com.android.library") version "3.4.1"
+    kotlin("multiplatform")
+    id("com.android.library")
+    id("com.squareup.sqldelight") version "1.1.4"
 }
 
 kotlin {
     android()
-    iosArm64("ios")
-    iosX64("iosSim")
+    val iosTarget = if (System.getenv("SDK_NAME")?.startsWith("iphoneos") == true) {
+        presets.getByName("iosArm64")
+    } else {
+        presets.getByName("iosX64")
+    }
+    targetFromPreset(iosTarget, "ios")
+
     sourceSets {
         all {
             languageSettings.apply {
-                enableLanguageFeature("InlineClasses")
                 progressiveMode = true
             }
         }
@@ -32,6 +37,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(kotlin("stdlib"))
+                implementation("com.squareup.sqldelight:android-driver:1.1.4")
             }
         }
         val androidTest by getting {
@@ -40,6 +46,22 @@ kotlin {
                 implementation(kotlin("test-junit"))
             }
         }
+        val iosMain by getting {
+            dependencies {
+                implementation("com.squareup.sqldelight:ios-driver:1.1.4")
+            }
+        }
+        val iosTest by getting {
+            dependencies {
+
+            }
+        }
+    }
+}
+
+sqldelight {
+    database("SolunaDb") {
+        packageName = "com.russhwolf.soluna.mobile.db"
     }
 }
 
@@ -51,10 +73,10 @@ android {
 }
 
 tasks.create("iosTest") {
-    dependsOn("linkDebugTestIosSim")
+    dependsOn("linkDebugTestIos")
     doLast {
         val testBinaryPath =
-            (kotlin.targets["iosSim"] as KotlinNativeTarget).binaries.getTest("DEBUG").outputFile.absolutePath
+            (kotlin.targets["ios"] as KotlinNativeTarget).binaries.getTest("DEBUG").outputFile.absolutePath
         exec {
             commandLine("xcrun", "simctl", "spawn", "iPhone Xʀ", testBinaryPath)
         }

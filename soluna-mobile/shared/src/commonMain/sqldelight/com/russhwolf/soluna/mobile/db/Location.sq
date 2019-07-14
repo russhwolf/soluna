@@ -1,0 +1,18 @@
+CREATE TABLE location (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    label TEXT NOT NULL UNIQUE,
+    latitude REAL NOT NULL,
+    longitude REAL NOT NULL,
+    timeZone TEXT NOT NULL
+);
+
+selectAll:
+SELECT * FROM location;
+
+selectWithLabel:
+SELECT * FROM location
+WHERE label = ?;
+
+insert:
+INSERT INTO location(label, latitude, longitude, timeZone)
+VALUES (?, ?, ?, ?);
