@@ -1,12 +1,8 @@
-package com.russhwolf.soluna.mobile
+package com.russhwolf.soluna.mobile.db
 
-import com.russhwolf.soluna.mobile.db.Location
-import com.russhwolf.soluna.mobile.db.Reminder
-import com.russhwolf.soluna.mobile.db.SelectAllLocations
-import com.russhwolf.soluna.mobile.db.SelectAllReminders
-import com.russhwolf.soluna.mobile.db.SelectRemindersByLocationLabel
-import com.russhwolf.soluna.mobile.db.SolunaDb
-import com.squareup.sqldelight.EnumColumnAdapter
+import com.russhwolf.soluna.mobile.AndroidJUnit4
+import com.russhwolf.soluna.mobile.RunWith
+import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.squareup.sqldelight.db.SqlDriver
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -18,13 +14,13 @@ import kotlin.test.assertTrue
 @RunWith(AndroidJUnit4::class)
 class SolunaDbTest {
 
-    lateinit var driver: SqlDriver
-    lateinit var database: SolunaDb
+    private lateinit var driver: SqlDriver
+    private lateinit var database: SolunaDb
 
     @BeforeTest
     fun setup() {
-        driver = createDriver()
-        database = SolunaDb(driver, Reminder.Adapter(EnumColumnAdapter()))
+        driver = createInMemorySqlDriver()
+        database = createDatabase(driver)
     }
 
     @Test

@@ -49,7 +49,7 @@ kotlin {
 
                 implementation("androidx.test:core:1.2.0")
                 implementation("androidx.test.ext:junit:1.1.1")
-                implementation("org.robolectric:robolectric:4.0")
+                implementation("org.robolectric:robolectric:4.3")
             }
         }
         val iosMain by getting {

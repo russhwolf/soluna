@@ -7,7 +7,7 @@ import com.squareup.sqldelight.drivers.ios.NativeSqliteDriver
 import com.squareup.sqldelight.drivers.ios.wrapConnection
 import kotlin.reflect.KClass
 
-actual fun createDriver(): SqlDriver {
+actual fun createInMemorySqlDriver(): SqlDriver {
     val schema = SolunaDb.Schema
     return NativeSqliteDriver(
         DatabaseConfiguration(

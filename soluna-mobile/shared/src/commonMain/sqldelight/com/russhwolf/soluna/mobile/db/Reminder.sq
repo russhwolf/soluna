@@ -1,4 +1,4 @@
-import com.russhwolf.soluna.mobile.ReminderType;
+import com.russhwolf.soluna.mobile.db.ReminderType;
 
 CREATE TABLE reminder (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
