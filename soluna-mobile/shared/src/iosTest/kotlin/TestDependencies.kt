@@ -5,7 +5,12 @@ import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.drivers.ios.NativeSqliteDriver
 import com.squareup.sqldelight.drivers.ios.wrapConnection
+import kotlinx.coroutines.CoroutineScope
+import kotlin.coroutines.CoroutineContext
 import kotlin.reflect.KClass
+
+actual fun <T> runBlocking(context: CoroutineContext, block: suspend CoroutineScope.() -> T): T =
+    kotlinx.coroutines.runBlocking(context, block)
 
 actual fun createInMemorySqlDriver(): SqlDriver {
     val schema = SolunaDb.Schema

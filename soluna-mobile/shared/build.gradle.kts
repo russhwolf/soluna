@@ -7,6 +7,9 @@ plugins {
     id("com.squareup.sqldelight") version "1.1.4"
 }
 
+val coroutineVersion = "1.2.2"
+val sqldelightVersion = "1.1.4"
+
 kotlin {
     android()
     val iosTarget = if (System.getenv("SDK_NAME")?.startsWith("iphoneos") == true) {
@@ -27,6 +30,9 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation(project(":soluna-core"))
+
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutineVersion")
+
             }
         }
         val commonTest by getting {
@@ -38,23 +44,32 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(kotlin("stdlib"))
-                implementation("com.squareup.sqldelight:android-driver:1.1.4")
+                implementation("com.squareup.sqldelight:android-driver:$sqldelightVersion")
+
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion")
             }
         }
         val androidTest by getting {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
-                implementation("com.squareup.sqldelight:android-driver:1.1.4")
 
                 implementation("androidx.test:core:1.2.0")
                 implementation("androidx.test.ext:junit:1.1.1")
                 implementation("org.robolectric:robolectric:4.3")
+
+                implementation("com.squareup.sqldelight:android-driver:$sqldelightVersion")
+
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion")
             }
         }
         val iosMain by getting {
             dependencies {
-                implementation("com.squareup.sqldelight:ios-driver:1.1.4")
+                implementation("com.squareup.sqldelight:ios-driver:$sqldelightVersion")
+
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutineVersion")
             }
         }
         val iosTest by getting {
