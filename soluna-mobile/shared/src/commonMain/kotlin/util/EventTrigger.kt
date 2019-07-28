@@ -1,15 +1,14 @@
 package com.russhwolf.soluna.mobile.util
 
-class EventTrigger<T : Any> private constructor(data: T?) {
+class EventTrigger<T : Any> private constructor(private var data: T?) {
     companion object {
         fun <T : Any> empty() = EventTrigger<T>(null as T?)
         fun <T : Any> create(data: T) = EventTrigger(data)
     }
 
-    var data: T? = data
-        private set
-
-    fun consume() {
+    fun consume(): T? {
+        val out = data
         data = null
+        return out
     }
 }

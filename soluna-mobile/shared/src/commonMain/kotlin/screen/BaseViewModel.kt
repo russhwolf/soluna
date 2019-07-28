@@ -22,10 +22,9 @@ abstract class BaseViewModel<T>(initialState: T) {
     }
 
     protected var error: EventTrigger<Throwable> by Delegates.observable(EventTrigger.empty()) { _, _, newValue ->
-        newValue.data?.let {
+        newValue.consume()?.let {
             errorListener?.invoke(it)
         }
-        newValue.consume()
     }
 
     protected fun load(action: suspend (T) -> T) {
@@ -60,10 +59,9 @@ abstract class BaseViewModel<T>(initialState: T) {
 
     fun setErrorListener(listener: ErrorListener) {
         errorListener = listener
-        error.data?.let {
+        error.consume()?.let {
             errorListener?.invoke(it)
         }
-        error.consume()
     }
 }
 

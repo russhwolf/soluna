@@ -1,10 +1,9 @@
 package com.russhwolf.soluna.mobile.screen
 
+import com.russhwolf.soluna.mobile.pause
 import com.russhwolf.soluna.mobile.runBlocking
 import com.russhwolf.soluna.mobile.runBlockingTest
-import kotlinx.coroutines.delay
 import kotlin.coroutines.suspendCoroutine
-import kotlin.properties.Delegates
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -13,22 +12,16 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 
-class BaseViewModelTest {
+class BaseViewModelTest : AbstractViewModelTest<TestViewModel, String>() {
 
-    private var state: String = "Initial"
-    private var isLoading: Boolean by Delegates.notNull()
-    private var error: Throwable? = null
-
-    private var viewModel = TestViewModel(state)
-
-    init {
-        viewModel.setViewStateListener { state = it }
-        viewModel.setLoadingListener { isLoading = it }
-        viewModel.setErrorListener { error = it }
+    override suspend fun createViewModel(): TestViewModel {
+        state = "Initial"
+        return TestViewModel(state)
     }
 
     @Test
     fun initialState() {
+        initializeViewModel()
         assertEquals("Initial", state)
         assertFalse(isLoading)
         assertNull(error)
@@ -45,7 +38,7 @@ class BaseViewModelTest {
     @Test
     fun loadState() = runBlocking {
         viewModel.loadState("Updated")
-        suspend()
+        pause()
         assertEquals("Updated", state)
         assertFalse(isLoading)
         assertNull(error)
@@ -62,17 +55,16 @@ class BaseViewModelTest {
     @Test
     fun throwLoadError() = runBlockingTest {
         viewModel.throwLoadError()
-        suspend()
+        pause()
         assertEquals("Initial", state)
         assertFalse(isLoading)
         assertNotNull(error)
     }
 
-    @Suppress("DeferredResultUnused")
     @Test
     fun infiniteLoad() = runBlocking {
         viewModel.infiniteLoad()
-        suspend()
+        pause()
         assertEquals("Initial", state)
         assertTrue(isLoading)
         assertNull(error)
@@ -96,7 +88,3 @@ class TestViewModel(state: String) : BaseViewModel<String>(state) {
         }
     }
 }
-
-private suspend fun suspend() = delay(1) // Create a near-instantaneous suspension point so listeners can update
-
-class TestError : RuntimeException("Test Error!")
