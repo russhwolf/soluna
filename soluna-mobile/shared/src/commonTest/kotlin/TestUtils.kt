@@ -8,4 +8,4 @@ fun runBlockingTest(block: suspend CoroutineScope.() -> Unit): Unit = runBlockin
 /**
  * Create a near-instantaneous suspension point so other coroutines can update
  */
-suspend fun pause() = delay(1)
+suspend fun pause() = delay(3)

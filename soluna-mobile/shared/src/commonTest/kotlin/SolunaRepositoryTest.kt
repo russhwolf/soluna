@@ -59,9 +59,9 @@ class SolunaRepositoryTest {
             timeZone = "America/New_York"
         )
 
-        val location = repository.getLocation("Test Location")
+        val location = repository.getLocation(1)
         assertEquals(
-            expected = Location(
+            expected = LocationDetail(
                 id = 1,
                 label = "Test Location",
                 latitude = 42.3956001,
@@ -74,7 +74,7 @@ class SolunaRepositoryTest {
 
     @Test
     fun getLocation_invalid() = runBlocking {
-        val location = repository.getLocation("Test Location")
+        val location = repository.getLocation(1)
         assertNull(location)
     }
 
@@ -87,10 +87,10 @@ class SolunaRepositoryTest {
             timeZone = "America/New_York"
         )
 
-        val dbLocation = database.locationQueries.selectLocationByLabel("Test Location").executeAsOne()
+        val dbLocation = database.locationQueries.selectLocationById(1).executeAsOne()
 
         assertEquals(
-            expected = Location(
+            expected = LocationDetail(
                 id = 1,
                 label = "Test Location",
                 latitude = 42.3956001,

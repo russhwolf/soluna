@@ -1,6 +1,6 @@
 package com.russhwolf.soluna.mobile.screen.locationlist
 
-import com.russhwolf.soluna.mobile.Location
+import com.russhwolf.soluna.mobile.LocationDetail
 import com.russhwolf.soluna.mobile.LocationSummary
 import com.russhwolf.soluna.mobile.MockSolunaRepository
 import com.russhwolf.soluna.mobile.pause
@@ -28,7 +28,7 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
     fun initialState_populated() = runBlockingTest {
         repository = MockSolunaRepository(
             listOf(
-                Location(0, "Home", 27.18, 62.83, "UTC")
+                LocationDetail(0, "Home", 27.18, 62.83, "UTC")
             )
         )
         initializeViewModel()

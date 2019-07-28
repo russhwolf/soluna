@@ -9,9 +9,9 @@ CREATE TABLE location (
 selectAllLocations:
 SELECT id, label FROM location;
 
-selectLocationByLabel:
+selectLocationById:
 SELECT id, label, latitude, longitude, timeZone FROM location
-WHERE label = ?;
+WHERE id = ?;
 
 insertLocation:
 INSERT INTO location(label, latitude, longitude, timeZone)

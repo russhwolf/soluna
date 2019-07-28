@@ -7,7 +7,7 @@ import com.russhwolf.soluna.mobile.util.runInBackground
 interface SolunaRepository {
     suspend fun getLocations(): List<LocationSummary>
 
-    suspend fun getLocation(label: String): Location?
+    suspend fun getLocation(id: Long): LocationDetail?
 
     suspend fun addLocation(label: String, latitude: Double, longitude: Double, timeZone: String)
 
@@ -18,9 +18,9 @@ interface SolunaRepository {
                 .executeAsList()
         }
 
-        override suspend fun getLocation(label: String): Location? = runInBackground {
+        override suspend fun getLocation(id: Long): LocationDetail? = runInBackground {
             database.locationQueries
-                .selectLocationByLabel(label)
+                .selectLocationById(id)
                 .executeAsOneOrNull()
         }
 
@@ -37,7 +37,7 @@ typealias LocationSummary = SelectAllLocations
 
 fun LocationSummary(id: Long, label: String): LocationSummary = SelectAllLocations.Impl(id, label)
 
-typealias Location = com.russhwolf.soluna.mobile.db.Location
+typealias LocationDetail = com.russhwolf.soluna.mobile.db.Location
 
-fun Location(id: Long, label: String, latitude: Double, longitude: Double, timeZone: String): Location =
+fun LocationDetail(id: Long, label: String, latitude: Double, longitude: Double, timeZone: String): LocationDetail =
     com.russhwolf.soluna.mobile.db.Location.Impl(id, label, latitude, longitude, timeZone)

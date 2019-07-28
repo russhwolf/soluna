@@ -8,7 +8,6 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @RunWith(AndroidJUnit4::class)
@@ -45,7 +44,7 @@ class SolunaDbTest {
             actual = updatedLocations[0]
         )
 
-        val location = database.locationQueries.selectLocationByLabel("Test Location").executeAsOne()
+        val location = database.locationQueries.selectLocationById(1).executeAsOne()
         assertEquals(
             expected = Location.Impl(
                 id = 1,
@@ -59,7 +58,7 @@ class SolunaDbTest {
 
         database.locationQueries.updateLocationLabelById("Updated Location", location.id)
 
-        val updatedLocation = database.locationQueries.selectLocationByLabel("Updated Location").executeAsOne()
+        val updatedLocation = database.locationQueries.selectLocationById(1).executeAsOne()
         assertEquals(
             expected = Location.Impl(
                 id = 1,
@@ -70,9 +69,6 @@ class SolunaDbTest {
             ),
             actual = updatedLocation
         )
-
-        val oldLocation = database.locationQueries.selectLocationByLabel("Test Location").executeAsOneOrNull()
-        assertNull(oldLocation)
 
         database.locationQueries.deleteLocationById(1)
         val finalLocations = database.locationQueries.selectAllLocations().executeAsList()
