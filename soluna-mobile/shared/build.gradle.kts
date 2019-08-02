@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.Framework.BitcodeEmbeddingMode.BITCODE
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -5,6 +6,7 @@ plugins {
     kotlin("multiplatform")
     id("com.android.library")
     id("com.squareup.sqldelight") version "1.1.4"
+    id("org.jetbrains.kotlin.xcode-compat") version "0.2.3"
 }
 
 val coroutineVersion = "1.2.2"
@@ -12,12 +14,13 @@ val sqldelightVersion = "1.1.4"
 
 kotlin {
     android()
-    val iosTarget = if (System.getenv("SDK_NAME")?.startsWith("iphoneos") == true) {
-        presets.getByName("iosArm64")
-    } else {
-        presets.getByName("iosX64")
+    xcode {
+        setupFramework("ios") {
+            baseName = "Shared"
+            embedBitcode = BITCODE
+            transitiveExport = true
+        }
     }
-    targetFromPreset(iosTarget, "ios")
 
     sourceSets {
         all {
@@ -26,7 +29,7 @@ kotlin {
             }
         }
 
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation(project(":soluna-core"))
@@ -35,7 +38,7 @@ kotlin {
 
             }
         }
-        val commonTest by getting {
+        commonTest {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
