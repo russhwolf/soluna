@@ -8,11 +8,9 @@ import com.russhwolf.soluna.mobile.util.EventTrigger
 class LocationListViewModel(private val repository: SolunaRepository) :
     BaseViewModel<LocationListViewState>(LocationListViewState(emptyList())) {
 
-    init {
-        load {
-            val locations = repository.getLocations()
-            LocationListViewState(locations)
-        }
+    val initialLoad = updateAsync {
+        val locations = repository.getLocations()
+        LocationListViewState(locations)
     }
 
     fun navigateToLocationDetails(locationSummary: LocationSummary) = update {

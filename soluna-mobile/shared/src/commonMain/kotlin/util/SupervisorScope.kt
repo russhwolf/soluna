@@ -6,5 +6,5 @@ import kotlin.coroutines.CoroutineContext
 
 class SupervisorScope : CoroutineScope {
     private val job = SupervisorJob()
-    override val coroutineContext: CoroutineContext = job + mainDispatcher
+    override val coroutineContext: CoroutineContext = job
 }

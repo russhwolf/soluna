@@ -3,7 +3,6 @@ package com.russhwolf.soluna.mobile.screen.locationlist
 import com.russhwolf.soluna.mobile.LocationDetail
 import com.russhwolf.soluna.mobile.LocationSummary
 import com.russhwolf.soluna.mobile.MockSolunaRepository
-import com.russhwolf.soluna.mobile.pause
 import com.russhwolf.soluna.mobile.runBlockingTest
 import com.russhwolf.soluna.mobile.screen.AbstractViewModelTest
 import kotlin.test.Test
@@ -19,8 +18,7 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
 
     @Test
     fun initialState_empty() = runBlockingTest {
-        initializeViewModel()
-        pause()
+        viewModel.initialLoad.await()
         assertTrue(state.locations.isEmpty())
     }
 
@@ -31,8 +29,7 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
                 LocationDetail(0, "Home", 27.18, 62.83, "UTC")
             )
         )
-        initializeViewModel()
-        pause()
+        viewModel.initialLoad.await()
         assertEquals(1, state.locations.size)
     }
 

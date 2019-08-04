@@ -9,7 +9,7 @@ class AddLocationViewModel(private val repository: SolunaRepository) : BaseViewM
         //  but appears fixed in 1.3.50 eap
         @Suppress("UnnecessaryVariable")
         val renamed = label
-        load {
+        updateAsync {
             repository.addLocation(renamed, latitude, longitude, timeZone)
         }
     }

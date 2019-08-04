@@ -1,9 +1,8 @@
 package com.russhwolf.soluna.mobile.screen
 
-import com.russhwolf.soluna.mobile.pause
 import com.russhwolf.soluna.mobile.runBlocking
 import com.russhwolf.soluna.mobile.runBlockingTest
-import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.delay
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -28,17 +27,16 @@ class BaseViewModelTest : AbstractViewModelTest<TestViewModel, String>() {
     }
 
     @Test
-    fun setState() {
-        viewModel.setState("Updated")
+    fun updateState() {
+        viewModel.updateState("Updated")
         assertEquals("Updated", state)
         assertFalse(isLoading)
         assertNull(error)
     }
 
     @Test
-    fun loadState() = runBlocking {
-        viewModel.loadState("Updated")
-        pause()
+    fun updateStateAsync() = runBlocking {
+        viewModel.updateStateAsync("Updated").await()
         assertEquals("Updated", state)
         assertFalse(isLoading)
         assertNull(error)
@@ -53,18 +51,18 @@ class BaseViewModelTest : AbstractViewModelTest<TestViewModel, String>() {
     }
 
     @Test
-    fun throwLoadError() = runBlockingTest {
-        viewModel.throwLoadError()
-        pause()
+    fun throwErrorAsync() = runBlockingTest {
+        viewModel.throwErrorAsync().await()
         assertEquals("Initial", state)
         assertFalse(isLoading)
         assertNotNull(error)
     }
 
     @Test
-    fun infiniteLoad() = runBlocking {
-        viewModel.infiniteLoad()
-        pause()
+    fun infiniteDelayAsync() = runBlocking {
+        @Suppress("DeferredResultUnused")
+        viewModel.infiniteDelayAsync()
+        delay(5)
         assertEquals("Initial", state)
         assertTrue(isLoading)
         assertNull(error)
@@ -72,19 +70,17 @@ class BaseViewModelTest : AbstractViewModelTest<TestViewModel, String>() {
 }
 
 class TestViewModel(state: String) : BaseViewModel<String>(state) {
-    fun setState(state: String) = update { state }
+    fun updateState(state: String) = update { state }
 
-    fun loadState(state: String) = load { state }
+    fun updateStateAsync(state: String) = updateAsync { state }
 
     fun throwError() = update { throw TestError() }
 
-    fun throwLoadError() = load { throw TestError() }
+    fun throwErrorAsync() = updateAsync { throw TestError() }
 
-    fun infiniteLoad() {
-        load {
-            suspendCoroutine {
-                // Continuation is never called
-            }
-        }
+    fun infiniteDelayAsync() = updateAsync { state ->
+        delay(Long.MAX_VALUE)
+        state
     }
+
 }

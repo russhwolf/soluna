@@ -20,7 +20,7 @@ abstract class AbstractViewModelTest<VM : BaseViewModel<T>, T : Any> {
 
     abstract suspend fun createViewModel(): VM
 
-    fun initializeViewModel() {
+    protected fun initializeViewModel() {
         viewModel // force lazy prop to load
     }
 }

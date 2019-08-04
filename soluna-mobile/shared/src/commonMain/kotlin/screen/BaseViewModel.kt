@@ -3,7 +3,8 @@ package com.russhwolf.soluna.mobile.screen
 import com.russhwolf.soluna.mobile.util.EventTrigger
 import com.russhwolf.soluna.mobile.util.SupervisorScope
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlin.properties.Delegates
 
 abstract class BaseViewModel<T>(initialState: T) {
@@ -27,8 +28,8 @@ abstract class BaseViewModel<T>(initialState: T) {
         }
     }
 
-    protected fun load(action: suspend (T) -> T) {
-        coroutineScope.launch {
+    protected fun updateAsync(action: suspend (T) -> T): Deferred<Unit> =
+        coroutineScope.async {
             isLoading = true
             try {
                 state = action(state)
@@ -37,7 +38,6 @@ abstract class BaseViewModel<T>(initialState: T) {
             }
             isLoading = false
         }
-    }
 
     protected fun update(action: (T) -> T) {
         try {

@@ -8,7 +8,7 @@ class LocationDetailViewModel(id: Long, repository: SolunaRepository) :
     BaseViewModel<LocationDetailViewState>(LocationDetailViewState(null)) {
 
     init {
-        load {
+        updateAsync {
             val location = repository.getLocation(id)
             LocationDetailViewState(location)
         }
