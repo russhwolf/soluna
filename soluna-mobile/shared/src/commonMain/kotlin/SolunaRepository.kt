@@ -11,6 +11,8 @@ interface SolunaRepository {
 
     suspend fun addLocation(label: String, latitude: Double, longitude: Double, timeZone: String)
 
+    suspend fun deleteLocation(id: Long)
+
     class Impl(private val database: SolunaDb) : SolunaRepository {
         override suspend fun getLocations(): List<LocationSummary> = runInBackground {
             database.locationQueries
@@ -29,6 +31,11 @@ interface SolunaRepository {
                 database.locationQueries
                     .insertLocation(label, latitude, longitude, timeZone)
             }
+
+        override suspend fun deleteLocation(id: Long) = runInBackground {
+            database.locationQueries
+                .deleteLocationById(id)
+        }
     }
 }
 

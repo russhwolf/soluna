@@ -101,6 +101,21 @@ class SolunaRepositoryTest {
         )
     }
 
+    @Test
+    fun deleteLocation_valid() = runBlocking {
+        repository.addLocation(
+            label = "Test Location",
+            latitude = 42.3956001,
+            longitude = -71.1387674,
+            timeZone = "America/New_York"
+        )
+
+        database.locationQueries.deleteLocationById(1)
+
+        val locations = database.locationQueries.selectAllLocations().executeAsList()
+        assertTrue(locations.isEmpty())
+    }
+
     @AfterTest
     fun tearDown() {
         driver.close()

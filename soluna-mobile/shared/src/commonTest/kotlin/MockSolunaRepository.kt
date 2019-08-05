@@ -11,4 +11,8 @@ class MockSolunaRepository(locations: List<LocationDetail> = mutableListOf()) : 
     override suspend fun addLocation(label: String, latitude: Double, longitude: Double, timeZone: String) {
         locations.add(LocationDetail(nextId++, label, latitude, longitude, timeZone))
     }
+
+    override suspend fun deleteLocation(id: Long) {
+        locations.removeAll { it.id == id }
+    }
 }

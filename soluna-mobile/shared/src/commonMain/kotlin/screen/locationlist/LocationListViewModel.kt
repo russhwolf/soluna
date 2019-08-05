@@ -19,7 +19,13 @@ class LocationListViewModel(private val repository: SolunaRepository) :
 
 
     fun navigateToAddLocation() = update {
-        it.copy(addLocationTrigger = EventTrigger.create(Unit))
+        it.copy(addLocationTrigger = EventTrigger.create())
+    }
+
+    fun removeLocation(id: Long) = updateAsync {
+        repository.deleteLocation(id)
+        val locations = repository.getLocations()
+        LocationListViewState(locations)
     }
 }
 

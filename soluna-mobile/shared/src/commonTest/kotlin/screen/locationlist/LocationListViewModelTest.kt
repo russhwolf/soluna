@@ -34,6 +34,17 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
     }
 
     @Test
+    fun removeLocation() = runBlockingTest {
+        repository = MockSolunaRepository(
+            listOf(
+                LocationDetail(0, "Home", 27.18, 62.83, "UTC")
+            )
+        )
+        viewModel.removeLocation(0).await()
+        assertTrue(state.locations.isEmpty())
+    }
+
+    @Test
     fun addLocationTrigger() {
         viewModel.navigateToAddLocation()
         assertNotNull(state.addLocationTrigger.consume())
