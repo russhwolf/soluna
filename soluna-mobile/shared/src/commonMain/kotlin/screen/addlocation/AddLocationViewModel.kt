@@ -3,11 +3,13 @@ package com.russhwolf.soluna.mobile.screen.addlocation
 import com.russhwolf.soluna.mobile.SolunaRepository
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import com.russhwolf.soluna.mobile.util.EventTrigger
+import com.russhwolf.soluna.mobile.util.mainDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 
-class AddLocationViewModel(private val repository: SolunaRepository) :
-    BaseViewModel<AddLocationViewState>(AddLocationViewState()) {
+class AddLocationViewModel(private val repository: SolunaRepository, dispatcher: CoroutineDispatcher = mainDispatcher) :
+    BaseViewModel<AddLocationViewState>(AddLocationViewState(), dispatcher) {
     fun addLocation(label: String, latitude: String, longitude: String, timeZone: String): Deferred<Unit> {
         val latitudeDouble = latitude.toDoubleOrNull()
         val longitudeDouble = longitude.toDoubleOrNull()

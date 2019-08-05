@@ -4,6 +4,7 @@ import com.russhwolf.soluna.mobile.MockSolunaRepository
 import com.russhwolf.soluna.mobile.runBlockingTest
 import com.russhwolf.soluna.mobile.screen.AbstractViewModelTest
 import com.russhwolf.soluna.mobile.util.EventTrigger
+import kotlinx.coroutines.Dispatchers
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -11,7 +12,8 @@ import kotlin.test.assertEquals
 class AddLocationViewModelTest : AbstractViewModelTest<AddLocationViewModel, AddLocationViewState>() {
     private var repository = MockSolunaRepository()
 
-    override suspend fun createViewModel(): AddLocationViewModel = AddLocationViewModel(repository)
+    override suspend fun createViewModel(): AddLocationViewModel =
+        AddLocationViewModel(repository, Dispatchers.Unconfined)
 
     @Test
     fun addLocation_valid() = runBlockingTest {

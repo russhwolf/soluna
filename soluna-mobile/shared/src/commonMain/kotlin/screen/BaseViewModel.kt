@@ -2,13 +2,14 @@ package com.russhwolf.soluna.mobile.screen
 
 import com.russhwolf.soluna.mobile.util.EventTrigger
 import com.russhwolf.soluna.mobile.util.SupervisorScope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlin.properties.Delegates
 
-abstract class BaseViewModel<T>(initialState: T) {
-    protected val coroutineScope: CoroutineScope = SupervisorScope()
+abstract class BaseViewModel<T>(initialState: T, dispatcher: CoroutineDispatcher) {
+    protected val coroutineScope: CoroutineScope = SupervisorScope(dispatcher)
 
     private var viewStateListener: ViewStateListener<T>? = null
     private var loadingListener: LoadingListener? = null

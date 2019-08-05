@@ -5,6 +5,7 @@ import com.russhwolf.soluna.mobile.LocationSummary
 import com.russhwolf.soluna.mobile.MockSolunaRepository
 import com.russhwolf.soluna.mobile.runBlockingTest
 import com.russhwolf.soluna.mobile.screen.AbstractViewModelTest
+import kotlinx.coroutines.Dispatchers
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -14,7 +15,8 @@ import kotlin.test.assertTrue
 class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, LocationListViewState>() {
     private var repository = MockSolunaRepository()
 
-    override suspend fun createViewModel(): LocationListViewModel = LocationListViewModel(repository)
+    override suspend fun createViewModel(): LocationListViewModel =
+        LocationListViewModel(repository, Dispatchers.Unconfined)
 
     @Test
     fun initialState_empty() = runBlockingTest {

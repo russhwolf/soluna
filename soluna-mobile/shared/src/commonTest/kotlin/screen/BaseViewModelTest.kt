@@ -2,6 +2,7 @@ package com.russhwolf.soluna.mobile.screen
 
 import com.russhwolf.soluna.mobile.runBlocking
 import com.russhwolf.soluna.mobile.runBlockingTest
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -69,7 +70,7 @@ class BaseViewModelTest : AbstractViewModelTest<TestViewModel, String>() {
     }
 }
 
-class TestViewModel(state: String) : BaseViewModel<String>(state) {
+class TestViewModel(state: String) : BaseViewModel<String>(state, Dispatchers.Unconfined) {
     fun updateState(state: String) = update { state }
 
     fun updateStateAsync(state: String) = updateAsync { state }
