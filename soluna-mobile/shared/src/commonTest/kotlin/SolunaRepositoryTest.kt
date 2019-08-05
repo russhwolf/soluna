@@ -1,5 +1,6 @@
 package com.russhwolf.soluna.mobile
 
+import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.squareup.sqldelight.db.SqlDriver
@@ -90,7 +91,7 @@ class SolunaRepositoryTest {
         val dbLocation = database.locationQueries.selectLocationById(1).executeAsOne()
 
         assertEquals(
-            expected = LocationDetail(
+            expected = Location.Impl(
                 id = 1,
                 label = "Test Location",
                 latitude = 42.3956001,

@@ -1,6 +1,5 @@
 package com.russhwolf.soluna.mobile
 
-import com.russhwolf.soluna.mobile.db.SelectAllLocations
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.util.runInBackground
 
@@ -16,13 +15,13 @@ interface SolunaRepository {
     class Impl(private val database: SolunaDb) : SolunaRepository {
         override suspend fun getLocations(): List<LocationSummary> = runInBackground {
             database.locationQueries
-                .selectAllLocations()
+                .selectAllLocations(::LocationSummary)
                 .executeAsList()
         }
 
         override suspend fun getLocation(id: Long): LocationDetail? = runInBackground {
             database.locationQueries
-                .selectLocationById(id)
+                .selectLocationById(id, ::LocationDetail)
                 .executeAsOneOrNull()
         }
 
@@ -39,12 +38,16 @@ interface SolunaRepository {
     }
 }
 
-// Rename/repackage SqlDelight models as repository-level abstractions
-typealias LocationSummary = SelectAllLocations
+// Repackage SqlDelight models as repository-level abstractions
+data class LocationSummary(
+    val id: Long,
+    val label: String
+)
 
-fun LocationSummary(id: Long, label: String): LocationSummary = SelectAllLocations.Impl(id, label)
-
-typealias LocationDetail = com.russhwolf.soluna.mobile.db.Location
-
-fun LocationDetail(id: Long, label: String, latitude: Double, longitude: Double, timeZone: String): LocationDetail =
-    com.russhwolf.soluna.mobile.db.Location.Impl(id, label, latitude, longitude, timeZone)
+data class LocationDetail(
+    val id: Long,
+    val label: String,
+    val latitude: Double,
+    val longitude: Double,
+    val timeZone: String
+)
