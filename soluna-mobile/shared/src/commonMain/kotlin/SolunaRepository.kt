@@ -1,6 +1,8 @@
 package com.russhwolf.soluna.mobile
 
+import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.db.SolunaDb
+import com.russhwolf.soluna.mobile.util.epochSeconds
 import com.russhwolf.soluna.mobile.util.runInBackground
 
 interface SolunaRepository {
@@ -12,7 +14,9 @@ interface SolunaRepository {
 
     suspend fun deleteLocation(id: Long)
 
-    class Impl(private val database: SolunaDb) : SolunaRepository {
+    suspend fun geocodeLocation(location: String): GeocodeData?
+
+    class Impl(private val database: SolunaDb, private val googleApiClient: GoogleApiClient) : SolunaRepository {
         override suspend fun getLocations(): List<LocationSummary> = runInBackground {
             database.locationQueries
                 .selectAllLocations(::LocationSummary)
@@ -35,8 +39,26 @@ interface SolunaRepository {
             database.locationQueries
                 .deleteLocationById(id)
         }
+
+        override suspend fun geocodeLocation(location: String): GeocodeData? {
+            val placeId =
+                googleApiClient.getPlaceAutocomplete(location).predictions.firstOrNull()?.place_id ?: return null
+            val coords = googleApiClient.getGeocode(placeId).results.getOrNull(0)?.geometry?.location ?: return null
+            val timeZone = googleApiClient.getTimeZone(coords.lat, coords.lng, epochSeconds).timeZoneId
+            return GeocodeData(
+                latitude = coords.lat,
+                longitude = coords.lng,
+                timeZone = timeZone
+            )
+        }
     }
 }
+
+data class GeocodeData(
+    val latitude: Double,
+    val longitude: Double,
+    val timeZone: String
+)
 
 // Repackage SqlDelight models as repository-level abstractions
 data class LocationSummary(
