@@ -1,5 +1,6 @@
 package com.russhwolf.soluna.mobile.screen.addlocation
 
+import com.russhwolf.soluna.mobile.GeocodeData
 import com.russhwolf.soluna.mobile.SolunaRepository
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import com.russhwolf.soluna.mobile.util.EventTrigger
@@ -29,8 +30,20 @@ class AddLocationViewModel(private val repository: SolunaRepository, dispatcher:
             state.copy(exitTrigger = EventTrigger.create())
         }
     }
+
+    fun geocodeLocation(location: String): Deferred<Unit> {
+        return updateAsync {
+            val geocodeData = repository.geocodeLocation(location)
+            if (geocodeData != null) {
+                state.copy(geocodeTrigger = EventTrigger.create(geocodeData))
+            } else {
+                state
+            }
+        }
+    }
 }
 
 data class AddLocationViewState(
+    val geocodeTrigger: EventTrigger<GeocodeData> = EventTrigger.empty(),
     val exitTrigger: EventTrigger<Unit> = EventTrigger.empty()
 )
