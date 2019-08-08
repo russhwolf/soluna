@@ -7,10 +7,9 @@ import com.russhwolf.soluna.mobile.db.createDatabase
 import com.squareup.sqldelight.db.SqlDriver
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
-import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
-import kotlinx.coroutines.io.ByteReadChannel
+import io.ktor.http.headersOf
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -164,8 +163,8 @@ private fun createMockEngine(latitude: Double, longitude: Double, timeZone: Stri
         else -> fail("Invalid path $path")
     }
     respond(
-        content = ByteReadChannel(body),
+        content = body,
         status = HttpStatusCode.OK,
-        headers = Headers.build { set(HttpHeaders.ContentType, "application/json") }
+        headers = headersOf(HttpHeaders.ContentType, "application/json")
     )
 }

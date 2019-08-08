@@ -3,10 +3,9 @@ package com.russhwolf.soluna.mobile.api
 import com.russhwolf.soluna.mobile.runBlockingTest
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
-import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
-import kotlinx.coroutines.io.ByteReadChannel
+import io.ktor.http.headersOf
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -243,8 +242,8 @@ private val mockEngine = MockEngine { httpRequestData ->
         else -> fail("Invalid path $path")
     }
     respond(
-        content = ByteReadChannel(body),
+        content = body,
         status = HttpStatusCode.OK,
-        headers = Headers.build { set(HttpHeaders.ContentType, "application/json") }
+        headers = headersOf(HttpHeaders.ContentType, "application/json")
     )
 }

@@ -6,6 +6,7 @@ import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.features.defaultRequest
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.URLProtocol
@@ -36,6 +37,7 @@ interface GoogleApiClient {
                     setMapper(TimeZoneResponse::class, TimeZoneResponse.serializer())
                 }
             }
+            install(Logging)
         }
 
         override suspend fun getPlaceAutocomplete(query: String): PlaceAutocompleteResponse =
