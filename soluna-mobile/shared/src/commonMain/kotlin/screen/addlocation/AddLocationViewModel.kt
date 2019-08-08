@@ -6,12 +6,12 @@ import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import com.russhwolf.soluna.mobile.util.EventTrigger
 import com.russhwolf.soluna.mobile.util.mainDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 
 class AddLocationViewModel(private val repository: SolunaRepository, dispatcher: CoroutineDispatcher = mainDispatcher) :
     BaseViewModel<AddLocationViewState>(AddLocationViewState(), dispatcher) {
-    fun addLocation(label: String, latitude: String, longitude: String, timeZone: String): Deferred<Unit> {
+    fun addLocation(label: String, latitude: String, longitude: String, timeZone: String): Job {
         val latitudeDouble = latitude.toDoubleOrNull()
         val longitudeDouble = longitude.toDoubleOrNull()
 
@@ -31,14 +31,12 @@ class AddLocationViewModel(private val repository: SolunaRepository, dispatcher:
         }
     }
 
-    fun geocodeLocation(location: String): Deferred<Unit> {
-        return updateAsync {
-            val geocodeData = repository.geocodeLocation(location)
-            if (geocodeData != null) {
-                state.copy(geocodeTrigger = EventTrigger.create(geocodeData))
-            } else {
-                state
-            }
+    fun geocodeLocation(location: String) = updateAsync {
+        val geocodeData = repository.geocodeLocation(location)
+        if (geocodeData != null) {
+            state.copy(geocodeTrigger = EventTrigger.create(geocodeData))
+        } else {
+            state
         }
     }
 }

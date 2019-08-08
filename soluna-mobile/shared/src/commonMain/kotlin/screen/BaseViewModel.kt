@@ -4,8 +4,8 @@ import com.russhwolf.soluna.mobile.util.EventTrigger
 import com.russhwolf.soluna.mobile.util.SupervisorScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
 abstract class BaseViewModel<T>(initialState: T, dispatcher: CoroutineDispatcher) {
@@ -29,8 +29,8 @@ abstract class BaseViewModel<T>(initialState: T, dispatcher: CoroutineDispatcher
         }
     }
 
-    protected fun updateAsync(action: suspend (T) -> T): Deferred<Unit> =
-        coroutineScope.async {
+    protected fun updateAsync(action: suspend (T) -> T): Job =
+        coroutineScope.launch {
             isLoading = true
             try {
                 state = action(state)

@@ -18,28 +18,28 @@ class AddLocationViewModelTest : AbstractViewModelTest<AddLocationViewModel, Add
 
     @Test
     fun addLocation_valid() = runBlockingTest {
-        viewModel.addLocation("Home", "27.18", "62.83", "UTC").await()
+        viewModel.addLocation("Home", "27.18", "62.83", "UTC").join()
         val expectedState = AddLocationViewState(exitTrigger = EventTrigger.create())
         assertEquals(expectedState, state)
     }
 
     @Test
     fun addLocation_invalid() = runBlockingTest {
-        viewModel.addLocation("Home", "Foo", "62.83", "UTC").await()
+        viewModel.addLocation("Home", "Foo", "62.83", "UTC").join()
         val expectedState = AddLocationViewState(exitTrigger = EventTrigger.empty())
         assertEquals(expectedState, state)
     }
 
     @Test
     fun geocodeLocation_valid() = runBlockingTest {
-        viewModel.geocodeLocation("Home").await()
+        viewModel.geocodeLocation("Home").join()
         val expectedState = AddLocationViewState(geocodeTrigger = EventTrigger.create(GeocodeData(27.18, 62.83, "UTC")))
         assertEquals(expectedState, state)
     }
 
     @Test
     fun geocodeLocation_invalid() = runBlockingTest {
-        viewModel.geocodeLocation("Away").await()
+        viewModel.geocodeLocation("Away").join()
         val expectedState = AddLocationViewState(geocodeTrigger = EventTrigger.empty())
         assertEquals(expectedState, state)
     }

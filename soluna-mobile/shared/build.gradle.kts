@@ -27,6 +27,7 @@ kotlin {
             transitiveExport = true
         }
     }
+    (targets["ios"] as KotlinNativeTarget).compilations["main"].extraOpts.add("-Xobjc-generics")
 
     sourceSets {
         all {

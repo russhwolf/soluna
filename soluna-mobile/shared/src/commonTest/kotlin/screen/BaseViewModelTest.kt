@@ -37,7 +37,7 @@ class BaseViewModelTest : AbstractViewModelTest<TestViewModel, String>() {
 
     @Test
     fun updateStateAsync() = runBlocking {
-        viewModel.updateStateAsync("Updated").await()
+        viewModel.updateStateAsync("Updated").join()
         assertEquals("Updated", state)
         assertFalse(isLoading)
         assertNull(error)
@@ -53,7 +53,7 @@ class BaseViewModelTest : AbstractViewModelTest<TestViewModel, String>() {
 
     @Test
     fun throwErrorAsync() = runBlockingTest {
-        viewModel.throwErrorAsync().await()
+        viewModel.throwErrorAsync().join()
         assertEquals("Initial", state)
         assertFalse(isLoading)
         assertNotNull(error)
