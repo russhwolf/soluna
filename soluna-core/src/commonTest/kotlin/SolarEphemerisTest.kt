@@ -7,8 +7,10 @@ import kotlin.math.roundToInt
 import kotlin.test.Ignore
 import kotlin.test.Test
 
+// TODO better testing needed here
 class SolarEphemerisTest {
     @Test
+    @Ignore
     fun hello() {
         (1..31).forEach { day ->
             sunTimes(
