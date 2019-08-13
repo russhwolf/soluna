@@ -3,13 +3,12 @@ package com.russhwolf.soluna.mobile.screen
 import com.russhwolf.soluna.mobile.util.EventTrigger
 import com.russhwolf.soluna.mobile.util.SupervisorScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
 abstract class BaseViewModel<T>(initialState: T, dispatcher: CoroutineDispatcher) {
-    protected val coroutineScope: CoroutineScope = SupervisorScope(dispatcher)
+    protected val coroutineScope = SupervisorScope(dispatcher)
 
     private var viewStateListener: ViewStateListener<T>? = null
     private var loadingListener: LoadingListener? = null
@@ -64,9 +63,14 @@ abstract class BaseViewModel<T>(initialState: T, dispatcher: CoroutineDispatcher
             errorListener?.invoke(it)
         }
     }
+
+    fun clearScope() {
+        coroutineScope.clear()
+    }
 }
 
 typealias ViewStateListener<T> = (T) -> Unit
 typealias LoadingListener = (Boolean) -> Unit
 typealias ErrorListener = (Throwable) -> Unit
+
 
