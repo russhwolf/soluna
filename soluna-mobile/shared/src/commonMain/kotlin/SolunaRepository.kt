@@ -17,34 +17,47 @@ interface SolunaRepository {
     suspend fun geocodeLocation(location: String): GeocodeData?
 
     class Impl(private val database: SolunaDb, private val googleApiClient: GoogleApiClient) : SolunaRepository {
-        override suspend fun getLocations(): List<LocationSummary> = runInBackground {
-            database.locationQueries
+
+        override suspend fun getLocations(): List<LocationSummary> = database.getLocations()
+
+        private suspend fun SolunaDb.getLocations(): List<LocationSummary> = runInBackground {
+            locationQueries
                 .selectAllLocations(::LocationSummary)
                 .executeAsList()
         }
 
-        override suspend fun getLocation(id: Long): LocationDetail? = runInBackground {
-            database.locationQueries
+        override suspend fun getLocation(id: Long): LocationDetail? = database.getLocation(id)
+
+        private suspend fun SolunaDb.getLocation(id: Long): LocationDetail? = runInBackground {
+            locationQueries
                 .selectLocationById(id, ::LocationDetail)
                 .executeAsOneOrNull()
         }
 
         override suspend fun addLocation(label: String, latitude: Double, longitude: Double, timeZone: String) =
+            database.addLocation(label, latitude, longitude, timeZone)
+
+        private suspend fun SolunaDb.addLocation(label: String, latitude: Double, longitude: Double, timeZone: String) =
             runInBackground {
-                database.locationQueries
+                locationQueries
                     .insertLocation(label, latitude, longitude, timeZone)
             }
 
-        override suspend fun deleteLocation(id: Long) = runInBackground {
-            database.locationQueries
+
+        override suspend fun deleteLocation(id: Long) = database.deleteLocation(id)
+
+        private suspend fun SolunaDb.deleteLocation(id: Long) = runInBackground {
+            locationQueries
                 .deleteLocationById(id)
         }
 
         override suspend fun geocodeLocation(location: String): GeocodeData? {
             val placeId =
                 googleApiClient.getPlaceAutocomplete(location).predictions.firstOrNull()?.place_id ?: return null
-            val coords = googleApiClient.getGeocode(placeId).results.getOrNull(0)?.geometry?.location ?: return null
-            val timeZone = googleApiClient.getTimeZone(coords.lat, coords.lng, epochSeconds).timeZoneId
+            val coords =
+                googleApiClient.getGeocode(placeId).results.firstOrNull()?.geometry?.location ?: return null
+            val timeZone =
+                googleApiClient.getTimeZone(coords.lat, coords.lng, epochSeconds).timeZoneId
             return GeocodeData(
                 latitude = coords.lat,
                 longitude = coords.lng,
