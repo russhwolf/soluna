@@ -14,6 +14,7 @@ plugins {
 }
 
 val coroutineVersion = "1.2.2"
+val coroutineWorkerVersion = "0.2.1"
 val ktorVersion = "1.2.3"
 val sqldelightVersion = "1.1.4"
 val serializationVersion = "0.11.1"
@@ -50,6 +51,8 @@ kotlin {
                 implementation("io.ktor:ktor-client-json:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
                 implementation("io.ktor:ktor-client-logging:$ktorVersion")
+
+                implementation("com.autodesk:coroutineworker:$coroutineWorkerVersion")
             }
         }
         commonTest {
