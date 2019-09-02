@@ -1,6 +1,5 @@
 package com.russhwolf.soluna.mobile.util
 
-import com.autodesk.coroutineworker.CoroutineWorker
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Delay
@@ -16,9 +15,6 @@ import platform.darwin.dispatch_get_main_queue
 import platform.darwin.dispatch_queue_t
 import platform.darwin.dispatch_time
 import kotlin.coroutines.CoroutineContext
-
-// NB Only using CoroutineWorker on native/iOS currently because it doesn't exist yet on Android (just JVM)
-actual suspend fun <T> runInBackground(block: () -> T) = CoroutineWorker.performAndWait { block() }
 
 actual val isMainThread: Boolean get() = NSThread.isMainThread
 

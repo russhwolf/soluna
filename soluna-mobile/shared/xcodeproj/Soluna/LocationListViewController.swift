@@ -11,7 +11,7 @@ import Shared
 
 class LocationListViewController: UITableViewController, UINavigationControllerDelegate {
     
-    let viewModel = LocationListViewModel(repository: SwiftKotlinBridgeKt.repository, dispatcher: BackgroundKt.mainDispatcher)
+    let viewModel = LocationListViewModel(repository: SwiftKotlinBridgeKt.repository, dispatcher: MainThreadKt.mainDispatcher)
     
     override func viewDidLoad() {
         super.viewDidLoad()

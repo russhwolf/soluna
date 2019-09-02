@@ -1,9 +1,6 @@
 package com.russhwolf.soluna.mobile.util
 
-import kotlinx.coroutines.CoroutineDispatcher
+import com.autodesk.coroutineworker.CoroutineWorker
 
-expect suspend fun <T> runInBackground(block: () -> T): T
-
-expect val isMainThread: Boolean
-
-expect val mainDispatcher: CoroutineDispatcher
+suspend fun <T> runInBackground(block: () -> T): T =
+    CoroutineWorker.performAndWait { block() }

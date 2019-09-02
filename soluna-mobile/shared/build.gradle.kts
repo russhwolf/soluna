@@ -7,7 +7,7 @@ import java.util.Properties
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
-    id("kotlinx-serialization") version "1.3.40"
+    id("kotlinx-serialization") version "1.3.41"
     id("com.squareup.sqldelight") version "1.1.4"
     id("org.jetbrains.kotlin.xcode-compat") version "0.2.3"
     id("com.codingfeline.buildkonfig") version "0.3.3"
@@ -103,6 +103,8 @@ kotlin {
                 implementation("io.ktor:ktor-client-json-jvm:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization-jvm:$ktorVersion")
                 implementation("io.ktor:ktor-client-logging-jvm:$ktorVersion")
+
+                implementation("com.autodesk:coroutineworker:$coroutineWorkerVersion")
             }
         }
         val iosMain by getting {

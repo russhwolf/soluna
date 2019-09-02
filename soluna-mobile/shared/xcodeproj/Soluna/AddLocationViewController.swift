@@ -11,7 +11,7 @@ import Shared
 
 class AddLocationViewController: UIViewController {
     
-    let viewModel = AddLocationViewModel(repository: SwiftKotlinBridgeKt.repository, dispatcher: BackgroundKt.mainDispatcher)
+    let viewModel = AddLocationViewModel(repository: SwiftKotlinBridgeKt.repository, dispatcher: MainThreadKt.mainDispatcher)
     
     @IBOutlet var labelInput: UITextField!
     @IBOutlet var latitudeInput: UITextField!
