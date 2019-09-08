@@ -14,6 +14,8 @@ interface SolunaRepository {
 
     suspend fun deleteLocation(id: Long)
 
+    suspend fun updateLocationLabel(id: Long, label: String)
+
     suspend fun geocodeLocation(location: String): GeocodeData?
 
     class Impl(private val database: SolunaDb, private val googleApiClient: GoogleApiClient) : SolunaRepository {
@@ -49,6 +51,13 @@ interface SolunaRepository {
         private suspend fun SolunaDb.deleteLocation(id: Long) = runInBackground {
             locationQueries
                 .deleteLocationById(id)
+        }
+
+        override suspend fun updateLocationLabel(id: Long, label: String) = database.updateLocationLabel(id, label)
+
+        private suspend fun SolunaDb.updateLocationLabel(id: Long, label: String) = runInBackground {
+            locationQueries
+                .updateLocationLabelById(label, id)
         }
 
         override suspend fun geocodeLocation(location: String): GeocodeData? {

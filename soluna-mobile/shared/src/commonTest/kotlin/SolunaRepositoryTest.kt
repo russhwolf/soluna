@@ -2,6 +2,7 @@ package com.russhwolf.soluna.mobile
 
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.db.Location
+import com.russhwolf.soluna.mobile.db.SelectAllLocations
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.squareup.sqldelight.db.SqlDriver
@@ -119,17 +120,40 @@ class SolunaRepositoryTest {
 
     @Test
     fun deleteLocation_valid() = runBlocking {
-        repository.addLocation(
+        database.locationQueries.insertLocation(
             label = "Test Location",
             latitude = 42.3956001,
             longitude = -71.1387674,
             timeZone = "America/New_York"
         )
 
-        database.locationQueries.deleteLocationById(1)
+        repository.deleteLocation(1)
 
         val locations = database.locationQueries.selectAllLocations().executeAsList()
         assertTrue(locations.isEmpty())
+    }
+
+    @Test
+    fun updateLocationLabel_valid() = runBlocking {
+        database.locationQueries.insertLocation(
+            label = "Test Location",
+            latitude = 42.3956001,
+            longitude = -71.1387674,
+            timeZone = "America/New_York"
+        )
+
+        repository.updateLocationLabel(1, "Updated Location")
+
+        val locations = database.locationQueries.selectAllLocations().executeAsList()
+        assertEquals(
+            expected = listOf(
+                SelectAllLocations.Impl(
+                    id = 1,
+                    label = "Updated Location"
+                )
+            ),
+            actual = locations
+        )
     }
 
     @Test

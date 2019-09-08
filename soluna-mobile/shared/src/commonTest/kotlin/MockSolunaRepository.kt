@@ -20,5 +20,12 @@ class MockSolunaRepository(
         locations.removeAll { it.id == id }
     }
 
+    override suspend fun updateLocationLabel(id: Long, label: String) {
+        val index = locations.indexOfFirst { it.id == id }
+        if (index < 0) return
+
+        locations[index] = locations[index].copy(label = label)
+    }
+
     override suspend fun geocodeLocation(location: String): GeocodeData? = geocodeMap[location]
 }
