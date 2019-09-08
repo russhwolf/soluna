@@ -130,23 +130,13 @@
         <scene sceneID="VsS-hi-5GN">
             <objects>
                 <tableViewController id="xqP-Yz-Qjs" customClass="LocationListViewController" customModule="Soluna" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="rcn-EJ-c9R">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="aFb-Vz-BwH">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="Ksh-V8-AK6">
-                                <rect key="frame" x="0.0" y="28" width="414" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ksh-V8-AK6" id="fN8-DF-qFW">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
                         <connections>
-                            <outlet property="dataSource" destination="xqP-Yz-Qjs" id="qfb-Jy-dpW"/>
-                            <outlet property="delegate" destination="xqP-Yz-Qjs" id="TXQ-JO-WVM"/>
+                            <outlet property="dataSource" destination="xqP-Yz-Qjs" id="gSr-Pz-N7a"/>
+                            <outlet property="delegate" destination="xqP-Yz-Qjs" id="1Ov-dm-Fch"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="Zs8-KR-Pgr">
@@ -157,6 +147,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="locationList" destination="aFb-Vz-BwH" id="q9F-js-pLX"/>
                         <segue destination="cUa-Jp-yFF" kind="show" id="CAv-ZH-VFW"/>
                     </connections>
                 </tableViewController>

@@ -16,6 +16,7 @@
 		467F62E222F3D24200671C72 /* SolunaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F62E122F3D24200671C72 /* SolunaTests.swift */; };
 		467F62ED22F3D24200671C72 /* SolunaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F62EC22F3D24200671C72 /* SolunaUITests.swift */; };
 		467F62F922F3D2B800671C72 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 798ED4B15B0A538239CEC606 /* Shared.framework */; };
+		46DEC43B2325628300BEF504 /* LocationListItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46DEC43A2325628300BEF504 /* LocationListItem.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		467F62E822F3D24200671C72 /* SolunaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SolunaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		467F62EC22F3D24200671C72 /* SolunaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolunaUITests.swift; sourceTree = "<group>"; };
 		467F62EE22F3D24200671C72 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		46DEC43A2325628300BEF504 /* LocationListItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationListItem.xib; sourceTree = "<group>"; };
 		798ED4B15B0A538239CEC606 /* Shared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -100,6 +102,7 @@
 				467F62D322F3D24200671C72 /* Assets.xcassets */,
 				467F62D522F3D24200671C72 /* LaunchScreen.storyboard */,
 				467F62D822F3D24200671C72 /* Info.plist */,
+				46DEC43A2325628300BEF504 /* LocationListItem.xib */,
 			);
 			path = Soluna;
 			sourceTree = "<group>";
@@ -267,6 +270,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				467F62D722F3D24200671C72 /* LaunchScreen.storyboard in Resources */,
+				46DEC43B2325628300BEF504 /* LocationListItem.xib in Resources */,
 				467F62D422F3D24200671C72 /* Assets.xcassets in Resources */,
 				467F62D222F3D24100671C72 /* Main.storyboard in Resources */,
 			);
@@ -405,6 +409,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Soluna/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -423,6 +428,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
+				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = Soluna/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
