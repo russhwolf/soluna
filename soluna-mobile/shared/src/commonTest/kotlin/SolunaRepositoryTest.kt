@@ -2,7 +2,7 @@ package com.russhwolf.soluna.mobile
 
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.db.Location
-import com.russhwolf.soluna.mobile.db.SelectAllLocations
+import com.russhwolf.soluna.mobile.db.LocationSummary
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.squareup.sqldelight.db.SqlDriver
@@ -147,7 +147,7 @@ class SolunaRepositoryTest {
         val locations = database.locationQueries.selectAllLocations().executeAsList()
         assertEquals(
             expected = listOf(
-                SelectAllLocations.Impl(
+                LocationSummary.Impl(
                     id = 1,
                     label = "Updated Location"
                 )

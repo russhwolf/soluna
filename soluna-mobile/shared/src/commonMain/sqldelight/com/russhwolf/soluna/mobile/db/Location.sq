@@ -6,11 +6,14 @@ CREATE TABLE location (
     timeZone TEXT NOT NULL
 );
 
-selectAllLocations:
+CREATE VIEW locationSummary AS
 SELECT id, label FROM location;
 
+selectAllLocations:
+SELECT * FROM locationSummary;
+
 selectLocationById:
-SELECT id, label, latitude, longitude, timeZone FROM location
+SELECT * FROM location
 WHERE id = ?;
 
 insertLocation:

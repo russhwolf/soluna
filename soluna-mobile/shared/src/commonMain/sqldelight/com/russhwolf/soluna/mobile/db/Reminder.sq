@@ -3,20 +3,22 @@ import com.russhwolf.soluna.mobile.db.ReminderType;
 CREATE TABLE reminder (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     locationId INTEGER NOT NULL,
-    type TEXT as ReminderType NOT NULL,
-    minutesBefore INTEGER as Int NOT NULL,
-    enabled INTEGER as Boolean NOT NULL,
+    type TEXT AS ReminderType NOT NULL,
+    minutesBefore INTEGER AS Int NOT NULL,
+    enabled INTEGER AS Boolean NOT NULL,
     FOREIGN KEY(locationId) REFERENCES location(id)
 );
 
-selectAllReminders:
-SELECT reminder.id, location.label, reminder.type, reminder.minutesBefore, reminder.enabled
+CREATE VIEW reminderWithLocation AS
+SELECT reminder.id, location.id AS locationId, location.label AS locationLabel, reminder.type, reminder.minutesBefore, reminder.enabled
 FROM reminder INNER JOIN location ON reminder.locationId = location.id;
 
-selectRemindersByLocationLabel:
-SELECT reminder.id, type, minutesBefore, enabled
-FROM reminder INNER JOIN location ON reminder.locationId = location.id
-WHERE location.label = ?;
+selectAllReminders:
+SELECT * FROM reminderWithLocation;
+
+selectRemindersByLocationId:
+SELECT * FROM reminderWithLocation
+WHERE locationId = ?;
 
 insertReminder:
 INSERT INTO reminder(locationId, type, minutesBefore, enabled)
