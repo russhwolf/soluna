@@ -1,7 +1,7 @@
 package com.russhwolf.soluna.mobile.screen.locationlist
 
-import com.russhwolf.soluna.mobile.LocationSummary
 import com.russhwolf.soluna.mobile.SolunaRepository
+import com.russhwolf.soluna.mobile.db.LocationSummary
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import com.russhwolf.soluna.mobile.util.EventTrigger
 import com.russhwolf.soluna.mobile.util.mainDispatcher

@@ -1,8 +1,8 @@
 package com.russhwolf.soluna.mobile.screen.locationlist
 
-import com.russhwolf.soluna.mobile.LocationDetail
-import com.russhwolf.soluna.mobile.LocationSummary
 import com.russhwolf.soluna.mobile.MockSolunaRepository
+import com.russhwolf.soluna.mobile.db.Location
+import com.russhwolf.soluna.mobile.db.LocationSummary
 import com.russhwolf.soluna.mobile.runBlockingTest
 import com.russhwolf.soluna.mobile.screen.AbstractViewModelTest
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +28,7 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
     fun initialState_populated() = runBlockingTest {
         repository = MockSolunaRepository(
             listOf(
-                LocationDetail(0, "Home", 27.18, 62.83, "UTC")
+                Location.Impl(0, "Home", 27.18, 62.83, "UTC")
             )
         )
         viewModel.initialLoad.join()
@@ -39,7 +39,7 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
     fun removeLocation() = runBlockingTest {
         repository = MockSolunaRepository(
             listOf(
-                LocationDetail(0, "Home", 27.18, 62.83, "UTC")
+                Location.Impl(0, "Home", 27.18, 62.83, "UTC")
             )
         )
         viewModel.removeLocation(0).join()
@@ -54,7 +54,7 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
 
     @Test
     fun locationDetailsTrigger() {
-        viewModel.navigateToLocationDetails(LocationSummary(0, "Home"))
+        viewModel.navigateToLocationDetails(LocationSummary.Impl(0, "Home"))
         assertEquals(0L, state.locationDetailsTrigger.consume())
     }
 }

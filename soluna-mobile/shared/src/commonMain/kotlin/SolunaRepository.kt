@@ -1,6 +1,8 @@
 package com.russhwolf.soluna.mobile
 
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
+import com.russhwolf.soluna.mobile.db.Location
+import com.russhwolf.soluna.mobile.db.LocationSummary
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.util.epochSeconds
 import com.russhwolf.soluna.mobile.util.runInBackground
@@ -8,7 +10,7 @@ import com.russhwolf.soluna.mobile.util.runInBackground
 interface SolunaRepository {
     suspend fun getLocations(): List<LocationSummary>
 
-    suspend fun getLocation(id: Long): LocationDetail?
+    suspend fun getLocation(id: Long): Location?
 
     suspend fun addLocation(label: String, latitude: Double, longitude: Double, timeZone: String)
 
@@ -24,15 +26,15 @@ interface SolunaRepository {
 
         private suspend fun SolunaDb.getLocations(): List<LocationSummary> = runInBackground {
             locationQueries
-                .selectAllLocations(::LocationSummary)
+                .selectAllLocations()
                 .executeAsList()
         }
 
-        override suspend fun getLocation(id: Long): LocationDetail? = database.getLocation(id)
+        override suspend fun getLocation(id: Long): Location? = database.getLocation(id)
 
-        private suspend fun SolunaDb.getLocation(id: Long): LocationDetail? = runInBackground {
+        private suspend fun SolunaDb.getLocation(id: Long): Location? = runInBackground {
             locationQueries
-                .selectLocationById(id, ::LocationDetail)
+                .selectLocationById(id)
                 .executeAsOneOrNull()
         }
 
@@ -77,20 +79,6 @@ interface SolunaRepository {
 }
 
 data class GeocodeData(
-    val latitude: Double,
-    val longitude: Double,
-    val timeZone: String
-)
-
-// Repackage SqlDelight models as repository-level abstractions
-data class LocationSummary(
-    val id: Long,
-    val label: String
-)
-
-data class LocationDetail(
-    val id: Long,
-    val label: String,
     val latitude: Double,
     val longitude: Double,
     val timeZone: String

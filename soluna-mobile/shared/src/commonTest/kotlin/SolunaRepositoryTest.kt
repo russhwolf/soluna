@@ -59,7 +59,7 @@ class SolunaRepositoryTest {
 
         assertEquals(1, locations.size)
         assertEquals(
-            expected = LocationSummary(
+            expected = LocationSummary.Impl(
                 id = 1,
                 label = "Test Location"
             ),
@@ -78,7 +78,7 @@ class SolunaRepositoryTest {
 
         val location = repository.getLocation(1)
         assertEquals(
-            expected = LocationDetail(
+            expected = Location.Impl(
                 id = 1,
                 label = "Test Location",
                 latitude = 42.3956001,
