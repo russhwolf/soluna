@@ -3,6 +3,8 @@ package com.russhwolf.soluna.mobile
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.LocationSummary
+import com.russhwolf.soluna.mobile.db.ReminderType
+import com.russhwolf.soluna.mobile.db.ReminderWithLocation
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.squareup.sqldelight.db.SqlDriver
@@ -47,12 +49,7 @@ class SolunaRepositoryTest {
 
     @Test
     fun getLocations_populated() = runBlocking {
-        database.locationQueries.insertLocation(
-            label = "Test Location",
-            latitude = 42.3956001,
-            longitude = -71.1387674,
-            timeZone = "America/New_York"
-        )
+        database.insertDummyLocation()
 
         val locations = repository.getLocations()
 
@@ -60,7 +57,7 @@ class SolunaRepositoryTest {
         assertEquals(
             expected = LocationSummary.Impl(
                 id = 1,
-                label = "Test Location"
+                label = "Test Location 1"
             ),
             actual = locations[0]
         )
@@ -68,22 +65,11 @@ class SolunaRepositoryTest {
 
     @Test
     fun getLocation_valid() = runBlocking {
-        database.locationQueries.insertLocation(
-            label = "Test Location",
-            latitude = 42.3956001,
-            longitude = -71.1387674,
-            timeZone = "America/New_York"
-        )
+        database.insertDummyLocation()
 
         val location = repository.getLocation(1)
         assertEquals(
-            expected = Location.Impl(
-                id = 1,
-                label = "Test Location",
-                latitude = 42.3956001,
-                longitude = -71.1387674,
-                timeZone = "America/New_York"
-            ),
+            expected = dummyLocation,
             actual = location
         )
     }
@@ -95,9 +81,9 @@ class SolunaRepositoryTest {
     }
 
     @Test
-    fun insertLocation_valid() = runBlocking {
+    fun addLocation_valid() = runBlocking {
         repository.addLocation(
-            label = "Test Location",
+            label = "Test Location 1",
             latitude = 42.3956001,
             longitude = -71.1387674,
             timeZone = "America/New_York"
@@ -106,25 +92,14 @@ class SolunaRepositoryTest {
         val dbLocation = database.locationQueries.selectLocationById(1).executeAsOne()
 
         assertEquals(
-            expected = Location.Impl(
-                id = 1,
-                label = "Test Location",
-                latitude = 42.3956001,
-                longitude = -71.1387674,
-                timeZone = "America/New_York"
-            ),
+            expected = dummyLocation,
             actual = dbLocation
         )
     }
 
     @Test
     fun deleteLocation_valid() = runBlocking {
-        database.locationQueries.insertLocation(
-            label = "Test Location",
-            latitude = 42.3956001,
-            longitude = -71.1387674,
-            timeZone = "America/New_York"
-        )
+        database.insertDummyLocation()
 
         repository.deleteLocation(1)
 
@@ -134,12 +109,7 @@ class SolunaRepositoryTest {
 
     @Test
     fun updateLocationLabel_valid() = runBlocking {
-        database.locationQueries.insertLocation(
-            label = "Test Location",
-            latitude = 42.3956001,
-            longitude = -71.1387674,
-            timeZone = "America/New_York"
-        )
+        database.insertDummyLocation()
 
         repository.updateLocationLabel(1, "Updated Location")
 
@@ -152,6 +122,122 @@ class SolunaRepositoryTest {
                 )
             ),
             actual = locations
+        )
+    }
+
+    @Test
+    fun getReminders_empty() = runBlocking {
+        val reminders = repository.getReminders()
+        assertTrue(reminders.isEmpty())
+    }
+
+    @Test
+    fun getReminders_populated() = runBlocking {
+        database.insertDummyLocation()
+        database.insertDummyReminder()
+
+        val reminders = repository.getReminders()
+
+        assertEquals(1, reminders.size)
+        assertEquals(
+            expected = dummyReminder,
+            actual = reminders[0]
+        )
+    }
+
+    @Test
+    fun getRemindersForLocation_empty() = runBlocking {
+        database.insertDummyLocation()
+        val reminders = repository.getReminders(1)
+        assertTrue(reminders.isEmpty())
+    }
+
+    @Test
+    fun getRemindersForLocation_populated() = runBlocking {
+        database.insertDummyLocation()
+        database.insertDummyReminder()
+
+        val reminders = repository.getReminders(1)
+
+        assertEquals(1, reminders.size)
+        assertEquals(
+            expected = dummyReminder,
+            actual = reminders[0]
+        )
+    }
+
+    @Test
+    fun getRemindersForLocation_invalid() = runBlocking {
+        database.insertDummyLocation()
+        database.insertDummyReminder()
+
+        val reminders = repository.getReminders(2)
+
+        assertTrue(reminders.isEmpty())
+    }
+
+    @Test
+    fun getRemindersForOtherLocation_empty() = runBlocking {
+        database.insertDummyLocation(1)
+        database.insertDummyLocation(2)
+        database.insertDummyReminder(1)
+
+        val reminders = repository.getReminders(2)
+
+        assertTrue(reminders.isEmpty())
+    }
+
+    @Test
+    fun addReminder_valid() = runBlocking {
+        database.insertDummyLocation()
+
+        repository.addReminder(
+            locationId = 1,
+            type = ReminderType.Sunset,
+            minutesBefore = 15,
+            enabled = true
+        )
+
+        val reminder = database.reminderQueries.selectAllReminders().executeAsOne()
+        assertEquals(
+            expected = dummyReminder,
+            actual = reminder
+        )
+    }
+
+    @Test
+    fun deleteReminder_valid() = runBlocking {
+        database.insertDummyLocation()
+        database.insertDummyReminder()
+
+        repository.deleteReminder(1)
+
+        val reminders = database.reminderQueries.selectAllReminders().executeAsList()
+        assertTrue(reminders.isEmpty())
+    }
+
+    @Test
+    fun updateReminder_valid() = runBlocking {
+        database.insertDummyLocation()
+        database.insertDummyReminder()
+
+        repository.updateReminder(
+            id = 1,
+            minutesBefore = 30,
+            enabled = false
+        )
+
+        val reminder = database.reminderQueries.selectAllReminders().executeAsOne()
+        assertEquals(
+            expected = ReminderWithLocation.Impl(
+                id = 1,
+                locationId = 1,
+                locationLabel = "Test Location 1",
+                type = ReminderType.Sunset,
+                minutesBefore = 30,
+                enabled = false
+            ),
+            actual = reminder
         )
     }
 
@@ -173,6 +259,41 @@ class SolunaRepositoryTest {
     fun tearDown() {
         driver.close()
     }
+}
+
+private val dummyLocation = Location.Impl(
+    id = 1,
+    label = "Test Location 1",
+    latitude = 42.3956001,
+    longitude = -71.1387674,
+    timeZone = "America/New_York"
+)
+
+private val dummyReminder = ReminderWithLocation.Impl(
+    id = 1,
+    locationId = 1,
+    locationLabel = "Test Location 1",
+    type = ReminderType.Sunset,
+    minutesBefore = 15,
+    enabled = true
+)
+
+private fun SolunaDb.insertDummyLocation(id: Long = 1) {
+    locationQueries.insertLocation(
+        label = "Test Location $id",
+        latitude = 42.3956001,
+        longitude = -71.1387674,
+        timeZone = "America/New_York"
+    )
+}
+
+private fun SolunaDb.insertDummyReminder(locationId: Long = 1) {
+    reminderQueries.insertReminder(
+        locationId = locationId,
+        type = ReminderType.Sunset,
+        minutesBefore = 15,
+        enabled = true
+    )
 }
 
 private fun createMockEngine(latitude: Double, longitude: Double, timeZone: String) = MockEngine { httpRequestData ->

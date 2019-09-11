@@ -28,12 +28,12 @@ deleteReminderById:
 DELETE FROM reminder
 WHERE id = ?;
 
-updateReminderEnabledById:
-UPDATE reminder
-SET enabled = ?
-WHERE id = ?;
-
 updateReminderMinutesBeforeById:
 UPDATE reminder
 SET minutesBefore = ?
+WHERE id = ?;
+
+updateReminderEnabledById:
+UPDATE reminder
+SET enabled = ?
 WHERE id = ?;
