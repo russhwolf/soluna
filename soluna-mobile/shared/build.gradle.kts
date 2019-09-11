@@ -91,20 +91,7 @@ kotlin {
 
                 implementation("io.ktor:ktor-client-mock-jvm:$ktorVersion")
 
-                implementation("com.squareup.sqldelight:android-driver:$sqldelightVersion")
-
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion")
-
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
-
-                implementation("io.ktor:ktor-client-android:$ktorVersion")
-                implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
-                implementation("io.ktor:ktor-client-json-jvm:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization-jvm:$ktorVersion")
-                implementation("io.ktor:ktor-client-logging-jvm:$ktorVersion")
-
-                implementation("com.autodesk:coroutineworker:$coroutineWorkerVersion")
+                implementation("com.squareup.sqldelight:sqlite-driver:$sqldelightVersion")
             }
         }
         val iosMain by getting {

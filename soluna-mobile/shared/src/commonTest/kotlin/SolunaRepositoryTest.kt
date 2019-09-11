@@ -19,7 +19,6 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
-@RunWith(AndroidJUnit4::class)
 class SolunaRepositoryTest {
     private val googleApiClient = GoogleApiClient.Impl(
         createMockEngine(
