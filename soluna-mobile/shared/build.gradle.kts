@@ -7,17 +7,17 @@ import java.util.Properties
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
-    id("kotlinx-serialization") version "1.3.41"
-    id("com.squareup.sqldelight") version "1.1.4"
+    id("kotlinx-serialization") version "1.3.50"
+    id("com.squareup.sqldelight") version "1.2.0"
     id("org.jetbrains.kotlin.xcode-compat") version "0.2.3"
     id("com.codingfeline.buildkonfig") version "0.3.3"
 }
 
-val coroutineVersion = "1.2.2"
-val coroutineWorkerVersion = "0.2.1"
-val ktorVersion = "1.2.3"
-val sqldelightVersion = "1.1.4"
-val serializationVersion = "0.11.1"
+val coroutineVersion = "1.3.0"
+val coroutineWorkerVersion = "0.3.0"
+val ktorVersion = "1.2.4"
+val sqldelightVersion = "1.2.0"
+val serializationVersion = "0.12.0"
 
 kotlin {
     android()
