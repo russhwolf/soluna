@@ -9,10 +9,14 @@
 import UIKit
 import Shared
 
-class AddLocationViewController: UIViewController {
-    
-    let viewModel = AddLocationViewModel(repository: SwiftKotlinBridgeKt.repository, dispatcher: MainThreadKt.mainDispatcher)
-    
+class AddLocationViewController: BaseViewController<AddLocationViewModel, AddLocationViewState> {
+    let viewModelInit = AddLocationViewModel(repository: SwiftKotlinBridgeKt.repository, dispatcher: MainThreadKt.mainDispatcher)
+
+    override var viewModel: AddLocationViewModel! {
+        get { return viewModelInit }
+        set { super.viewModel = newValue }
+    }
+
     @IBOutlet var labelInput: UITextField!
     @IBOutlet var latitudeInput: UITextField!
     @IBOutlet var longitudeInput: UITextField!
@@ -30,9 +34,6 @@ class AddLocationViewController: UIViewController {
             if (state.exitTrigger.consume() != nil) {
                 self.navigationController?.popViewController(animated: true)
             }
-        }
-        viewModel.setErrorListener { (throwable) in
-            throwable.printStackTrace()
         }
     }
     

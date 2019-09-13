@@ -17,6 +17,7 @@
 		467F62ED22F3D24200671C72 /* SolunaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F62EC22F3D24200671C72 /* SolunaUITests.swift */; };
 		467F62F922F3D2B800671C72 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 798ED4B15B0A538239CEC606 /* Shared.framework */; };
 		46DEC43B2325628300BEF504 /* LocationListItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46DEC43A2325628300BEF504 /* LocationListItem.xib */; };
+		5CB7CF69F971163BF1B8D97E /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CB7C5484A0922369DE537C7 /* BaseViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		467F62EC22F3D24200671C72 /* SolunaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolunaUITests.swift; sourceTree = "<group>"; };
 		467F62EE22F3D24200671C72 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		46DEC43A2325628300BEF504 /* LocationListItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocationListItem.xib; sourceTree = "<group>"; };
+		5CB7C5484A0922369DE537C7 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		798ED4B15B0A538239CEC606 /* Shared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -103,6 +105,7 @@
 				467F62D522F3D24200671C72 /* LaunchScreen.storyboard */,
 				467F62D822F3D24200671C72 /* Info.plist */,
 				46DEC43A2325628300BEF504 /* LocationListItem.xib */,
+				5CB7C5484A0922369DE537C7 /* BaseViewController.swift */,
 			);
 			path = Soluna;
 			sourceTree = "<group>";
@@ -317,6 +320,7 @@
 				467F62CF22F3D24100671C72 /* LocationListViewController.swift in Sources */,
 				4675EA3122F534A800861EF1 /* AddLocationViewController.swift in Sources */,
 				467F62CD22F3D24100671C72 /* AppDelegate.swift in Sources */,
+				5CB7CF69F971163BF1B8D97E /* BaseViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
