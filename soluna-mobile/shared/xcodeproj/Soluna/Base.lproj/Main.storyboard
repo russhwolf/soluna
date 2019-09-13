@@ -148,7 +148,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="locationList" destination="aFb-Vz-BwH" id="q9F-js-pLX"/>
-                        <segue destination="cUa-Jp-yFF" kind="show" id="CAv-ZH-VFW"/>
+                        <segue destination="cUa-Jp-yFF" kind="show" identifier="AddLocation" id="CAv-ZH-VFW"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e9G-v6-nVy" userLabel="First Responder" sceneMemberID="firstResponder"/>

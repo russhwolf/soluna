@@ -23,9 +23,7 @@ abstract class BaseViewModel<T>(initialState: T, dispatcher: CoroutineDispatcher
     }
 
     protected var error: EventTrigger<Throwable> by Delegates.observable(EventTrigger.empty()) { _, _, newValue ->
-        newValue.consume()?.let {
-            errorListener?.invoke(it)
-        }
+        newValue.consume { errorListener?.invoke(it) }
     }
 
     protected fun updateAsync(action: suspend (T) -> T): Job =
@@ -59,9 +57,7 @@ abstract class BaseViewModel<T>(initialState: T, dispatcher: CoroutineDispatcher
 
     fun setErrorListener(listener: ErrorListener) {
         errorListener = listener
-        error.consume()?.let {
-            errorListener?.invoke(it)
-        }
+        error.consume { listener(it) }
     }
 
     fun clearScope() {

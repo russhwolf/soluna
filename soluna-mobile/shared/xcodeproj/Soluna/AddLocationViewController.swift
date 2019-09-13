@@ -25,13 +25,12 @@ class AddLocationViewController: BaseViewController<AddLocationViewModel, AddLoc
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.setViewStateListener { (state: AddLocationViewState) in
-            let geocodeResult = state.geocodeTrigger.consume()
-            if (geocodeResult != nil) {
-                self.latitudeInput.text = String(geocodeResult!.latitude)
-                self.longitudeInput.text = String(geocodeResult!.longitude)
-                self.timeZoneInput.text = geocodeResult!.timeZone
+            state.geocodeTrigger.consume { geocodeResult in
+                self.latitudeInput.text = String(geocodeResult.latitude)
+                self.longitudeInput.text = String(geocodeResult.longitude)
+                self.timeZoneInput.text = geocodeResult.timeZone
             }
-            if (state.exitTrigger.consume() != nil) {
+            state.exitTrigger.consume { unit in
                 self.navigationController?.popViewController(animated: true)
             }
         }
