@@ -36,10 +36,6 @@ class AddLocationViewController: BaseViewController<AddLocationViewModel, AddLoc
         }
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        viewModel.clearScope()
-    }
-    
     @IBAction func onSubmitClick(_ sender: Any) {
         viewModel.addLocation(
             label: labelInput.text ?? "",

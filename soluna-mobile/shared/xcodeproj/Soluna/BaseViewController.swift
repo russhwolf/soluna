@@ -30,6 +30,10 @@ open class BaseViewController<VM : BaseViewModel<T>, T: AnyObject> : UIViewContr
         }
     }
 
+    open override func viewDidDisappear(_ animated: Bool) {
+        viewModel?.clearScope()
+    }
+
     private func configureActivityIndicator() {
         view.addSubview(activityIndicator)
         activityIndicator.hidesWhenStopped = true
