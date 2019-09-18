@@ -21,7 +21,7 @@ class AddLocationViewController: BaseViewController<AddLocationViewModel, AddLoc
     @IBOutlet var latitudeInput: UITextField!
     @IBOutlet var longitudeInput: UITextField!
     @IBOutlet var timeZoneInput: UITextField!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.setViewStateListener { (state: AddLocationViewState) in
@@ -30,12 +30,12 @@ class AddLocationViewController: BaseViewController<AddLocationViewModel, AddLoc
                 self.longitudeInput.text = String(geocodeResult.longitude)
                 self.timeZoneInput.text = geocodeResult.timeZone
             }
-            state.exitTrigger.consume { unit in
+            state.exitTrigger.consume { _ in
                 self.navigationController?.popViewController(animated: true)
             }
         }
     }
-    
+
     @IBAction func onSubmitClick(_ sender: Any) {
         viewModel.addLocation(
             label: labelInput.text ?? "",
@@ -44,9 +44,22 @@ class AddLocationViewController: BaseViewController<AddLocationViewModel, AddLoc
             timeZone: timeZoneInput.text ?? ""
         )
     }
-    
+
     @IBAction func onGeocodeClick(_ sender: Any) {
-        viewModel.geocodeLocation(location: labelInput.text ?? "")
+        let alert = UIAlertController(title: "Get location from address", message: nil, preferredStyle: .alert)
+
+        var input: UITextField? = nil
+        alert.addTextField { field in
+            field.text = self.labelInput.text
+            field.placeholder = "Address"
+            input = field
+        }
+        alert.addAction(UIAlertAction(title: "Submit", style: .default) { _ in
+            let location = input?.text ?? ""
+            self.viewModel.geocodeLocation(location: location)
+        })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+        present(alert, animated: true)
     }
-    
 }
