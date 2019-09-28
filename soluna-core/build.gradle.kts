@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+
 plugins {
     id("org.jetbrains.kotlin.multiplatform")
     id("maven-publish")
@@ -44,3 +46,15 @@ kotlin {
         }
     }
 }
+
+tasks.create("iosTest") {
+    dependsOn("linkDebugTestIosX64")
+    doLast {
+        val testBinaryPath =
+            (kotlin.targets["iosX64"] as KotlinNativeTarget).binaries.getTest("DEBUG").outputFile.absolutePath
+        exec {
+            commandLine("xcrun", "simctl", "spawn", "iPhone Xʀ", testBinaryPath)
+        }
+    }
+}
+tasks["check"].dependsOn("iosTest")
