@@ -2,12 +2,19 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
+    application
 }
-
-version = "unspecified"
 
 repositories {
     mavenCentral()
+}
+
+application {
+    mainClassName = "com.russhwolf.soluna.calendar.MainKt"
+}
+
+tasks.withType(JavaExec::class) {
+    args = (findProperty("args") as? String ?: "").split(" ")
 }
 
 dependencies {

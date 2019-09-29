@@ -26,19 +26,20 @@ import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
-fun main() {
-    val month = Month.JULY
-    val year = 2019
-    val latitude = 42.3875968
-    val longitude = -71.0994968
-    val timeZone = ZoneId.of("America/New_York")
+fun main(vararg args: String) {
+    val locationName = args[0]
+    val month = Month.of(args[1].toInt())
+    val year = args[2].toInt()
+    val latitude = args[3].toDouble()
+    val longitude = args[4].toDouble()
+    val timeZone = ZoneId.of(args[5])
 
     val image = BufferedImage(PAGE_WIDTH.roundToInt(), PAGE_HEIGHT.roundToInt(), BufferedImage.TYPE_INT_RGB)
     image.createGraphics().run {
         renderCalendar(month, year, latitude, longitude, timeZone)
         dispose()
     }
-    val file = File("CalendarTest.png")
+    val file = File("$locationName-$year-${month.value}.png")
     ImageIO.write(image, "png", file)
 }
 
@@ -179,9 +180,18 @@ private class CalendarRenderer(
     private fun cellX(dayOfWeek: Int) = MARGIN_HORIZONTAL + CELL_WIDTH * (dayOfWeek - 1) + MARGIN_INTERNAL
     private fun cellY(weekOfMonth: Int) = MARGIN_HEADER + CELL_HEIGHT * (weekOfMonth - 1) + MARGIN_INTERNAL
     private fun Double.toDateTime(localDate: LocalDate, timeZone: ZoneId): ZonedDateTime {
-        val hours = floor(this).toInt()
-        val minutes = ((this - hours) * 60).roundToInt()
-        val utcDateTime = ZonedDateTime.of(localDate, LocalTime.of(hours, minutes), ZoneId.of("UTC"))
+        var date = localDate
+        var hours = floor(this).toInt()
+        var minutes = ((this - hours) * 60).roundToInt()
+        if (minutes >= 60) {
+            minutes -= 60
+            hours += 1
+        }
+        if (hours >= 24) {
+            hours -= 24
+            date = date.plusDays(1)
+        }
+        val utcDateTime = ZonedDateTime.of(date, LocalTime.of(hours, minutes), ZoneId.of("UTC"))
         return utcDateTime.withZoneSameInstant(timeZone)
     }
 
