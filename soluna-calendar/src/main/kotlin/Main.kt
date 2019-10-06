@@ -102,7 +102,9 @@ private class CalendarRenderer(
         val previousTransform = transform
         for (i in 1..numberOfDays) {
             val date = LocalDate.of(year, month, i)
-            val (sunRiseTime, sunSetTime) = sunTimes(year, month.value, i, 0.0, latitude, longitude)
+            val zoneOffsetSeconds = date.atTime(12, 0).atZone(timeZone).offset.totalSeconds
+            val zoneOffsetHours = zoneOffsetSeconds / 3600.0
+            val (sunRiseTime, sunSetTime) = sunTimes(year, month.value, i, zoneOffsetHours, latitude, longitude)
             val sunRiseDate = sunRiseTime?.toDateTime(date, timeZone)
             val sunSetDate = sunSetTime?.toDateTime(date, timeZone)
 //            val (moonRiseTime, moonSetTime) = moonTimes(year, month.value, i, 0.0, latitude, longitude)
@@ -191,8 +193,7 @@ private class CalendarRenderer(
             hours -= 24
             date = date.plusDays(1)
         }
-        val utcDateTime = ZonedDateTime.of(date, LocalTime.of(hours, minutes), ZoneId.of("UTC"))
-        return utcDateTime.withZoneSameInstant(timeZone)
+        return ZonedDateTime.of(date, LocalTime.of(hours, minutes), timeZone)
     }
 
     private fun ZonedDateTime.formatTime(): String {
