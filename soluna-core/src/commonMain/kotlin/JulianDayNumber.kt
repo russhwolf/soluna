@@ -9,7 +9,7 @@ internal fun julianDayNumber(
     // Section 15.11.3, Algorithm 3 (p. 618)
     val Y = year
     val M = month
-    val D = day
+    val D = day - 1 // Algorithm assumes 0-indexed day (apparently)
 
     val (y, j, m, n, r, p, q, v, u, s, t, w) = calendar
 

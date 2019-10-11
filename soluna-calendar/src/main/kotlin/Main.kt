@@ -2,11 +2,13 @@ package com.russhwolf.soluna.calendar
 
 import com.russhwolf.soluna.calendar.CalendarRenderer.Companion.PAGE_HEIGHT
 import com.russhwolf.soluna.calendar.CalendarRenderer.Companion.PAGE_WIDTH
+import com.russhwolf.soluna.moonTimes
 import com.russhwolf.soluna.sunTimes
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics2D
+import java.awt.geom.Ellipse2D
 import java.awt.geom.Line2D
 import java.awt.image.BufferedImage
 import java.io.File
@@ -107,9 +109,9 @@ private class CalendarRenderer(
             val (sunRiseTime, sunSetTime) = sunTimes(year, month.value, i, zoneOffsetHours, latitude, longitude)
             val sunRiseDate = sunRiseTime?.toDateTime(date, timeZone)
             val sunSetDate = sunSetTime?.toDateTime(date, timeZone)
-//            val (moonRiseTime, moonSetTime) = moonTimes(year, month.value, i, 0.0, latitude, longitude)
-//            val moonRiseDate = moonRiseTime?.toDateTime(date, timeZone)
-//            val moonSetDate = moonSetTime?.toDateTime(date, timeZone)
+            val (moonRiseTime, moonSetTime) = moonTimes(year, month.value, i, zoneOffsetHours, latitude, longitude)
+            val moonRiseDate = moonRiseTime?.toDateTime(date, timeZone)
+            val moonSetDate = moonSetTime?.toDateTime(date, timeZone)
 
             val weekDayValue = date.get(weekFields.dayOfWeek())
             val weekValue = date.get(weekFields.weekOfMonth())
@@ -122,10 +124,17 @@ private class CalendarRenderer(
             drawString("Sunrise: ${sunRiseDate?.formatTime() ?: "None"}", 0, 0)
             translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
             drawString("Sunset: ${sunSetDate?.formatTime() ?: "None"}", 0, 0)
-//            translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
-//            drawString("Moonrise: ${moonRiseDate?.formatTime() ?: "None"}", 0, 0)
-//            translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
-//            drawString("Moonset: ${moonSetDate?.formatTime() ?: "None"}", 0, 0)
+            if ((moonRiseTime ?: Double.NEGATIVE_INFINITY) < (moonSetTime ?: Double.POSITIVE_INFINITY)) {
+                translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
+                drawString("Moonrise: ${moonRiseDate?.formatTime() ?: "None"}", 0, 0)
+                translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
+                drawString("Moonset: ${moonSetDate?.formatTime() ?: "None"}", 0, 0)
+            } else {
+                translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
+                drawString("Moonset: ${moonSetDate?.formatTime() ?: "None"}", 0, 0)
+                translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
+                drawString("Moonrise: ${moonRiseDate?.formatTime() ?: "None"}", 0, 0)
+            }
             transform = previousTransform
         }
     }

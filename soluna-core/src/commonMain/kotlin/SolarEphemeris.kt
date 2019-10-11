@@ -119,9 +119,6 @@ internal fun lunarEphemeris(
     val m = 0.9175 * cos(beta) * sin(lambda) - 0.3978 * sin(beta)
     val n = 0.3978 * cos(beta) * sin(lambda) + 0.9171 * sin(beta)
 
-    val alpha = atan2(m, l)
-    val delta = asin(n)
-
     val r = 1 / sin(pi)
     val x = r * l
     val y = r * m
@@ -145,7 +142,8 @@ internal fun lunarEphemeris(
     val pi_prime = asin(1 / r_prime)
 
     // Earth Rotation Angle (eq 3.3, p. 78)
-    val Theta = TAU * (0.779_057_273_264_0 + 1.002_737_811_911_354_48 * T * 36525).rad
+    val t_u = (JD + 0.5 + UT / HourAngle.MAX - 2_451_545.0)
+    val Theta = TAU * (0.779_057_273_264_0 + 1.002_737_811_911_354_48 * t_u).rad
 
     // Hour Angle via Earth Rotation Angle and Right Ascension (is this right?) (eq. 3.15, p. 80)
     val GHA = (Theta.toDegrees() - alpha_prime).coerceInRange()
@@ -157,16 +155,18 @@ private fun timeAtAltitude(
     ephemeris: (Int, HourAngle) -> EphemerisPoint,
     size: (Degree) -> Degree,
     phi: Degree, // Latitude
-    lambda: Degree, // Longitude, NOT lambda FROM solarEphemeris()
+    lambda: Degree, // Longitude, NOT lambda from solarEphemeris()
     JD: Int,
     offset: HourAngle,
     sign: Int // +1 for rise, -1 for set
 ): HourAngle? {
     // Based on section 12.3.3 (p. 515)
-    var UT0 = 12.hour + offset
+    var UT = 12.hour + offset
 
     var converged = false
-    for (i in 1..10) {
+    for (i in 1..100) {
+        val UT0 = UT
+
         val (GHA, delta, pi) = ephemeris(JD, UT0)
         val h = -size(pi)
 
@@ -179,10 +179,9 @@ private fun timeAtAltitude(
         }
 
         // Update guess (eq. 12.10)
-        val diff = -(GHA + lambda + sign * t).toHourAngle()
-        UT0 += diff
+        UT = (UT0 + -(GHA + lambda + sign * t).toHourAngle() + offset).coerceInRange() - offset
 
-        if (abs(diff) < 0.008.hour) {
+        if (abs(UT0 - UT) < 0.008.hour) {
             converged = true
             break
         }
@@ -190,11 +189,7 @@ private fun timeAtAltitude(
     if (!converged) return null
 
     // TODO add correction described in 12.13 for high latitudes
-
-    UT0 = (UT0 + offset)
-    while (UT0 < 0.hour) UT0 += 24.hour
-    while (UT0 > 24.hour) UT0 -= 24.hour
-    return UT0
+    return (UT + offset).coerceInRange()
 }
 
 internal data class EphemerisPoint(val GHA: Degree, val delta: Degree, val pi: Degree = 0.deg)
