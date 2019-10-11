@@ -8,7 +8,6 @@ import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics2D
-import java.awt.geom.Ellipse2D
 import java.awt.geom.Line2D
 import java.awt.image.BufferedImage
 import java.io.File
@@ -136,6 +135,22 @@ private class CalendarRenderer(
                 drawString("Moonrise: ${moonRiseDate?.formatTime() ?: "None"}", 0, 0)
             }
             transform = previousTransform
+
+            val zoneOffsetStart = date.atTime(0, 0).atZone(timeZone).offset.totalSeconds
+            val zoneOffsetEnd = date.atTime(23, 59, 59, 999999999).atZone(timeZone).offset.totalSeconds
+            val dstString = when {
+                zoneOffsetStart > zoneOffsetEnd -> "DST ends"
+                zoneOffsetStart < zoneOffsetEnd -> "DST starts"
+                else -> null
+            }
+            if (dstString != null) {
+                translate(
+                    cellX(weekDayValue) + CELL_WIDTH - fontMetrics.stringWidth(dstString) - 2 * MARGIN_INTERNAL,
+                    cellY(weekValue) + fontMetrics.ascent
+                )
+                drawString(dstString, 0, 0)
+                transform = previousTransform
+            }
         }
     }
 
