@@ -1,7 +1,9 @@
 package com.russhwolf.soluna.calendar
 
+import com.russhwolf.soluna.MoonPhase
 import com.russhwolf.soluna.calendar.CalendarRenderer.Companion.PAGE_HEIGHT
 import com.russhwolf.soluna.calendar.CalendarRenderer.Companion.PAGE_WIDTH
+import com.russhwolf.soluna.moonPhase
 import com.russhwolf.soluna.moonTimes
 import com.russhwolf.soluna.sunTimes
 import java.awt.BasicStroke
@@ -77,10 +79,13 @@ private class CalendarRenderer(
 
     private val baseFont =
         Font.createFont(0, Thread.currentThread().contextClassLoader.getResourceAsStream("Roboto-Medium.ttf"))
+    private val symbolFont =
+        Font.createFont(0, Thread.currentThread().contextClassLoader.getResourceAsStream("Symbola.ttf")).deriveFont(48f)
     private val titleFont = baseFont.deriveFont(144f)
     private val dateFont = baseFont.deriveFont(64f)
     private val weekdayFont = baseFont.deriveFont(72f)
     private val timeFont = baseFont.deriveFont(36f)
+    private val dstFont = timeFont
     private val footerFont = timeFont
 
     init {
@@ -149,14 +154,32 @@ private class CalendarRenderer(
             }
             transform = previousTransform
 
+            val phase = when (moonPhase(year, month.value, i, zoneOffsetHours, longitude)) {
+                MoonPhase.NEW -> "\uD83C\uDF11"
+                MoonPhase.FIRST_QUARTER -> "\uD83C\uDF13"
+                MoonPhase.FULL -> "\uD83C\uDF15"
+                MoonPhase.LAST_QUARTER -> "\uD83C\uDF17"
+                null -> null
+            }
+            if (phase != null) {
+                font = symbolFont
+                translate(
+                    cellX(weekDayValue) + CELL_WIDTH - fontMetrics.stringWidth(phase) - 2 * MARGIN_INTERNAL,
+                    cellY(weekValue) + fontMetrics.ascent
+                )
+                drawString(phase, 0, 0)
+                transform = previousTransform
+            }
+
             val zoneOffsetStart = date.atTime(0, 0).atZone(timeZone).offset.totalSeconds
             val zoneOffsetEnd = date.atTime(23, 59, 59, 999999999).atZone(timeZone).offset.totalSeconds
             val dstString = when {
                 zoneOffsetStart > zoneOffsetEnd -> "DST ends"
                 zoneOffsetStart < zoneOffsetEnd -> "DST starts"
-                else -> null
-            }
-            if (dstString != null) {
+                else -> ""
+            } + if (phase != null) "\u2002\u2003" else ""
+            if (dstString.isNotBlank()) {
+                font = dstFont
                 translate(
                     cellX(weekDayValue) + CELL_WIDTH - fontMetrics.stringWidth(dstString) - 2 * MARGIN_INTERNAL,
                     cellY(weekValue) + fontMetrics.ascent
@@ -164,6 +187,7 @@ private class CalendarRenderer(
                 drawString(dstString, 0, 0)
                 transform = previousTransform
             }
+
         }
     }
 

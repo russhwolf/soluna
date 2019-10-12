@@ -193,3 +193,34 @@ private fun timeAtAltitude(
 }
 
 internal data class EphemerisPoint(val GHA: Degree, val delta: Degree, val pi: Degree = 0.deg)
+
+fun moonPhase(
+    year: Int,
+    month: Int,
+    day: Int,
+    offset: Double, // Hours
+    longitude: Double // Degrees
+): MoonPhase? {
+    val JD = julianDayNumber(year, month, day)
+    val UTstart = offset.hour
+    val UTend = (24 + offset).hour
+
+    val phaseStart = moonPhaseTable(JD, UTstart, longitude.deg, longitude.deg)
+    val phaseEnd = moonPhaseTable(JD, UTend, longitude.deg, longitude.deg)
+
+    if (phaseEnd < phaseStart) return MoonPhase.NEW
+    for (phase in MoonPhase.values().toList().minus(MoonPhase.NEW)) {
+        if (phase.angle in phaseStart..phaseEnd) {
+            return phase
+        }
+    }
+    return null
+}
+
+enum class MoonPhase(internal val angle: Degree) { NEW(0.deg), FIRST_QUARTER(90.deg), FULL(180.deg), LAST_QUARTER(270.deg) }
+
+private fun moonPhaseTable(JD: Int, UT: HourAngle, latitude: Degree, longitude: Degree): Degree {
+    val solarGHA = solarEphemeris(JD, UT).GHA
+    val lunarGHA = lunarEphemeris(JD, UT, latitude, longitude).GHA
+    return (solarGHA - lunarGHA).coerceInRange()
+}
