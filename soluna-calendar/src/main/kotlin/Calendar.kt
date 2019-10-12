@@ -80,13 +80,16 @@ private class CalendarRenderer(
     private val baseFont =
         Font.createFont(0, Thread.currentThread().contextClassLoader.getResourceAsStream("Roboto-Medium.ttf"))
     private val symbolFont =
-        Font.createFont(0, Thread.currentThread().contextClassLoader.getResourceAsStream("Symbola.ttf")).deriveFont(48f)
-    private val titleFont = baseFont.deriveFont(144f)
-    private val dateFont = baseFont.deriveFont(64f)
-    private val weekdayFont = baseFont.deriveFont(72f)
-    private val timeFont = baseFont.deriveFont(36f)
+        Font.createFont(0, Thread.currentThread().contextClassLoader.getResourceAsStream("Symbola.ttf"))
+            .deriveScaledFont(48f)
+    private val titleFont = baseFont.deriveScaledFont(144f)
+    private val dateFont = baseFont.deriveScaledFont(64f)
+    private val weekdayFont = baseFont.deriveScaledFont(72f)
+    private val timeFont = baseFont.deriveScaledFont(36f)
     private val dstFont = timeFont
     private val footerFont = timeFont
+
+    private fun Font.deriveScaledFont(size: Float) = deriveFont(SCALE.toFloat() * size)
 
     init {
         graphics.apply {
@@ -266,18 +269,19 @@ private class CalendarRenderer(
     private fun Double.positionString(direction: String): String = "%1.3f°$direction".format(abs(this))
 
     companion object {
-        internal const val PAGE_WIDTH = 3300.0
-        internal const val PAGE_HEIGHT = 2550.0
-        private const val MARGIN_HORIZONTAL = 200.0
-        private const val MARGIN_HEADER = 550.0
-        private const val MARGIN_FOOTER = 250.0
-        private const val MARGIN_INTERNAL = 15.0
-        private const val MARGIN_TITLE = 50.0
-        private const val MARGIN_COLUMN_HEADER = 40.0
+        internal const val SCALE = 2.0
+        internal const val PAGE_WIDTH = SCALE * 3300.0
+        internal const val PAGE_HEIGHT = SCALE * 2550.0
+        private const val MARGIN_HORIZONTAL = SCALE * 200.0
+        private const val MARGIN_HEADER = SCALE * 550.0
+        private const val MARGIN_FOOTER = SCALE * 250.0
+        private const val MARGIN_INTERNAL = SCALE * 15.0
+        private const val MARGIN_TITLE = SCALE * 50.0
+        private const val MARGIN_COLUMN_HEADER = SCALE * 40.0
         private const val ROWS = 6
         private const val COLUMNS = 7
-        private const val STROKE_WIDTH_INNER = 10f
-        private const val STROKE_WIDTH_OUTER = 15f
+        private const val STROKE_WIDTH_INNER = SCALE.toFloat() * 10f
+        private const val STROKE_WIDTH_OUTER = SCALE.toFloat() * 15f
 
         private const val CELL_WIDTH = (PAGE_WIDTH - 2 * MARGIN_HORIZONTAL) / COLUMNS
         private const val CELL_HEIGHT = (PAGE_HEIGHT - (MARGIN_HEADER + MARGIN_FOOTER)) / ROWS
