@@ -10,11 +10,9 @@ import UIKit
 import Shared
 
 class LocationListViewController: BaseViewController<LocationListViewModel, LocationListViewState>, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
-    let viewModelInit = SwiftKotlinBridgeKt.getLocationListViewModel()
 
-    override var viewModel: LocationListViewModel! {
-        get { return viewModelInit }
-        set { super.viewModel = newValue }
+    override func initViewModel() -> LocationListViewModel {
+        return SwiftKotlinBridgeKt.getLocationListViewModel()
     }
 
     private var items: [LocationSummary] = []

@@ -10,11 +10,9 @@ import UIKit
 import Shared
 
 class AddLocationViewController: BaseViewController<AddLocationViewModel, AddLocationViewState> {
-    let viewModelInit = SwiftKotlinBridgeKt.getAddLocationViewModel()
 
-    override var viewModel: AddLocationViewModel! {
-        get { return viewModelInit }
-        set { super.viewModel = newValue }
+    override func initViewModel() -> AddLocationViewModel {
+        return SwiftKotlinBridgeKt.getAddLocationViewModel()
     }
 
     @IBOutlet var labelInput: UITextField!

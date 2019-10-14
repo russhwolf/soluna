@@ -8,7 +8,11 @@ import Shared
 
 open class BaseViewController<VM : BaseViewModel<T>, T: AnyObject> : UIViewController {
 
-    open var viewModel: VM? = nil
+    open func initViewModel() -> VM {
+        preconditionFailure("BaseViewController subclass must override initViewModel()!")
+    }
+
+    lazy var viewModel: VM = initViewModel()
 
     let activityIndicator = UIActivityIndicatorView(style: .gray)
 
@@ -17,11 +21,11 @@ open class BaseViewController<VM : BaseViewModel<T>, T: AnyObject> : UIViewContr
 
         configureActivityIndicator()
 
-        viewModel?.setErrorListener { (error: KotlinThrowable) in
+        viewModel.setErrorListener { (error: KotlinThrowable) in
             error.printStackTrace()
         }
 
-        viewModel?.setLoadingListener { (loading: KotlinBoolean) in
+        viewModel.setLoadingListener { (loading: KotlinBoolean) in
             if (loading as! Bool) {
                 self.activityIndicator.startAnimating()
             } else {
@@ -31,7 +35,7 @@ open class BaseViewController<VM : BaseViewModel<T>, T: AnyObject> : UIViewContr
     }
 
     open override func viewDidDisappear(_ animated: Bool) {
-        viewModel?.clearScope()
+        viewModel.clearScope()
     }
 
     private func configureActivityIndicator() {
