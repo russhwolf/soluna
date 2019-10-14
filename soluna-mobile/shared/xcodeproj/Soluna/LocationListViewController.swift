@@ -10,7 +10,7 @@ import UIKit
 import Shared
 
 class LocationListViewController: BaseViewController<LocationListViewModel, LocationListViewState>, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
-    let viewModelInit = LocationListViewModel(repository: SwiftKotlinBridgeKt.repository, dispatcher: MainThreadKt.mainDispatcher)
+    let viewModelInit = SwiftKotlinBridgeKt.getLocationListViewModel()
 
     override var viewModel: LocationListViewModel! {
         get { return viewModelInit }

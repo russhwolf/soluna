@@ -10,7 +10,7 @@ import UIKit
 import Shared
 
 class AddLocationViewController: BaseViewController<AddLocationViewModel, AddLocationViewState> {
-    let viewModelInit = AddLocationViewModel(repository: SwiftKotlinBridgeKt.repository, dispatcher: MainThreadKt.mainDispatcher)
+    let viewModelInit = SwiftKotlinBridgeKt.getAddLocationViewModel()
 
     override var viewModel: AddLocationViewModel! {
         get { return viewModelInit }
