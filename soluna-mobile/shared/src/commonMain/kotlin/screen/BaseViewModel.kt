@@ -14,6 +14,8 @@ abstract class BaseViewModel<T>(initialState: T, dispatcher: CoroutineDispatcher
     private var loadingListener: LoadingListener? = null
     private var errorListener: ErrorListener? = null
 
+    private var loadCount: Int = 0
+
     protected var state: T by Delegates.observable(initialState) { _, _, newValue ->
         viewStateListener?.invoke(newValue)
     }
@@ -28,13 +30,15 @@ abstract class BaseViewModel<T>(initialState: T, dispatcher: CoroutineDispatcher
 
     protected fun updateAsync(action: suspend (T) -> T): Job =
         coroutineScope.launch {
-            isLoading = true
+            loadCount++
+            isLoading = loadCount > 0
             try {
                 state = action(state)
             } catch (e: Throwable) {
                 error = EventTrigger.create(e)
             }
-            isLoading = false
+            loadCount--
+            isLoading = loadCount > 0
         }
 
     protected fun update(action: (T) -> T) {

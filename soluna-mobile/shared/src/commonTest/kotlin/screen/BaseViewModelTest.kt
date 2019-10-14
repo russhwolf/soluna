@@ -69,24 +69,36 @@ class BaseViewModelTest : AbstractViewModelTest<TestViewModel, String>() {
         assertFalse(isLoading)
         assertNotNull(error)
     }
+
+    @Test
+    fun multipleLoads() {
+        viewModel.awaitAsyncState(1)
+        viewModel.awaitAsyncState(2)
+        assertTrue(isLoading)
+        viewModel.resumeAsyncState(1) { "Updating" }
+        assertTrue(isLoading)
+        viewModel.resumeAsyncState(2) { "Finished" }
+        assertFalse(isLoading)
+    }
 }
 
 class TestViewModel(state: String) : BaseViewModel<String>(state, Dispatchers.Unconfined) {
-    private var continuation: Continuation<String>? = null
+    private val continuations = mutableMapOf<Int, Continuation<String>>()
 
     fun updateState(updater: () -> String) = update { updater() }
 
-    fun awaitAsyncState() = updateAsync {
+    fun awaitAsyncState(id: Int = 0) = updateAsync {
         suspendCoroutine {
-            continuation = it
+            continuations[id] = it
         }
     }
 
-    fun resumeAsyncState(updater: () -> String) {
+    fun resumeAsyncState(id: Int = 0, updater: () -> String) {
+        val continuation = continuations[id]!!
         try {
-            continuation!!.resume(updater())
+            continuation.resume(updater())
         } catch (throwable: Throwable) {
-            continuation!!.resumeWithException(throwable)
+            continuation.resumeWithException(throwable)
         }
     }
 }
