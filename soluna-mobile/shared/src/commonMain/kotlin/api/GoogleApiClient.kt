@@ -46,7 +46,7 @@ interface GoogleApiClient {
             httpClient.getWithTimeout {
                 url {
                     encodedPath = "place/autocomplete/json"
-                    parameter("input", query.encodeURLQueryComponent())
+                    parameter("input", query.encodeURLQueryComponent(spaceToPlus = true))
                     parameter("types", "geocode")
                 }
             }
