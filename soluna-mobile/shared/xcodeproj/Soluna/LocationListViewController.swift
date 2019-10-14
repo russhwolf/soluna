@@ -33,6 +33,10 @@ class LocationListViewController: BaseViewController<LocationListViewModel, Loca
             }
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        viewModel.refresh()
+    }
 
     private func setItems(items: [LocationSummary]) {
         self.items = items

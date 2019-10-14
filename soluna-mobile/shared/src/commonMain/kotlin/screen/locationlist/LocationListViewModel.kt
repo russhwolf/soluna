@@ -13,9 +13,9 @@ class LocationListViewModel(
 ) :
     BaseViewModel<LocationListViewState>(LocationListViewState(emptyList()), dispatcher) {
 
-    val initialLoad = updateAsync {
+    fun refresh() = updateAsync {
         val locations = repository.getLocations()
-        LocationListViewState(locations)
+        it.copy(locations = locations)
     }
 
     fun navigateToLocationDetails(locationSummary: LocationSummary) = update {

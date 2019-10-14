@@ -20,7 +20,7 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
 
     @Test
     fun initialState_empty() = runBlockingTest {
-        viewModel.initialLoad.join()
+        viewModel.refresh().join()
         assertTrue(state.locations.isEmpty())
     }
 
@@ -31,7 +31,7 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
                 Location.Impl(0, "Home", 27.18, 62.83, "UTC")
             )
         )
-        viewModel.initialLoad.join()
+        viewModel.refresh().join()
         assertEquals(1, state.locations.size)
     }
 
