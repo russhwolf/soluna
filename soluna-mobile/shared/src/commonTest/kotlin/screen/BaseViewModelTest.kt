@@ -1,9 +1,10 @@
 package com.russhwolf.soluna.mobile.screen
 
-import com.russhwolf.soluna.mobile.runBlocking
-import com.russhwolf.soluna.mobile.runBlockingTest
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -29,15 +30,24 @@ class BaseViewModelTest : AbstractViewModelTest<TestViewModel, String>() {
 
     @Test
     fun updateState() {
-        viewModel.updateState("Updated")
+        viewModel.updateState { "Updated" }
         assertEquals("Updated", state)
         assertFalse(isLoading)
         assertNull(error)
     }
 
     @Test
-    fun updateStateAsync() = runBlocking {
-        viewModel.updateStateAsync("Updated").join()
+    fun loading() {
+        viewModel.awaitAsyncState()
+        assertEquals("Initial", state)
+        assertTrue(isLoading)
+        assertNull(error)
+    }
+
+    @Test
+    fun updateStateAsync() {
+        viewModel.awaitAsyncState()
+        viewModel.resumeAsyncState { "Updated" }
         assertEquals("Updated", state)
         assertFalse(isLoading)
         assertNull(error)
@@ -45,43 +55,38 @@ class BaseViewModelTest : AbstractViewModelTest<TestViewModel, String>() {
 
     @Test
     fun throwError() {
-        viewModel.throwError()
+        viewModel.updateState { throw TestError() }
         assertEquals("Initial", state)
         assertFalse(isLoading)
         assertNotNull(error)
     }
 
     @Test
-    fun throwErrorAsync() = runBlockingTest {
-        viewModel.throwErrorAsync().join()
+    fun throwErrorAsync() {
+        viewModel.awaitAsyncState()
+        viewModel.resumeAsyncState { throw TestError() }
         assertEquals("Initial", state)
         assertFalse(isLoading)
         assertNotNull(error)
-    }
-
-    @Test
-    fun infiniteDelayAsync() = runBlocking {
-        @Suppress("DeferredResultUnused")
-        viewModel.infiniteDelayAsync()
-        delay(5)
-        assertEquals("Initial", state)
-        assertTrue(isLoading)
-        assertNull(error)
     }
 }
 
 class TestViewModel(state: String) : BaseViewModel<String>(state, Dispatchers.Unconfined) {
-    fun updateState(state: String) = update { state }
+    private var continuation: Continuation<String>? = null
 
-    fun updateStateAsync(state: String) = updateAsync { state }
+    fun updateState(updater: () -> String) = update { updater() }
 
-    fun throwError() = update { throw TestError() }
-
-    fun throwErrorAsync() = updateAsync { throw TestError() }
-
-    fun infiniteDelayAsync() = updateAsync { state ->
-        delay(Long.MAX_VALUE)
-        state
+    fun awaitAsyncState() = updateAsync {
+        suspendCoroutine {
+            continuation = it
+        }
     }
 
+    fun resumeAsyncState(updater: () -> String) {
+        try {
+            continuation!!.resume(updater())
+        } catch (throwable: Throwable) {
+            continuation!!.resumeWithException(throwable)
+        }
+    }
 }
