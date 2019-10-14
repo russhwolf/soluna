@@ -33,11 +33,7 @@ interface GoogleApiClient {
                 parameter("key", BuildKonfig.GOOGLE_API_KEY)
             }
             install(JsonFeature) {
-                serializer = KotlinxSerializer(Json.nonstrict).apply {
-                    setMapper(PlaceAutocompleteResponse::class, PlaceAutocompleteResponse.serializer())
-                    setMapper(GeocodeResponse::class, GeocodeResponse.serializer())
-                    setMapper(TimeZoneResponse::class, TimeZoneResponse.serializer())
-                }
+                serializer = KotlinxSerializer(Json.nonstrict)
             }
             install(Logging)
         }
