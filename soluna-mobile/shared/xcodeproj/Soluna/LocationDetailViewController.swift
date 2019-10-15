@@ -24,10 +24,18 @@ class LocationDetailViewController: BaseViewController<LocationDetailViewModel, 
 
         viewModel.setViewStateListener { state in
             self.labelLabel.text = state.location?.label ?? "No Location for id \(self.id)!"
+            
+            state.exitTrigger.consume { _ in
+                self.navigationController?.popViewController(animated: true)
+            }
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         viewModel.refresh()
+    }
+
+    @IBAction func onDeleteClick(_ sender: Any) {
+        viewModel.delete()
     }
 }

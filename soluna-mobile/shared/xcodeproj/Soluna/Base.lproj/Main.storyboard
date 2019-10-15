@@ -67,14 +67,6 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JiG-IJ-x8K">
-                                <rect key="frame" x="331" y="99" width="63" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Geocode"/>
-                                <connections>
-                                    <action selector="onGeocodeClick:" destination="cUa-Jp-yFF" eventType="touchUpInside" id="CjB-GF-0rl"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MQV-hs-4rk">
                                 <rect key="frame" x="20" y="372" width="49" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -92,6 +84,13 @@
                         <viewLayoutGuide key="safeArea" id="P2H-xE-Swj"/>
                     </view>
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="o76-Lr-Zfa">
+                        <barButtonItem key="rightBarButtonItem" title="Geocode" id="fB6-2j-uc2">
+                            <connections>
+                                <action selector="onGeocodeClick:" destination="cUa-Jp-yFF" id="HCT-cq-6Tf"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="labelInput" destination="EbM-Za-ZCP" id="azK-Ju-fDI"/>
@@ -109,7 +108,7 @@
             <objects>
                 <viewController id="skT-qt-jgp" customClass="LocationDetailViewController" customModule="Soluna" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="H8P-at-9Nm">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YHA-LY-qAM">
@@ -123,6 +122,15 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="0J3-jm-YNw"/>
                     </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="MfJ-7c-cjj">
+                        <barButtonItem key="rightBarButtonItem" title="Delete" id="qGJ-7O-Oom">
+                            <connections>
+                                <action selector="onDeleteClick:" destination="skT-qt-jgp" id="YDC-L5-NOm"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="labelLabel" destination="YHA-LY-qAM" id="9Y0-dr-mpS"/>
                     </connections>
@@ -170,7 +178,7 @@
                     <connections>
                         <outlet property="locationList" destination="aFb-Vz-BwH" id="q9F-js-pLX"/>
                         <segue destination="cUa-Jp-yFF" kind="show" identifier="AddLocation" id="CAv-ZH-VFW"/>
-                        <segue destination="skT-qt-jgp" kind="showDetail" identifier="LocationDetail" id="9xK-kg-FUe"/>
+                        <segue destination="skT-qt-jgp" kind="show" identifier="LocationDetail" id="9xK-kg-FUe"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e9G-v6-nVy" userLabel="First Responder" sceneMemberID="firstResponder"/>

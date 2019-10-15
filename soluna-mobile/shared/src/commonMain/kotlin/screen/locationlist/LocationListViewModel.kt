@@ -30,7 +30,7 @@ class LocationListViewModel(
     fun removeLocation(id: Long) = updateAsync {
         repository.deleteLocation(id)
         val locations = repository.getLocations()
-        LocationListViewState(locations)
+        it.copy(locations = locations)
     }
 }
 
