@@ -18,6 +18,8 @@ class LocationListViewController: BaseViewController<LocationListViewModel, Loca
     private var items: [LocationSummary] = []
 
     @IBOutlet var locationList: UITableView!
+    
+    var selectedId: Int64 = -1
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +30,10 @@ class LocationListViewController: BaseViewController<LocationListViewModel, Loca
             self.setItems(items: state.locations)
             state.addLocationTrigger.consume { unit in
                 self.performSegue(withIdentifier: "AddLocation", sender: self)
+            }
+            state.locationDetailsTrigger.consume { id in
+                self.selectedId = id.int64Value
+                self.performSegue(withIdentifier: "LocationDetail", sender: self)
             }
         }
     }
@@ -60,7 +66,16 @@ class LocationListViewController: BaseViewController<LocationListViewModel, Loca
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
-        viewModel.removeLocation(id: items[index].id)
+//        viewModel.removeLocation(id: items[index].id)
+        viewModel.navigateToLocationDetails(locationSummary: items[index])
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let locationDetailViewController = segue.destination as? LocationDetailViewController else {
+            return
+        }
+        locationDetailViewController.id = selectedId
     }
 }
 

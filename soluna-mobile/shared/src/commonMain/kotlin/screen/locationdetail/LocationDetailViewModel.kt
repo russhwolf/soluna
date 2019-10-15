@@ -1,4 +1,4 @@
-package com.russhwolf.soluna.mobile.screen.addlocation
+package com.russhwolf.soluna.mobile.screen.locationdetail
 
 import com.russhwolf.soluna.mobile.SolunaRepository
 import com.russhwolf.soluna.mobile.db.Location
@@ -14,7 +14,7 @@ class LocationDetailViewModel(
 ) :
     BaseViewModel<LocationDetailViewState>(LocationDetailViewState(null), dispatcher) {
 
-    val initialLoad = updateAsync {
+    fun refresh() = updateAsync {
         val location = repository.getLocation(id)
         LocationDetailViewState(location)
     }

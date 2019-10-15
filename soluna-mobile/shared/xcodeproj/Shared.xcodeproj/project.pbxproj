@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		46419F3E23553E1700B125F7 /* LocationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46419F3D23553E1700B125F7 /* LocationDetailViewController.swift */; };
 		4675EA3122F534A800861EF1 /* AddLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4675EA3022F534A800861EF1 /* AddLocationViewController.swift */; };
 		467F62CD22F3D24100671C72 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F62CC22F3D24100671C72 /* AppDelegate.swift */; };
 		467F62CF22F3D24100671C72 /* LocationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F62CE22F3D24100671C72 /* LocationListViewController.swift */; };
@@ -38,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		46419F3D23553E1700B125F7 /* LocationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetailViewController.swift; sourceTree = "<group>"; };
 		4675EA3022F534A800861EF1 /* AddLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLocationViewController.swift; sourceTree = "<group>"; };
 		467F62CA22F3D24100671C72 /* Soluna.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Soluna.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		467F62CC22F3D24100671C72 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -97,15 +99,16 @@
 		467F62CB22F3D24100671C72 /* Soluna */ = {
 			isa = PBXGroup;
 			children = (
-				467F62CC22F3D24100671C72 /* AppDelegate.swift */,
-				467F62CE22F3D24100671C72 /* LocationListViewController.swift */,
 				4675EA3022F534A800861EF1 /* AddLocationViewController.swift */,
-				467F62D022F3D24100671C72 /* Main.storyboard */,
+				467F62CC22F3D24100671C72 /* AppDelegate.swift */,
 				467F62D322F3D24200671C72 /* Assets.xcassets */,
-				467F62D522F3D24200671C72 /* LaunchScreen.storyboard */,
-				467F62D822F3D24200671C72 /* Info.plist */,
-				46DEC43A2325628300BEF504 /* LocationListItem.xib */,
 				5CB7C5484A0922369DE537C7 /* BaseViewController.swift */,
+				467F62D822F3D24200671C72 /* Info.plist */,
+				467F62D522F3D24200671C72 /* LaunchScreen.storyboard */,
+				46419F3D23553E1700B125F7 /* LocationDetailViewController.swift */,
+				46DEC43A2325628300BEF504 /* LocationListItem.xib */,
+				467F62CE22F3D24100671C72 /* LocationListViewController.swift */,
+				467F62D022F3D24100671C72 /* Main.storyboard */,
 			);
 			path = Soluna;
 			sourceTree = "<group>";
@@ -321,6 +324,7 @@
 				4675EA3122F534A800861EF1 /* AddLocationViewController.swift in Sources */,
 				467F62CD22F3D24100671C72 /* AppDelegate.swift in Sources */,
 				5CB7CF69F971163BF1B8D97E /* BaseViewController.swift in Sources */,
+				46419F3E23553E1700B125F7 /* LocationDetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -6,7 +6,7 @@ import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.screen.addlocation.AddLocationViewModel
-import com.russhwolf.soluna.mobile.screen.addlocation.LocationDetailViewModel
+import com.russhwolf.soluna.mobile.screen.locationdetail.LocationDetailViewModel
 import com.russhwolf.soluna.mobile.screen.locationlist.LocationListViewModel
 import com.squareup.sqldelight.drivers.ios.NativeSqliteDriver
 import io.ktor.client.engine.ios.Ios
