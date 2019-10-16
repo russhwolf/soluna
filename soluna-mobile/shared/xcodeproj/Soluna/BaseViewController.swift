@@ -6,7 +6,7 @@
 import UIKit
 import Shared
 
-open class BaseViewController<VM : BaseViewModel<T>, T: AnyObject> : UIViewController {
+open class BaseViewController<VM: BaseViewModel<T>, T: AnyObject>: UIViewController {
 
     open func initViewModel() -> VM {
         preconditionFailure("BaseViewController subclass must override initViewModel()!")
@@ -14,7 +14,8 @@ open class BaseViewController<VM : BaseViewModel<T>, T: AnyObject> : UIViewContr
 
     lazy var viewModel: VM = initViewModel()
 
-    let activityIndicator = UIActivityIndicatorView(style: .gray)
+    let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+    lazy var activityIndicatorBackground = UIView(frame: view.frame)
 
     open override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,9 +28,11 @@ open class BaseViewController<VM : BaseViewModel<T>, T: AnyObject> : UIViewContr
 
         viewModel.setLoadingListener { (loading: KotlinBoolean) in
             if (loading as! Bool) {
+                self.activityIndicatorBackground.alpha = 1
                 self.activityIndicator.startAnimating()
             } else {
                 self.activityIndicator.stopAnimating()
+                self.activityIndicatorBackground.alpha = 0
             }
         }
     }
@@ -39,14 +42,17 @@ open class BaseViewController<VM : BaseViewModel<T>, T: AnyObject> : UIViewContr
     }
 
     private func configureActivityIndicator() {
+        view.addSubview(activityIndicatorBackground)
+        activityIndicatorBackground.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+
         view.addSubview(activityIndicator)
         activityIndicator.hidesWhenStopped = true
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
 
-        let horizontalConstraint = NSLayoutConstraint(item: activityIndicator, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
+        let horizontalConstraint = NSLayoutConstraint(item: activityIndicator, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1, constant: 0)
         view.addConstraint(horizontalConstraint)
 
-        let verticalConstraint = NSLayoutConstraint(item: activityIndicator, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
+        let verticalConstraint = NSLayoutConstraint(item: activityIndicator, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1, constant: 0)
         view.addConstraint(verticalConstraint)
     }
 }

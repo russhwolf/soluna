@@ -24,7 +24,7 @@ class LocationListViewController: BaseViewController<LocationListViewModel, Loca
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        locationList.register(UINib(nibName: "LocationListItem", bundle: nil), forCellReuseIdentifier: "LocationListItem")
+//        locationList.register(UINib(nibName: "LocationListItem", bundle: nil), forCellReuseIdentifier: "LocationListItem")
 
         viewModel.setViewStateListener { (state: LocationListViewState) in
             self.setItems(items: state.locations)
@@ -66,7 +66,6 @@ class LocationListViewController: BaseViewController<LocationListViewModel, Loca
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
-//        viewModel.removeLocation(id: items[index].id)
         viewModel.navigateToLocationDetails(locationSummary: items[index])
     }
     

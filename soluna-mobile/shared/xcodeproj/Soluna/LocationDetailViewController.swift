@@ -13,7 +13,8 @@ class LocationDetailViewController: BaseViewController<LocationDetailViewModel, 
 
     var id: Int64 = -1
     
-    @IBOutlet var labelLabel: UILabel!
+    @IBOutlet var longitudeText: UILabel!
+    @IBOutlet var latitudeText: UILabel!
     
     override func initViewModel() -> LocationDetailViewModel {
         return SwiftKotlinBridgeKt.getLocationDetailViewModel(id: id)
@@ -23,8 +24,12 @@ class LocationDetailViewController: BaseViewController<LocationDetailViewModel, 
         super.viewDidLoad()
 
         viewModel.setViewStateListener { state in
-            self.labelLabel.text = state.location?.label ?? "No Location for id \(self.id)!"
-            
+            if let location = state.location {
+                self.title = location.label
+                self.longitudeText.text = String(location.longitude)
+                self.latitudeText.text = String(location.latitude)
+            }
+
             state.exitTrigger.consume { _ in
                 self.navigationController?.popViewController(animated: true)
             }
