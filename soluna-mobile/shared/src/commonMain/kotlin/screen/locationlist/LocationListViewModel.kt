@@ -15,22 +15,22 @@ class LocationListViewModel(
 
     fun refresh() = updateAsync {
         val locations = repository.getLocations()
-        it.copy(locations = locations)
+        state.copy(locations = locations)
     }
 
     fun navigateToLocationDetails(locationSummary: LocationSummary) = update {
-        it.copy(locationDetailsTrigger = EventTrigger.create(locationSummary.id))
+        state.copy(locationDetailsTrigger = EventTrigger.create(locationSummary.id))
     }
 
 
     fun navigateToAddLocation() = update {
-        it.copy(addLocationTrigger = EventTrigger.create())
+        state.copy(addLocationTrigger = EventTrigger.create())
     }
 
     fun removeLocation(id: Long) = updateAsync {
         repository.deleteLocation(id)
         val locations = repository.getLocations()
-        it.copy(locations = locations)
+        state.copy(locations = locations)
     }
 }
 

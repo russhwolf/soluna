@@ -28,12 +28,12 @@ abstract class BaseViewModel<T>(initialState: T, dispatcher: CoroutineDispatcher
         newValue.consume { errorListener?.invoke(it) }
     }
 
-    protected fun updateAsync(action: suspend (T) -> T): Job =
+    protected fun updateAsync(action: suspend () -> T): Job =
         coroutineScope.launch {
             loadCount++
             isLoading = loadCount > 0
             try {
-                state = action(state)
+                state = action()
             } catch (e: Throwable) {
                 error = EventTrigger.create(e)
             }
@@ -41,9 +41,9 @@ abstract class BaseViewModel<T>(initialState: T, dispatcher: CoroutineDispatcher
             isLoading = loadCount > 0
         }
 
-    protected fun update(action: (T) -> T) {
+    protected fun update(action: () -> T) {
         try {
-            state = action(state)
+            state = action()
         } catch (e: Throwable) {
             error = EventTrigger.create(e)
         }

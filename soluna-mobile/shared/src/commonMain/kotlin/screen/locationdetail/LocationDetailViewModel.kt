@@ -19,12 +19,12 @@ class LocationDetailViewModel(
     fun refresh() = updateAsync {
         val locationAsync = coroutineScope.async { repository.getLocation(id) }
         val remindersAsync = coroutineScope.async { repository.getReminders(id) }
-        it.copy(location = locationAsync.await(), reminders = remindersAsync.await())
+        state.copy(location = locationAsync.await(), reminders = remindersAsync.await())
     }
 
     fun delete() = updateAsync {
         repository.deleteLocation(id)
-        it.copy(exitTrigger = EventTrigger.create())
+        state.copy(exitTrigger = EventTrigger.create())
     }
 }
 
