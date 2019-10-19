@@ -18,6 +18,7 @@ val coroutineWorkerVersion = "0.3.0"
 val ktorVersion = "1.2.4"
 val sqldelightVersion = "1.2.0"
 val serializationVersion = "0.12.0"
+val statelyVersion = "0.9.3"
 
 kotlin {
     android()
@@ -53,6 +54,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-logging:$ktorVersion")
 
                 implementation("com.autodesk:coroutineworker:$coroutineWorkerVersion")
+                implementation("co.touchlab:stately:$statelyVersion")
             }
         }
         commonTest {

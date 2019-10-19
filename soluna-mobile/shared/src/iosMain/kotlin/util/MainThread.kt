@@ -1,5 +1,7 @@
 package com.russhwolf.soluna.mobile.util
 
+import kotlinx.cinterop.COpaquePointer
+import kotlinx.cinterop.staticCFunction
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Delay
@@ -11,10 +13,14 @@ import platform.Foundation.NSThread
 import platform.darwin.DISPATCH_TIME_NOW
 import platform.darwin.dispatch_after
 import platform.darwin.dispatch_async
+import platform.darwin.dispatch_async_f
 import platform.darwin.dispatch_get_main_queue
 import platform.darwin.dispatch_queue_t
 import platform.darwin.dispatch_time
 import kotlin.coroutines.CoroutineContext
+import kotlin.native.concurrent.DetachedObjectGraph
+import kotlin.native.concurrent.attach
+import kotlin.native.concurrent.freeze
 
 actual val isMainThread: Boolean get() = NSThread.isMainThread
 
@@ -60,4 +66,15 @@ private class NsQueueDispatcher(
         return handle
     }
 
+}
+
+private class Task<T>(val input: T, val block: (T) -> Unit)
+
+actual fun <T> runInMainThread(input: () -> T, block: (T) -> Unit) {
+    dispatch_async_f(dispatch_get_main_queue(), DetachedObjectGraph {
+        Task(input(), block).freeze()
+    }.asCPointer(), staticCFunction { cPointer: COpaquePointer? ->
+        val result = DetachedObjectGraph<Task<T>>(cPointer).attach()
+        result.block(result.input)
+    })
 }
