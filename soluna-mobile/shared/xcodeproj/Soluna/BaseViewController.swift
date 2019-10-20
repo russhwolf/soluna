@@ -37,7 +37,7 @@ open class BaseViewController<VM: BaseViewModel<T>, T: AnyObject>: UIViewControl
         }
     }
 
-    open override func viewDidDisappear(_ animated: Bool) {
+    deinit {
         viewModel.clearScope()
     }
 

@@ -8,9 +8,13 @@ import com.russhwolf.soluna.mobile.db.ReminderWithLocation
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.util.epochSeconds
 import com.russhwolf.soluna.mobile.util.runInBackground
+import db.asListFlow
+import kotlinx.coroutines.flow.Flow
 
 interface SolunaRepository {
     suspend fun getLocations(): List<LocationSummary>
+
+    fun getLocationsFlow(): Flow<List<LocationSummary>>
 
     suspend fun getLocation(id: Long): Location?
 
@@ -39,6 +43,11 @@ interface SolunaRepository {
                 .selectAllLocations()
                 .executeAsList()
         }
+
+        override fun getLocationsFlow(): Flow<List<LocationSummary>> =
+            database.locationQueries
+                .selectAllLocations()
+                .asListFlow()
 
         override suspend fun getLocation(id: Long): Location? = database.getLocation(id)
 

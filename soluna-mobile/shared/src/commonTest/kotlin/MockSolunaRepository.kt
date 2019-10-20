@@ -5,6 +5,9 @@ import com.russhwolf.soluna.mobile.db.LocationSummary
 import com.russhwolf.soluna.mobile.db.Reminder
 import com.russhwolf.soluna.mobile.db.ReminderType
 import com.russhwolf.soluna.mobile.db.ReminderWithLocation
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 class MockSolunaRepository(
     locations: List<Location> = mutableListOf(),
@@ -17,16 +20,29 @@ class MockSolunaRepository(
     private val reminders = reminders.toMutableList()
     private val geocodeMap = geocodeMap.toMutableMap()
 
+    private val locationListeners = mutableListOf<() -> Unit>()
+
     override suspend fun getLocations(): List<LocationSummary> = locations.map { LocationSummary.Impl(it.id, it.label) }
+
+    override fun getLocationsFlow(): Flow<List<LocationSummary>> = callbackFlow {
+        val listener: () -> Unit = { offer(locations.map { LocationSummary.Impl(it.id, it.label) }) }
+
+        locationListeners.add(listener)
+        awaitClose {
+            locationListeners.remove(listener)
+        }
+    }
 
     override suspend fun getLocation(id: Long): Location? = locations.find { it.id == id }
 
     override suspend fun addLocation(label: String, latitude: Double, longitude: Double, timeZone: String) {
         locations.add(Location.Impl(nextLocationId++, label, latitude, longitude, timeZone))
+        locationListeners.forEach { it() }
     }
 
     override suspend fun deleteLocation(id: Long) {
         locations.removeAll { it.id == id }
+        locationListeners.forEach { it() }
     }
 
     override suspend fun updateLocationLabel(id: Long, label: String) {
@@ -36,6 +52,8 @@ class MockSolunaRepository(
         val prevLocation = locations[index]
         locations[index] =
             Location.Impl(id, label, prevLocation.latitude, prevLocation.longitude, prevLocation.timeZone)
+
+        locationListeners.forEach { it() }
     }
 
     override suspend fun getReminders(locationId: Long?): List<ReminderWithLocation> = reminders.map { reminder ->

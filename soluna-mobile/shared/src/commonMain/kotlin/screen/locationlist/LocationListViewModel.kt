@@ -6,6 +6,9 @@ import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import com.russhwolf.soluna.mobile.util.EventTrigger
 import com.russhwolf.soluna.mobile.util.mainDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class LocationListViewModel(
     private val repository: SolunaRepository,
@@ -13,9 +16,19 @@ class LocationListViewModel(
 ) :
     BaseViewModel<LocationListViewState>(LocationListViewState(emptyList()), dispatcher) {
 
-    fun refresh() = updateAsync {
-        val locations = repository.getLocations()
-        state.copy(locations = locations)
+    fun onCreate(): Job {
+        coroutineScope.launch {
+            repository
+                .getLocationsFlow()
+                .collectLatest { locations ->
+                    update { state.copy(locations = locations) }
+                }
+        }
+
+        return updateAsync {
+            val locations = repository.getLocations()
+            state.copy(locations = locations)
+        }
     }
 
     fun navigateToLocationDetails(locationSummary: LocationSummary) = update {

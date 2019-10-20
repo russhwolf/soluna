@@ -24,7 +24,7 @@ class LocationListViewController: BaseViewController<LocationListViewModel, Loca
     override func viewDidLoad() {
         super.viewDidLoad()
 
-//        locationList.register(UINib(nibName: "LocationListItem", bundle: nil), forCellReuseIdentifier: "LocationListItem")
+        viewModel.onCreate()
 
         viewModel.setViewStateListener { (state: LocationListViewState) in
             self.setItems(items: state.locations)
@@ -36,10 +36,6 @@ class LocationListViewController: BaseViewController<LocationListViewModel, Loca
                 self.performSegue(withIdentifier: "LocationDetail", sender: self)
             }
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        viewModel.refresh()
     }
 
     private func setItems(items: [LocationSummary]) {

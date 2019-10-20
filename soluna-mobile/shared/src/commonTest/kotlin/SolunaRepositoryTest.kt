@@ -13,8 +13,16 @@ import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -60,6 +68,43 @@ class SolunaRepositoryTest {
                 label = "Test Location 1"
             ),
             actual = locations[0]
+        )
+    }
+
+    @Test
+    @Ignore // TODO listeners aren't getting called in here for some reason
+    fun getLocationsFlow() = runBlocking {
+        val locationsFlow = repository.getLocationsFlow()
+        val values = mutableListOf<List<LocationSummary>>()
+        GlobalScope.launch {
+            delay(10)
+            database.insertDummyLocation(2)
+        }
+        database.insertDummyLocation(1)
+        withTimeoutOrNull(500) {
+            locationsFlow
+                .onEach {
+                    values.add(it)
+                }
+                .take(1)
+                .collect()
+        }
+        assertEquals<List<List<LocationSummary>>>(
+            expected = listOf(
+                listOf(
+                    LocationSummary.Impl(
+                        id = 1,
+                        label = "Test Location 1"
+                    )
+                ),
+                listOf(
+                    LocationSummary.Impl(
+                        id = 2,
+                        label = "Test Location 2"
+                    )
+                )
+            ),
+            actual = values
         )
     }
 

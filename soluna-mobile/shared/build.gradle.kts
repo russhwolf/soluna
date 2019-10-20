@@ -36,6 +36,7 @@ kotlin {
             languageSettings.apply {
                 progressiveMode = true
                 useExperimentalAnnotation("kotlin.Experimental")
+                useExperimentalAnnotation("kotlinx.coroutines.ExperimentalCoroutinesApi")
             }
         }
 
