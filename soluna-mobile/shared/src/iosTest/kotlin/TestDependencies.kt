@@ -6,6 +6,9 @@ import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.drivers.ios.NativeSqliteDriver
 import com.squareup.sqldelight.drivers.ios.wrapConnection
 import kotlinx.coroutines.CoroutineScope
+import platform.CoreFoundation.CFRunLoopRunInMode
+import platform.CoreFoundation.kCFRunLoopDefaultMode
+import platform.CoreFoundation.kCFRunLoopRunHandledSource
 import kotlin.coroutines.CoroutineContext
 import kotlin.reflect.KClass
 
@@ -32,3 +35,10 @@ actual fun createInMemorySqlDriver(): SqlDriver {
 actual annotation class RunWith(actual val value: KClass<out Runner>)
 actual abstract class Runner
 actual class AndroidJUnit4 : Runner()
+
+actual fun blockUntilIdle() {
+    // Adapted from https://stackoverflow.com/a/16975344/2565340
+    @Suppress("ControlFlowWithEmptyBody")
+    while (CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.0, true) == kCFRunLoopRunHandledSource) {
+    }
+}

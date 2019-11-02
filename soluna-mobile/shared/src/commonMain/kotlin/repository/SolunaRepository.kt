@@ -44,8 +44,10 @@ interface SolunaRepository {
                 .executeAsList()
         }
 
-        override fun getLocationsFlow(): Flow<List<LocationSummary>> =
-            database.locationQueries
+        override fun getLocationsFlow(): Flow<List<LocationSummary>> = database.getLocationsFlow()
+
+        private fun SolunaDb.getLocationsFlow(): Flow<List<LocationSummary>> =
+            locationQueries
                 .selectAllLocations()
                 .asListFlow()
 

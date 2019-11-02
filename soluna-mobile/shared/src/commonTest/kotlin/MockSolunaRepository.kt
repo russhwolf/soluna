@@ -56,22 +56,25 @@ class MockSolunaRepository(
         locationListeners.forEach { it() }
     }
 
-    override suspend fun getReminders(locationId: Long?): List<ReminderWithLocation> = reminders.map { reminder ->
-        ReminderWithLocation.Impl(
-            reminder.id,
-            reminder.locationId,
-            locations.first { it.id == reminder.locationId }.label,
-            reminder.type,
-            reminder.minutesBefore,
-            reminder.enabled
-        )
-    }.run {
-        if (locationId != null) {
-            filter { it.id == locationId }
-        } else {
-            this
-        }
-    }
+    override suspend fun getReminders(locationId: Long?): List<ReminderWithLocation> =
+        reminders
+            .run {
+                if (locationId != null) {
+                    filter { it.locationId == locationId }
+                } else {
+                    this
+                }
+            }
+            .map { reminder ->
+                ReminderWithLocation.Impl(
+                    reminder.id,
+                    reminder.locationId,
+                    locations.first { it.id == reminder.locationId }.label,
+                    reminder.type,
+                    reminder.minutesBefore,
+                    reminder.enabled
+                )
+            }
 
     override suspend fun addReminder(locationId: Long, type: ReminderType, minutesBefore: Int, enabled: Boolean) {
         reminders.add(Reminder.Impl(nextReminderId++, locationId, type, minutesBefore, enabled))

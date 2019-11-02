@@ -7,28 +7,28 @@ import com.russhwolf.soluna.mobile.db.ReminderType
 import com.russhwolf.soluna.mobile.db.ReminderWithLocation
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.db.createDatabase
+import com.russhwolf.soluna.mobile.util.runInBackground
 import com.squareup.sqldelight.db.SqlDriver
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.withTimeout
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
+@RunWith(AndroidJUnit4::class)
 class SolunaRepositoryTest {
     private val googleApiClient = GoogleApiClient.Impl(
         createMockEngine(
@@ -72,22 +72,24 @@ class SolunaRepositoryTest {
     }
 
     @Test
-    @Ignore // TODO listeners aren't getting called in here for some reason
     fun getLocationsFlow() = runBlocking {
-        val locationsFlow = repository.getLocationsFlow()
         val values = mutableListOf<List<LocationSummary>>()
-        GlobalScope.launch {
-            delay(10)
-            database.insertDummyLocation(2)
-        }
-        database.insertDummyLocation(1)
-        withTimeoutOrNull(500) {
-            locationsFlow
-                .onEach {
+        withTimeout(1000) {
+            repository.getLocationsFlow()
+                .onStart {
+                    launch {
+                        delay(5)
+                        runInBackground { database.insertDummyLocation(1) }
+                        blockUntilIdle()
+                        delay(5)
+                        runInBackground { database.insertDummyLocation(2) }
+                        blockUntilIdle()
+                    }
+                }
+                .take(2)
+                .collect {
                     values.add(it)
                 }
-                .take(1)
-                .collect()
         }
         assertEquals<List<List<LocationSummary>>>(
             expected = listOf(
@@ -98,6 +100,10 @@ class SolunaRepositoryTest {
                     )
                 ),
                 listOf(
+                    LocationSummary.Impl(
+                        id = 1,
+                        label = "Test Location 1"
+                    ),
                     LocationSummary.Impl(
                         id = 2,
                         label = "Test Location 2"
@@ -357,3 +363,4 @@ private fun createMockEngine(latitude: Double, longitude: Double, timeZone: Stri
         headers = headersOf(HttpHeaders.ContentType, "application/json")
     )
 }
+

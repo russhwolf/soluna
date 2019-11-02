@@ -1,5 +1,7 @@
 package com.russhwolf.soluna.mobile.db
 
+import com.russhwolf.soluna.mobile.AndroidJUnit4
+import com.russhwolf.soluna.mobile.RunWith
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.squareup.sqldelight.db.SqlDriver
 import kotlin.test.AfterTest
@@ -8,6 +10,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
+@RunWith(AndroidJUnit4::class)
 class SolunaDbTest {
 
     private lateinit var driver: SqlDriver

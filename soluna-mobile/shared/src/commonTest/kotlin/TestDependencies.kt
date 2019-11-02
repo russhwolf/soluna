@@ -13,3 +13,5 @@ expect fun createInMemorySqlDriver(): SqlDriver
 expect annotation class RunWith(val value: KClass<out Runner>)
 expect abstract class Runner
 expect class AndroidJUnit4 : Runner
+
+expect fun blockUntilIdle()

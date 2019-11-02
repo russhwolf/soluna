@@ -4,6 +4,7 @@ import co.touchlab.stately.concurrency.AtomicReference
 import co.touchlab.stately.concurrency.value
 import com.russhwolf.soluna.mobile.AndroidJUnit4
 import com.russhwolf.soluna.mobile.RunWith
+import com.russhwolf.soluna.mobile.blockUntilIdle
 import com.russhwolf.soluna.mobile.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -46,5 +47,3 @@ class BackgroundTest {
     }
 
 }
-
-expect fun blockUntilIdle()

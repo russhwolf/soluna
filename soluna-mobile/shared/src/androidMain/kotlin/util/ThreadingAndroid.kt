@@ -10,7 +10,9 @@ actual val isMainThread: Boolean get() = Looper.myLooper() === Looper.getMainLoo
 actual val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 
 actual fun <T> runInMainThread(input: () -> T, block: (T) -> Unit) {
-    mainHandler.post { block(input()) }
+    mainHandler.post {
+        block(input())
+    }
 }
 
-private val mainHandler by lazy { Handler(Looper.getMainLooper()) }
+private val mainHandler = Handler(Looper.getMainLooper())
