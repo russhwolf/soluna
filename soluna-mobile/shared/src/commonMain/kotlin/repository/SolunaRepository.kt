@@ -8,7 +8,9 @@ import com.russhwolf.soluna.mobile.db.ReminderWithLocation
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.util.epochSeconds
 import com.russhwolf.soluna.mobile.util.runInBackground
+import com.squareup.sqldelight.Query
 import db.asListFlow
+import db.asOneOrNullFlow
 import kotlinx.coroutines.flow.Flow
 
 interface SolunaRepository {
@@ -18,13 +20,21 @@ interface SolunaRepository {
 
     suspend fun getLocation(id: Long): Location?
 
+    fun getLocationFlow(id: Long): Flow<Location?>
+
     suspend fun addLocation(label: String, latitude: Double, longitude: Double, timeZone: String)
 
     suspend fun deleteLocation(id: Long)
 
     suspend fun updateLocationLabel(id: Long, label: String)
 
-    suspend fun getReminders(locationId: Long? = null): List<ReminderWithLocation>
+    suspend fun getReminders(): List<ReminderWithLocation>
+
+    fun getRemindersFlow(): Flow<List<ReminderWithLocation>>
+
+    suspend fun getRemindersForLocation(locationId: Long): List<ReminderWithLocation>
+
+    fun getRemindersForLocationFlow(locationId: Long): Flow<List<ReminderWithLocation>>
 
     suspend fun addReminder(locationId: Long, type: ReminderType, minutesBefore: Int, enabled: Boolean)
 
@@ -44,10 +54,8 @@ interface SolunaRepository {
                 .executeAsList()
         }
 
-        override fun getLocationsFlow(): Flow<List<LocationSummary>> = database.getLocationsFlow()
-
-        private fun SolunaDb.getLocationsFlow(): Flow<List<LocationSummary>> =
-            locationQueries
+        override fun getLocationsFlow(): Flow<List<LocationSummary>> =
+            database.locationQueries
                 .selectAllLocations()
                 .asListFlow()
 
@@ -58,6 +66,11 @@ interface SolunaRepository {
                 .selectLocationById(id)
                 .executeAsOneOrNull()
         }
+
+        override fun getLocationFlow(id: Long): Flow<Location?> =
+            database.locationQueries
+                .selectLocationById(id)
+                .asOneOrNullFlow()
 
         override suspend fun addLocation(label: String, latitude: Double, longitude: Double, timeZone: String) =
             database.addLocation(label, latitude, longitude, timeZone)
@@ -83,18 +96,30 @@ interface SolunaRepository {
                 .updateLocationLabelById(label, id)
         }
 
-        override suspend fun getReminders(locationId: Long?): List<ReminderWithLocation> =
-            database.getReminders(locationId)
+        override suspend fun getReminders(): List<ReminderWithLocation> =
+            database.getReminders()
 
-        private suspend fun SolunaDb.getReminders(locationId: Long?): List<ReminderWithLocation> = runInBackground {
-            val query = if (locationId != null) {
-                reminderQueries.selectRemindersByLocationId(locationId)
-            } else {
-                reminderQueries.selectAllReminders()
+        private suspend fun SolunaDb.getReminders(): List<ReminderWithLocation> = runInBackground {
+            reminderQueries.selectAllReminders().executeAsList()
+        }
+
+        override fun getRemindersFlow(): Flow<List<ReminderWithLocation>> =
+            database.reminderQueries
+                .selectAllReminders()
+                .asListFlow()
+
+        override suspend fun getRemindersForLocation(locationId: Long): List<ReminderWithLocation> =
+            database.getRemindersForLocation(locationId)
+
+        private suspend fun SolunaDb.getRemindersForLocation(locationId: Long): List<ReminderWithLocation> =
+            runInBackground {
+                reminderQueries.selectRemindersByLocationId(locationId).executeAsList()
             }
 
-            query.executeAsList()
-        }
+        override fun getRemindersForLocationFlow(locationId: Long): Flow<List<ReminderWithLocation>> =
+            database.reminderQueries
+                .selectRemindersByLocationId(locationId)
+                .asListFlow()
 
         override suspend fun addReminder(locationId: Long, type: ReminderType, minutesBefore: Int, enabled: Boolean) =
             database.addReminder(locationId, type, minutesBefore, enabled)

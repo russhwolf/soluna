@@ -2,8 +2,8 @@ package com.russhwolf.soluna.mobile.screen.addlocation
 
 import com.russhwolf.soluna.mobile.GeocodeData
 import com.russhwolf.soluna.mobile.MockSolunaRepository
-import com.russhwolf.soluna.mobile.runBlockingTest
 import com.russhwolf.soluna.mobile.screen.AbstractViewModelTest
+import com.russhwolf.soluna.mobile.suspendTest
 import com.russhwolf.soluna.mobile.util.EventTrigger
 import kotlinx.coroutines.Dispatchers
 import kotlin.test.Test
@@ -17,28 +17,28 @@ class AddLocationViewModelTest : AbstractViewModelTest<AddLocationViewModel, Add
         AddLocationViewModel(repository, Dispatchers.Unconfined)
 
     @Test
-    fun addLocation_valid() = runBlockingTest {
+    fun addLocation_valid() = suspendTest {
         viewModel.addLocation("Home", "27.18", "62.83", "UTC").join()
         val expectedState = AddLocationViewState(exitTrigger = EventTrigger.create())
         assertEquals(expectedState, state)
     }
 
     @Test
-    fun addLocation_invalid() = runBlockingTest {
+    fun addLocation_invalid() = suspendTest {
         viewModel.addLocation("Home", "Foo", "62.83", "UTC").join()
         val expectedState = AddLocationViewState(exitTrigger = EventTrigger.empty())
         assertEquals(expectedState, state)
     }
 
     @Test
-    fun geocodeLocation_valid() = runBlockingTest {
+    fun geocodeLocation_valid() = suspendTest {
         viewModel.geocodeLocation("Home").join()
         val expectedState = AddLocationViewState(geocodeTrigger = EventTrigger.create(GeocodeData(27.18, 62.83, "UTC")))
         assertEquals(expectedState, state)
     }
 
     @Test
-    fun geocodeLocation_invalid() = runBlockingTest {
+    fun geocodeLocation_invalid() = suspendTest {
         viewModel.geocodeLocation("Away").join()
         val expectedState = AddLocationViewState(geocodeTrigger = EventTrigger.empty())
         assertEquals(expectedState, state)

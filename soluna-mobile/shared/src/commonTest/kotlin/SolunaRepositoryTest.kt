@@ -50,13 +50,13 @@ class SolunaRepositoryTest {
     }
 
     @Test
-    fun getLocations_empty() = runBlocking {
+    fun getLocations_empty() = suspendTest {
         val locations = repository.getLocations()
         assertTrue(locations.isEmpty())
     }
 
     @Test
-    fun getLocations_populated() = runBlocking {
+    fun getLocations_populated() = suspendTest {
         database.insertDummyLocation()
 
         val locations = repository.getLocations()
@@ -72,7 +72,7 @@ class SolunaRepositoryTest {
     }
 
     @Test
-    fun getLocationsFlow() = runBlocking {
+    fun getLocationsFlow() = suspendTest {
         val values = mutableListOf<List<LocationSummary>>()
         withTimeout(1000) {
             repository.getLocationsFlow()
@@ -115,7 +115,7 @@ class SolunaRepositoryTest {
     }
 
     @Test
-    fun getLocation_valid() = runBlocking {
+    fun getLocation_valid() = suspendTest {
         database.insertDummyLocation()
 
         val location = repository.getLocation(1)
@@ -126,13 +126,47 @@ class SolunaRepositoryTest {
     }
 
     @Test
-    fun getLocation_invalid() = runBlocking {
+    fun getLocation_invalid() = suspendTest {
         val location = repository.getLocation(1)
         assertNull(location)
     }
 
     @Test
-    fun addLocation_valid() = runBlocking {
+    fun getLocationFlow() = suspendTest {
+        database.insertDummyLocation()
+
+        val values = mutableListOf<Location?>()
+        withTimeout(1000) {
+            repository.getLocationFlow(1)
+                .onStart {
+                    launch {
+                        delay(5)
+                        runInBackground { database.locationQueries.updateLocationLabelById("Updated location", 1) }
+                        blockUntilIdle()
+                        delay(5)
+                        runInBackground { database.insertDummyLocation(2) }
+                        blockUntilIdle()
+                        delay(5)
+                        runInBackground { database.locationQueries.deleteLocationById(1) }
+                        blockUntilIdle()
+                    }
+                }
+                .take(2)
+                .collect {
+                    values.add(it)
+                }
+        }
+        assertEquals<List<Location?>>(
+            expected = listOf(
+                dummyLocation.copy(label = "Updated location"),
+                null
+            ),
+            actual = values
+        )
+    }
+
+    @Test
+    fun addLocation_valid() = suspendTest {
         repository.addLocation(
             label = "Test Location 1",
             latitude = 42.3956001,
@@ -149,7 +183,7 @@ class SolunaRepositoryTest {
     }
 
     @Test
-    fun deleteLocation_valid() = runBlocking {
+    fun deleteLocation_valid() = suspendTest {
         database.insertDummyLocation()
 
         repository.deleteLocation(1)
@@ -159,7 +193,7 @@ class SolunaRepositoryTest {
     }
 
     @Test
-    fun updateLocationLabel_valid() = runBlocking {
+    fun updateLocationLabel_valid() = suspendTest {
         database.insertDummyLocation()
 
         repository.updateLocationLabel(1, "Updated Location")
@@ -177,13 +211,13 @@ class SolunaRepositoryTest {
     }
 
     @Test
-    fun getReminders_empty() = runBlocking {
+    fun getReminders_empty() = suspendTest {
         val reminders = repository.getReminders()
         assertTrue(reminders.isEmpty())
     }
 
     @Test
-    fun getReminders_populated() = runBlocking {
+    fun getReminders_populated() = suspendTest {
         database.insertDummyLocation()
         database.insertDummyReminder()
 
@@ -197,18 +231,50 @@ class SolunaRepositoryTest {
     }
 
     @Test
-    fun getRemindersForLocation_empty() = runBlocking {
+    fun getRemindersFlow() = suspendTest {
         database.insertDummyLocation()
-        val reminders = repository.getReminders(1)
+        database.insertDummyReminder()
+
+        val values = mutableListOf<List<ReminderWithLocation>>()
+        withTimeout(1000) {
+            repository.getRemindersFlow()
+                .onStart {
+                    launch {
+                        delay(100)
+                        runInBackground { database.reminderQueries.deleteReminderById(1) }
+                        blockUntilIdle()
+                        delay(100)
+                        runInBackground { database.insertDummyReminder() }
+                        blockUntilIdle()
+                    }
+                }
+                .take(2)
+                .collect {
+                    values.add(it)
+                }
+        }
+        assertEquals<List<List<ReminderWithLocation>>>(
+            expected = listOf(
+                emptyList(),
+                listOf(dummyReminder.copy(id = 2))
+            ),
+            actual = values
+        )
+    }
+
+    @Test
+    fun getRemindersForLocation_empty() = suspendTest {
+        database.insertDummyLocation()
+        val reminders = repository.getRemindersForLocation(1)
         assertTrue(reminders.isEmpty())
     }
 
     @Test
-    fun getRemindersForLocation_populated() = runBlocking {
+    fun getRemindersForLocation_populated() = suspendTest {
         database.insertDummyLocation()
         database.insertDummyReminder()
 
-        val reminders = repository.getReminders(1)
+        val reminders = repository.getRemindersForLocation(1)
 
         assertEquals(1, reminders.size)
         assertEquals(
@@ -218,28 +284,64 @@ class SolunaRepositoryTest {
     }
 
     @Test
-    fun getRemindersForLocation_invalid() = runBlocking {
+    fun getRemindersForLocation_invalid() = suspendTest {
         database.insertDummyLocation()
         database.insertDummyReminder()
 
-        val reminders = repository.getReminders(2)
+        val reminders = repository.getRemindersForLocation(2)
 
         assertTrue(reminders.isEmpty())
     }
 
     @Test
-    fun getRemindersForOtherLocation_empty() = runBlocking {
+    fun getRemindersForLocationFlow() = suspendTest {
         database.insertDummyLocation(1)
         database.insertDummyLocation(2)
         database.insertDummyReminder(1)
 
-        val reminders = repository.getReminders(2)
+        val values = mutableListOf<List<ReminderWithLocation>>()
+        withTimeout(1000) {
+            repository.getRemindersForLocationFlow(1)
+                .onStart {
+                    launch {
+                        delay(100)
+                        runInBackground { database.reminderQueries.deleteReminderById(1) }
+                        blockUntilIdle()
+                        delay(100)
+                        runInBackground { database.insertDummyReminder(2) }
+                        blockUntilIdle()
+                        delay(100)
+                        runInBackground { database.insertDummyReminder(1) }
+                        blockUntilIdle()
+                    }
+                }
+                .take(2)
+                .collect {
+                    values.add(it)
+                }
+        }
+        assertEquals<List<List<ReminderWithLocation>>>(
+            expected = listOf(
+                emptyList(),
+                listOf(dummyReminder.copy(id = 3))
+            ),
+            actual = values
+        )
+    }
+
+    @Test
+    fun getRemindersForOtherLocation_empty() = suspendTest {
+        database.insertDummyLocation(1)
+        database.insertDummyLocation(2)
+        database.insertDummyReminder(1)
+
+        val reminders = repository.getRemindersForLocation(2)
 
         assertTrue(reminders.isEmpty())
     }
 
     @Test
-    fun addReminder_valid() = runBlocking {
+    fun addReminder_valid() = suspendTest {
         database.insertDummyLocation()
 
         repository.addReminder(
@@ -257,7 +359,7 @@ class SolunaRepositoryTest {
     }
 
     @Test
-    fun deleteReminder_valid() = runBlocking {
+    fun deleteReminder_valid() = suspendTest {
         database.insertDummyLocation()
         database.insertDummyReminder()
 
@@ -268,7 +370,7 @@ class SolunaRepositoryTest {
     }
 
     @Test
-    fun updateReminder_valid() = runBlocking {
+    fun updateReminder_valid() = suspendTest {
         database.insertDummyLocation()
         database.insertDummyReminder()
 
@@ -293,7 +395,7 @@ class SolunaRepositoryTest {
     }
 
     @Test
-    fun geocodeLocation_valid() = runBlocking {
+    fun geocodeLocation_valid() = suspendTest {
         val geocodeData = repository.geocodeLocation("Test Location")
 
         assertEquals(

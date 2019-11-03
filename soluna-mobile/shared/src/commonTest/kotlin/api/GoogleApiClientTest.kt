@@ -1,7 +1,7 @@
 package com.russhwolf.soluna.mobile.api
 
 import com.russhwolf.soluna.mobile.BuildKonfig
-import com.russhwolf.soluna.mobile.runBlockingTest
+import com.russhwolf.soluna.mobile.suspendTest
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.request.HttpRequestData
@@ -17,7 +17,7 @@ class GoogleApiClientTest {
     private val googleApiClient by lazy { GoogleApiClient.Impl(mockEngine) }
 
     @Test
-    fun placeAutoComplete_success() = runBlockingTest {
+    fun placeAutoComplete_success() = suspendTest {
         requestValidator = {
             assertEquals(
                 expected = HttpMethod.Get,
@@ -45,7 +45,7 @@ class GoogleApiClientTest {
     }
 
     @Test
-    fun geocode_success() = runBlockingTest {
+    fun geocode_success() = suspendTest {
         requestValidator = {
             assertEquals(
                 expected = HttpMethod.Get,
@@ -79,7 +79,7 @@ class GoogleApiClientTest {
     }
 
     @Test
-    fun timezone_success() = runBlockingTest {
+    fun timezone_success() = suspendTest {
         requestValidator = {
             assertEquals(
                 expected = HttpMethod.Get,

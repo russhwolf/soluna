@@ -10,13 +10,14 @@ import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
 fun <T : Any> Query<T>.asListFlow(): Flow<List<T>> = asExecutionFlow(Query<T>::executeAsList)
 fun <T : Any> Query<T>.asOneOrNullFlow(): Flow<T?> = asExecutionFlow(Query<T>::executeAsOneOrNull)
 
 private inline fun <T : Any, S> Query<T>.asExecutionFlow(crossinline execution: Query<T>.() -> S): Flow<S> =
-    asUnitFlow().map { runInBackground { execution() } }
+    asUnitFlow().map { runInBackground { execution() } }.distinctUntilChanged()
 
 private fun <T : Any> Query<T>.asUnitFlow(): Flow<Unit> = callbackFlow {
     if (!isMainThread) {

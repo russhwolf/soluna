@@ -5,7 +5,7 @@ import co.touchlab.stately.concurrency.value
 import com.russhwolf.soluna.mobile.AndroidJUnit4
 import com.russhwolf.soluna.mobile.RunWith
 import com.russhwolf.soluna.mobile.blockUntilIdle
-import com.russhwolf.soluna.mobile.runBlocking
+import com.russhwolf.soluna.mobile.suspendTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -19,7 +19,7 @@ class BackgroundTest {
     }
 
     @Test
-    fun backgroundThread() = runBlocking {
+    fun backgroundThread() = suspendTest {
         val isMain = runInBackground { isMainThread }
         assertFalse(isMain)
     }
@@ -35,7 +35,7 @@ class BackgroundTest {
     }
 
     @Test
-    fun backgroundToMain() = runBlocking {
+    fun backgroundToMain() = suspendTest {
         val isMain = AtomicReference<Boolean?>(null)
         runInBackground {
             runInMainThread({ isMain }) {

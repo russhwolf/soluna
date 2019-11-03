@@ -8,6 +8,7 @@ import com.russhwolf.soluna.mobile.db.ReminderWithLocation
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 class MockSolunaRepository(
     locations: List<Location> = mutableListOf(),
@@ -21,19 +22,29 @@ class MockSolunaRepository(
     private val geocodeMap = geocodeMap.toMutableMap()
 
     private val locationListeners = mutableListOf<() -> Unit>()
+    private val reminderListeners = mutableListOf<() -> Unit>()
 
     override suspend fun getLocations(): List<LocationSummary> = locations.map { LocationSummary.Impl(it.id, it.label) }
 
-    override fun getLocationsFlow(): Flow<List<LocationSummary>> = callbackFlow {
-        val listener: () -> Unit = { offer(locations.map { LocationSummary.Impl(it.id, it.label) }) }
+    override fun getLocationsFlow(): Flow<List<LocationSummary>> = callbackFlow<List<LocationSummary>> {
+        val listener: () -> Unit = { offer(runBlocking { getLocations() }) }
 
         locationListeners.add(listener)
         awaitClose {
             locationListeners.remove(listener)
         }
-    }
+    }.distinctUntilChanged()
 
     override suspend fun getLocation(id: Long): Location? = locations.find { it.id == id }
+
+    override fun getLocationFlow(id: Long): Flow<Location?> = callbackFlow<Location?> {
+        val listener: () -> Unit = { offer(runBlocking { getLocation(id) }) }
+
+        locationListeners.add(listener)
+        awaitClose {
+            locationListeners.remove(listener)
+        }
+    }.distinctUntilChanged()
 
     override suspend fun addLocation(label: String, latitude: Double, longitude: Double, timeZone: String) {
         locations.add(Location.Impl(nextLocationId++, label, latitude, longitude, timeZone))
@@ -56,15 +67,8 @@ class MockSolunaRepository(
         locationListeners.forEach { it() }
     }
 
-    override suspend fun getReminders(locationId: Long?): List<ReminderWithLocation> =
+    override suspend fun getReminders(): List<ReminderWithLocation> =
         reminders
-            .run {
-                if (locationId != null) {
-                    filter { it.locationId == locationId }
-                } else {
-                    this
-                }
-            }
             .map { reminder ->
                 ReminderWithLocation.Impl(
                     reminder.id,
@@ -76,12 +80,47 @@ class MockSolunaRepository(
                 )
             }
 
+    override fun getRemindersFlow(): Flow<List<ReminderWithLocation>> = callbackFlow<List<ReminderWithLocation>> {
+        val listener: () -> Unit = { offer(runBlocking { getReminders() }) }
+
+        reminderListeners.add(listener)
+        awaitClose {
+            reminderListeners.remove(listener)
+        }
+    }.distinctUntilChanged()
+
+    override suspend fun getRemindersForLocation(locationId: Long): List<ReminderWithLocation> =
+        reminders
+            .filter { it.locationId == locationId }
+            .map { reminder ->
+                ReminderWithLocation.Impl(
+                    reminder.id,
+                    reminder.locationId,
+                    locations.first { it.id == reminder.locationId }.label,
+                    reminder.type,
+                    reminder.minutesBefore,
+                    reminder.enabled
+                )
+            }
+
+    override fun getRemindersForLocationFlow(locationId: Long): Flow<List<ReminderWithLocation>> =
+        callbackFlow<List<ReminderWithLocation>> {
+            val listener: () -> Unit = { offer(runBlocking { getRemindersForLocation(locationId) }) }
+
+            reminderListeners.add(listener)
+            awaitClose {
+                reminderListeners.remove(listener)
+            }
+        }.distinctUntilChanged()
+
     override suspend fun addReminder(locationId: Long, type: ReminderType, minutesBefore: Int, enabled: Boolean) {
         reminders.add(Reminder.Impl(nextReminderId++, locationId, type, minutesBefore, enabled))
+        reminderListeners.forEach { it() }
     }
 
     override suspend fun deleteReminder(id: Long) {
         reminders.removeAll { it.id == id }
+        reminderListeners.forEach { it() }
     }
 
     override suspend fun updateReminder(id: Long, minutesBefore: Int?, enabled: Boolean?) {
@@ -97,6 +136,7 @@ class MockSolunaRepository(
                 minutesBefore ?: prevReminder.minutesBefore,
                 enabled ?: prevReminder.enabled
             )
+        reminderListeners.forEach { it() }
     }
 
     override suspend fun geocodeLocation(location: String): GeocodeData? = geocodeMap[location]

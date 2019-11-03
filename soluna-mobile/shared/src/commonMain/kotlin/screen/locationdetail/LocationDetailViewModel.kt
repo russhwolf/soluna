@@ -18,7 +18,7 @@ class LocationDetailViewModel(
 
     fun refresh() = updateAsync {
         val locationAsync = coroutineScope.async { repository.getLocation(id) }
-        val remindersAsync = coroutineScope.async { repository.getReminders(id) }
+        val remindersAsync = coroutineScope.async { repository.getRemindersForLocation(id) }
         state.copy(location = locationAsync.await(), reminders = remindersAsync.await())
     }
 
