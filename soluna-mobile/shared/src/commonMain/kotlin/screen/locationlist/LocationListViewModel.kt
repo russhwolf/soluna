@@ -16,16 +16,12 @@ class LocationListViewModel(
 ) :
     BaseViewModel<LocationListViewState>(LocationListViewState(emptyList()), dispatcher) {
 
-    fun onCreate(): Job {
-        coroutineScope.launch {
-            repository
-                .getLocationsFlow()
-                .collectLatest { locations ->
-                    update { state.copy(locations = locations) }
-                }
-        }
+    init {
+        repository
+            .getLocationsFlow()
+            .collectAndUpdate { state.copy(locations = it) }
 
-        return updateAsync {
+        updateAsync {
             val locations = repository.getLocations()
             state.copy(locations = locations)
         }

@@ -12,6 +12,9 @@ open class BaseViewController<VM: BaseViewModel<T>, T: AnyObject>: UIViewControl
         preconditionFailure("BaseViewController subclass must override initViewModel()!")
     }
 
+    open func onUpdateState(state: T) {
+    }
+
     lazy var viewModel: VM = initViewModel()
 
     let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
@@ -19,11 +22,12 @@ open class BaseViewController<VM: BaseViewModel<T>, T: AnyObject>: UIViewControl
 
     open override func viewDidLoad() {
         super.viewDidLoad()
-
         configureActivityIndicator()
 
-        viewModel.setErrorListener { (error: KotlinThrowable) in
-            error.printStackTrace()
+        viewModel.setViewStateListener { (state: T?) in
+            if let state = state {
+                self.onUpdateState(state: state)
+            }
         }
 
         viewModel.setLoadingListener { (loading: KotlinBoolean) in
@@ -34,6 +38,10 @@ open class BaseViewController<VM: BaseViewModel<T>, T: AnyObject>: UIViewControl
                 self.activityIndicator.stopAnimating()
                 self.activityIndicatorBackground.alpha = 0
             }
+        }
+
+        viewModel.setErrorListener { (error: KotlinThrowable) in
+            error.printStackTrace()
         }
     }
 

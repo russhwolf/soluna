@@ -11,26 +11,26 @@ import Shared
 
 class AddLocationViewController: BaseViewController<AddLocationViewModel, AddLocationViewState> {
 
-    override func initViewModel() -> AddLocationViewModel {
-        return SwiftKotlinBridgeKt.getAddLocationViewModel()
-    }
-
     @IBOutlet var labelInput: UITextField!
     @IBOutlet var latitudeInput: UITextField!
     @IBOutlet var longitudeInput: UITextField!
     @IBOutlet var timeZoneInput: UITextField!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        viewModel.setViewStateListener { (state: AddLocationViewState) in
-            state.geocodeTrigger.consume { geocodeResult in
-                self.latitudeInput.text = String(geocodeResult.latitude)
-                self.longitudeInput.text = String(geocodeResult.longitude)
-                self.timeZoneInput.text = geocodeResult.timeZone
-            }
-            state.exitTrigger.consume { _ in
-                self.navigationController?.popViewController(animated: true)
-            }
+    override func initViewModel() -> AddLocationViewModel {
+        SwiftKotlinBridgeKt.getAddLocationViewModel()
+    }
+
+    override func onUpdateState(state: AddLocationViewState) {
+        super.onUpdateState(state: state)
+
+        state.geocodeTrigger.consume { geocodeResult in
+            self.latitudeInput.text = String(geocodeResult.latitude)
+            self.longitudeInput.text = String(geocodeResult.longitude)
+            self.timeZoneInput.text = geocodeResult.timeZone
+        }
+
+        state.exitTrigger.consume { _ in
+            self.navigationController?.popViewController(animated: true)
         }
     }
 

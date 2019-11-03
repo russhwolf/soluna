@@ -17,27 +17,19 @@ class LocationDetailViewController: BaseViewController<LocationDetailViewModel, 
     @IBOutlet var latitudeText: UILabel!
     
     override func initViewModel() -> LocationDetailViewModel {
-        return SwiftKotlinBridgeKt.getLocationDetailViewModel(id: id)
+        SwiftKotlinBridgeKt.getLocationDetailViewModel(id: id)
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
 
-        viewModel.setViewStateListener { state in
-            if let location = state.location {
-                self.title = location.label
-                self.longitudeText.text = String(location.longitude)
-                self.latitudeText.text = String(location.latitude)
-            }
-
-            state.exitTrigger.consume { _ in
-                self.navigationController?.popViewController(animated: true)
-            }
+    override func onUpdateState(state: LocationDetailViewState) {
+        super.onUpdateState(state: state)
+        if let location = state.location {
+            self.title = location.label
+            self.longitudeText.text = String(location.longitude)
+            self.latitudeText.text = String(location.latitude)
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        viewModel.refresh()
+        state.exitTrigger.consume { _ in
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
     @IBAction func onDeleteClick(_ sender: Any) {

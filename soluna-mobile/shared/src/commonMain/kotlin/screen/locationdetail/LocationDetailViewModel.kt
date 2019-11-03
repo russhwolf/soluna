@@ -7,23 +7,40 @@ import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import com.russhwolf.soluna.mobile.util.EventTrigger
 import com.russhwolf.soluna.mobile.util.mainDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class LocationDetailViewModel(
-    private val id: Long,
+    private val locationId: Long,
     private val repository: SolunaRepository,
     dispatcher: CoroutineDispatcher = mainDispatcher
 ) :
     BaseViewModel<LocationDetailViewState>(LocationDetailViewState(null), dispatcher) {
 
-    fun refresh() = updateAsync {
-        val locationAsync = coroutineScope.async { repository.getLocation(id) }
-        val remindersAsync = coroutineScope.async { repository.getRemindersForLocation(id) }
-        state.copy(location = locationAsync.await(), reminders = remindersAsync.await())
+    init {
+        repository
+            .getLocationFlow(locationId)
+            .collectAndUpdate { state.copy(location = it) }
+
+        repository
+            .getRemindersForLocationFlow(locationId)
+            .collectAndUpdate { state.copy(reminders = it) }
+
+        updateAsync {
+            val location = repository.getLocation(locationId)
+            state.copy(location = location)
+        }
+
+        updateAsync {
+            val reminders = repository.getRemindersForLocation(locationId)
+            state.copy(reminders = reminders)
+        }
     }
 
     fun delete() = updateAsync {
-        repository.deleteLocation(id)
+        repository.deleteLocation(locationId)
         state.copy(exitTrigger = EventTrigger.create())
     }
 }

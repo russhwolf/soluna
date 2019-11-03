@@ -4,23 +4,27 @@ import com.russhwolf.soluna.mobile.util.EventTrigger
 import com.russhwolf.soluna.mobile.util.SupervisorScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
-abstract class BaseViewModel<T>(initialState: T, dispatcher: CoroutineDispatcher) {
+abstract class BaseViewModel<S>(initialState: S, dispatcher: CoroutineDispatcher) {
     protected val coroutineScope = SupervisorScope(dispatcher)
 
-    private var viewStateListener: ViewStateListener<T>? = null
+    private var viewStateListener: ViewStateListener<S>? = null
     private var loadingListener: LoadingListener? = null
     private var errorListener: ErrorListener? = null
 
-    private var loadCount: Int = 0
+    private var loadCount: Int by Delegates.observable(0) { _, _, newValue ->
+        isLoading = newValue > 0
+    }
 
-    protected var state: T by Delegates.observable(initialState) { _, _, newValue ->
+    protected var state: S by Delegates.observable(initialState) { _, _, newValue ->
         viewStateListener?.invoke(newValue)
     }
 
-    protected var isLoading: Boolean by Delegates.observable(false) { _, _, newValue ->
+    private var isLoading: Boolean by Delegates.observable(false) { _, _, newValue ->
         loadingListener?.invoke(newValue)
     }
 
@@ -28,28 +32,31 @@ abstract class BaseViewModel<T>(initialState: T, dispatcher: CoroutineDispatcher
         newValue.consume { errorListener?.invoke(it) }
     }
 
-    protected fun updateAsync(action: suspend () -> T): Job =
+    protected fun updateAsync(action: suspend () -> S): Job =
         coroutineScope.launch {
             loadCount++
-            isLoading = loadCount > 0
             try {
                 state = action()
             } catch (e: Throwable) {
                 error = EventTrigger.create(e)
             }
             loadCount--
-            isLoading = loadCount > 0
         }
 
-    protected fun update(action: () -> T) {
+    protected fun update(action: () -> S) =
         try {
             state = action()
         } catch (e: Throwable) {
             error = EventTrigger.create(e)
         }
+
+    protected fun <T> Flow<T>.collectAndUpdate(action: (T) -> S) {
+        coroutineScope.launch {
+            collectLatest { update { action(it) } }
+        }
     }
 
-    fun setViewStateListener(listener: ViewStateListener<T>) {
+    fun setViewStateListener(listener: ViewStateListener<S>) {
         viewStateListener = listener
         listener.invoke(state)
     }
@@ -69,7 +76,7 @@ abstract class BaseViewModel<T>(initialState: T, dispatcher: CoroutineDispatcher
     }
 }
 
-typealias ViewStateListener<T> = (T) -> Unit
+typealias ViewStateListener<S> = (S) -> Unit
 typealias LoadingListener = (Boolean) -> Unit
 typealias ErrorListener = (Throwable) -> Unit
 

@@ -20,7 +20,7 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
 
     @Test
     fun initialState_empty() = suspendTest {
-        viewModel.onCreate().join()
+        awaitLoading()
         assertTrue(state.locations.isEmpty())
     }
 
@@ -31,13 +31,13 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
                 Location.Impl(0, "Home", 27.18, 62.83, "UTC")
             )
         )
-        viewModel.onCreate().join()
+        awaitLoading()
         assertEquals(listOf(LocationSummary.Impl(0, "Home")), state.locations)
     }
 
     @Test
     fun locationsFlow() = suspendTest {
-        viewModel.onCreate().join()
+        awaitLoading()
         repository.addLocation("Home", 27.18, 62.83, "UTC")
         assertEquals(listOf(LocationSummary.Impl(0, "Home")), state.locations)
     }

@@ -11,30 +11,24 @@ import Shared
 
 class LocationListViewController: BaseViewController<LocationListViewModel, LocationListViewState>, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource {
 
-    override func initViewModel() -> LocationListViewModel {
-        return SwiftKotlinBridgeKt.getLocationListViewModel()
-    }
-
     private var items: [LocationSummary] = []
+    private var selectedId: Int64 = -1
 
     @IBOutlet var locationList: UITableView!
-    
-    var selectedId: Int64 = -1
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func initViewModel() -> LocationListViewModel {
+        SwiftKotlinBridgeKt.getLocationListViewModel()
+    }
 
-        viewModel.onCreate()
-
-        viewModel.setViewStateListener { (state: LocationListViewState) in
-            self.setItems(items: state.locations)
-            state.addLocationTrigger.consume { unit in
-                self.performSegue(withIdentifier: "AddLocation", sender: self)
-            }
-            state.locationDetailsTrigger.consume { id in
-                self.selectedId = id.int64Value
-                self.performSegue(withIdentifier: "LocationDetail", sender: self)
-            }
+    override func onUpdateState(state: LocationListViewState) {
+        super.onUpdateState(state: state)
+        self.setItems(items: state.locations)
+        state.addLocationTrigger.consume { unit in
+            self.performSegue(withIdentifier: "AddLocation", sender: self)
+        }
+        state.locationDetailsTrigger.consume { id in
+            self.selectedId = id.int64Value
+            self.performSegue(withIdentifier: "LocationDetail", sender: self)
         }
     }
 
