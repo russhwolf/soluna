@@ -1,6 +1,6 @@
 package com.russhwolf.soluna.mobile.screen.locationlist
 
-import com.russhwolf.soluna.mobile.SolunaRepository
+import com.russhwolf.soluna.mobile.LocationRepository
 import com.russhwolf.soluna.mobile.db.LocationSummary
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import com.russhwolf.soluna.mobile.util.EventTrigger
@@ -11,18 +11,18 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class LocationListViewModel(
-    private val repository: SolunaRepository,
+    private val locationRepository: LocationRepository,
     dispatcher: CoroutineDispatcher = mainDispatcher
 ) :
     BaseViewModel<LocationListViewState>(LocationListViewState(emptyList()), dispatcher) {
 
     init {
-        repository
+        locationRepository
             .getLocationsFlow()
             .collectAndUpdate { state.copy(locations = it) }
 
         updateAsync {
-            val locations = repository.getLocations()
+            val locations = locationRepository.getLocations()
             state.copy(locations = locations)
         }
     }
@@ -37,8 +37,8 @@ class LocationListViewModel(
     }
 
     fun removeLocation(id: Long) = updateAsync {
-        repository.deleteLocation(id)
-        val locations = repository.getLocations()
+        locationRepository.deleteLocation(id)
+        val locations = locationRepository.getLocations()
         state.copy(locations = locations)
     }
 }

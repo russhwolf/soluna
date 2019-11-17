@@ -1,6 +1,6 @@
 package com.russhwolf.soluna.mobile.screen.locationlist
 
-import com.russhwolf.soluna.mobile.MockSolunaRepository
+import com.russhwolf.soluna.mobile.MockLocationRepository
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.LocationSummary
 import com.russhwolf.soluna.mobile.suspendTest
@@ -13,10 +13,10 @@ import kotlin.test.assertTrue
 
 
 class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, LocationListViewState>() {
-    private var repository = MockSolunaRepository()
+    private var locationRepository = MockLocationRepository()
 
     override suspend fun createViewModel(): LocationListViewModel =
-        LocationListViewModel(repository, Dispatchers.Unconfined)
+        LocationListViewModel(locationRepository, Dispatchers.Unconfined)
 
     @Test
     fun initialState_empty() = suspendTest {
@@ -26,7 +26,7 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
 
     @Test
     fun initialState_populated() = suspendTest {
-        repository = MockSolunaRepository(
+        locationRepository = MockLocationRepository(
             listOf(
                 Location.Impl(0, "Home", 27.18, 62.83, "UTC")
             )
@@ -38,13 +38,13 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
     @Test
     fun locationsFlow() = suspendTest {
         awaitLoading()
-        repository.addLocation("Home", 27.18, 62.83, "UTC")
+        locationRepository.addLocation("Home", 27.18, 62.83, "UTC")
         assertEquals(listOf(LocationSummary.Impl(0, "Home")), state.locations)
     }
 
     @Test
     fun removeLocation() = suspendTest {
-        repository = MockSolunaRepository(
+        locationRepository = MockLocationRepository(
             listOf(
                 Location.Impl(0, "Home", 27.18, 62.83, "UTC")
             )

@@ -1,7 +1,8 @@
 package com.russhwolf.soluna.mobile.screen.addlocation
 
 import com.russhwolf.soluna.mobile.GeocodeData
-import com.russhwolf.soluna.mobile.MockSolunaRepository
+import com.russhwolf.soluna.mobile.MockLocationRepository
+import com.russhwolf.soluna.mobile.repository.MockGeocodeRepository
 import com.russhwolf.soluna.mobile.screen.AbstractViewModelTest
 import com.russhwolf.soluna.mobile.suspendTest
 import com.russhwolf.soluna.mobile.util.EventTrigger
@@ -11,10 +12,12 @@ import kotlin.test.assertEquals
 
 
 class AddLocationViewModelTest : AbstractViewModelTest<AddLocationViewModel, AddLocationViewState>() {
-    private val repository = MockSolunaRepository(geocodeMap = mapOf("Home" to GeocodeData(27.18, 62.83, "UTC")))
+    private val locationRepository = MockLocationRepository()
+    private val geocodeRepository =
+        MockGeocodeRepository(geocodeMap = mapOf("Home" to GeocodeData(27.18, 62.83, "UTC")))
 
     override suspend fun createViewModel(): AddLocationViewModel =
-        AddLocationViewModel(repository, Dispatchers.Unconfined)
+        AddLocationViewModel(locationRepository, geocodeRepository, Dispatchers.Unconfined)
 
     @Test
     fun addLocation_valid() = suspendTest {
