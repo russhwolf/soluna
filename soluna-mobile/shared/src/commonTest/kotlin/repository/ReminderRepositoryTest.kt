@@ -1,15 +1,21 @@
-package com.russhwolf.soluna.mobile
+package com.russhwolf.soluna.mobile.repository
 
+import com.russhwolf.soluna.mobile.AndroidJUnit4
+import com.russhwolf.soluna.mobile.ReminderRepository
+import com.russhwolf.soluna.mobile.RunWith
+import com.russhwolf.soluna.mobile.blockUntilIdle
+import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.ReminderType
 import com.russhwolf.soluna.mobile.db.ReminderWithLocation
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.db.createDatabase
+import com.russhwolf.soluna.mobile.suspendTest
 import com.russhwolf.soluna.mobile.util.runInBackground
 import com.squareup.sqldelight.db.SqlDriver
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import kotlin.test.AfterTest
@@ -57,8 +63,7 @@ class ReminderRepositoryTest {
         database.insertDummyLocation()
         database.insertDummyReminder()
 
-        val values = mutableListOf<List<ReminderWithLocation>>()
-        withTimeout(1000) {
+        val values = withTimeout(1000) {
             repository.getRemindersFlow()
                 .onStart {
                     launch {
@@ -71,11 +76,9 @@ class ReminderRepositoryTest {
                     }
                 }
                 .take(2)
-                .collect {
-                    values.add(it)
-                }
+                .toList()
         }
-        assertEquals<List<List<ReminderWithLocation>>>(
+        assertEquals(
             expected = listOf(
                 emptyList(),
                 listOf(dummyReminder.copy(id = 2))
@@ -121,8 +124,7 @@ class ReminderRepositoryTest {
         database.insertDummyLocation(2)
         database.insertDummyReminder(1)
 
-        val values = mutableListOf<List<ReminderWithLocation>>()
-        withTimeout(1000) {
+        val values = withTimeout(1000) {
             repository.getRemindersForLocationFlow(1)
                 .onStart {
                     launch {
@@ -138,11 +140,9 @@ class ReminderRepositoryTest {
                     }
                 }
                 .take(2)
-                .collect {
-                    values.add(it)
-                }
+                .toList()
         }
-        assertEquals<List<List<ReminderWithLocation>>>(
+        assertEquals(
             expected = listOf(
                 emptyList(),
                 listOf(dummyReminder.copy(id = 3))

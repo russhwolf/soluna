@@ -1,23 +1,21 @@
-package com.russhwolf.soluna.mobile
+package com.russhwolf.soluna.mobile.repository
 
-import com.russhwolf.soluna.mobile.api.GoogleApiClient
+import com.russhwolf.soluna.mobile.AndroidJUnit4
+import com.russhwolf.soluna.mobile.LocationRepository
+import com.russhwolf.soluna.mobile.RunWith
+import com.russhwolf.soluna.mobile.blockUntilIdle
+import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.LocationSummary
-import com.russhwolf.soluna.mobile.db.ReminderType
-import com.russhwolf.soluna.mobile.db.ReminderWithLocation
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.db.createDatabase
+import com.russhwolf.soluna.mobile.suspendTest
 import com.russhwolf.soluna.mobile.util.runInBackground
 import com.squareup.sqldelight.db.SqlDriver
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.respond
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import kotlin.test.AfterTest
@@ -26,7 +24,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import kotlin.test.fail
 
 @RunWith(AndroidJUnit4::class)
 class LocationRepositoryTest {
@@ -66,8 +63,7 @@ class LocationRepositoryTest {
 
     @Test
     fun getLocationsFlow() = suspendTest {
-        val values = mutableListOf<List<LocationSummary>>()
-        withTimeout(1000) {
+        val values = withTimeout(1000) {
             repository.getLocationsFlow()
                 .onStart {
                     launch {
@@ -80,11 +76,9 @@ class LocationRepositoryTest {
                     }
                 }
                 .take(2)
-                .collect {
-                    values.add(it)
-                }
+                .toList()
         }
-        assertEquals<List<List<LocationSummary>>>(
+        assertEquals(
             expected = listOf(
                 listOf(
                     LocationSummary.Impl(
@@ -128,8 +122,7 @@ class LocationRepositoryTest {
     fun getLocationFlow() = suspendTest {
         database.insertDummyLocation()
 
-        val values = mutableListOf<Location?>()
-        withTimeout(1000) {
+        val values = withTimeout(1000) {
             repository.getLocationFlow(1)
                 .onStart {
                     launch {
@@ -145,11 +138,9 @@ class LocationRepositoryTest {
                     }
                 }
                 .take(2)
-                .collect {
-                    values.add(it)
-                }
+                .toList()
         }
-        assertEquals<List<Location?>>(
+        assertEquals(
             expected = listOf(
                 dummyLocation.copy(label = "Updated location"),
                 null
