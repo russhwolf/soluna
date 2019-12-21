@@ -1,7 +1,6 @@
 package com.russhwolf.soluna.mobile.repository
 
 import com.russhwolf.soluna.mobile.AndroidJUnit4
-import com.russhwolf.soluna.mobile.ReminderRepository
 import com.russhwolf.soluna.mobile.RunWith
 import com.russhwolf.soluna.mobile.blockUntilIdle
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver

@@ -1,10 +1,10 @@
 package com.russhwolf.soluna.mobile.screen.locationlist
 
-import com.russhwolf.soluna.mobile.MockLocationRepository
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.LocationSummary
-import com.russhwolf.soluna.mobile.suspendTest
+import com.russhwolf.soluna.mobile.repository.MockLocationRepository
 import com.russhwolf.soluna.mobile.screen.AbstractViewModelTest
+import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -26,11 +26,7 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
 
     @Test
     fun initialState_populated() = suspendTest {
-        locationRepository = MockLocationRepository(
-            listOf(
-                Location.Impl(0, "Home", 27.18, 62.83, "UTC")
-            )
-        )
+        locationRepository = MockLocationRepository(Location.Impl(0, "Home", 27.18, 62.83, "UTC"))
         awaitLoading()
         assertEquals(listOf(LocationSummary.Impl(0, "Home")), state.locations)
     }
@@ -44,11 +40,7 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
 
     @Test
     fun removeLocation() = suspendTest {
-        locationRepository = MockLocationRepository(
-            listOf(
-                Location.Impl(0, "Home", 27.18, 62.83, "UTC")
-            )
-        )
+        locationRepository = MockLocationRepository(Location.Impl(0, "Home", 27.18, 62.83, "UTC"))
         viewModel.removeLocation(0).join()
         assertTrue(state.locations.isEmpty())
     }

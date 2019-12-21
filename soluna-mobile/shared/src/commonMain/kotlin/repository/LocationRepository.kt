@@ -1,16 +1,11 @@
-package com.russhwolf.soluna.mobile
+package com.russhwolf.soluna.mobile.repository
 
-import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.LocationSummary
-import com.russhwolf.soluna.mobile.db.ReminderType
-import com.russhwolf.soluna.mobile.db.ReminderWithLocation
 import com.russhwolf.soluna.mobile.db.SolunaDb
-import com.russhwolf.soluna.mobile.util.epochSeconds
+import com.russhwolf.soluna.mobile.db.asListFlow
+import com.russhwolf.soluna.mobile.db.asOneOrNullFlow
 import com.russhwolf.soluna.mobile.util.runInBackground
-import com.squareup.sqldelight.Query
-import db.asListFlow
-import db.asOneOrNullFlow
 import kotlinx.coroutines.flow.Flow
 
 interface LocationRepository {

@@ -1,10 +1,9 @@
-package com.russhwolf.soluna.mobile
+package com.russhwolf.soluna.mobile.repository
 
-import com.russhwolf.soluna.mobile.db.Location
-import com.russhwolf.soluna.mobile.db.LocationSummary
 import com.russhwolf.soluna.mobile.db.Reminder
 import com.russhwolf.soluna.mobile.db.ReminderType
 import com.russhwolf.soluna.mobile.db.ReminderWithLocation
+import com.russhwolf.soluna.mobile.runBlocking
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -12,7 +11,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 
 class MockReminderRepository(
     private val locationRepository: LocationRepository,
-    reminders: List<Reminder> = mutableListOf()
+    vararg reminders: Reminder
 ) : ReminderRepository {
     private var nextReminderId = 0L
     private val reminders = reminders.toMutableList()
@@ -32,7 +31,7 @@ class MockReminderRepository(
                 )
             }
 
-    override fun getRemindersFlow(): Flow<List<ReminderWithLocation>> = callbackFlow<List<ReminderWithLocation>> {
+    override fun getRemindersFlow(): Flow<List<ReminderWithLocation>> = callbackFlow {
         val listener: () -> Unit = { offer(runBlocking { getReminders() }) }
 
         reminderListeners.add(listener)
@@ -56,7 +55,7 @@ class MockReminderRepository(
             }
 
     override fun getRemindersForLocationFlow(locationId: Long): Flow<List<ReminderWithLocation>> =
-        callbackFlow<List<ReminderWithLocation>> {
+        callbackFlow {
             val listener: () -> Unit = { offer(runBlocking { getRemindersForLocation(locationId) }) }
 
             reminderListeners.add(listener)

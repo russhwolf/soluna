@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
 abstract class BaseViewModel<S>(initialState: S, dispatcher: CoroutineDispatcher) {
-    protected val coroutineScope = SupervisorScope(dispatcher)
+    val coroutineScope = SupervisorScope(dispatcher)
 
     private var viewStateListener: ViewStateListener<S>? = null
     private var loadingListener: LoadingListener? = null
@@ -32,11 +32,13 @@ abstract class BaseViewModel<S>(initialState: S, dispatcher: CoroutineDispatcher
         newValue.consume { errorListener?.invoke(it) }
     }
 
-    protected fun updateAsync(action: suspend () -> S): Job =
+    protected fun updateAsync(action: suspend () -> S): Job = doAsync { state = action() }
+
+    protected fun doAsync(action: suspend () -> Unit): Job =
         coroutineScope.launch {
             loadCount++
             try {
-                state = action()
+                action()
             } catch (e: Throwable) {
                 error = EventTrigger.create(e)
             }

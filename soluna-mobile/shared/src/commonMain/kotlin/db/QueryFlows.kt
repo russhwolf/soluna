@@ -1,4 +1,4 @@
-package db
+package com.russhwolf.soluna.mobile.db
 
 import co.touchlab.stately.concurrency.ThreadLocalRef
 import co.touchlab.stately.concurrency.value

@@ -1,4 +1,4 @@
-package com.russhwolf.soluna.mobile
+package com.russhwolf.soluna.mobile.repository
 
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.util.epochSeconds

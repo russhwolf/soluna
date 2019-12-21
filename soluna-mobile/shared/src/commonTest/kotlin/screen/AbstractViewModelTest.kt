@@ -2,12 +2,12 @@ package com.russhwolf.soluna.mobile.screen
 
 import com.russhwolf.soluna.mobile.runBlocking
 import kotlinx.coroutines.CancellableContinuation
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.properties.Delegates
+import kotlin.test.assertEquals
 
 abstract class AbstractViewModelTest<VM : BaseViewModel<T>, T : Any> {
     protected lateinit var state: T
@@ -44,7 +44,7 @@ abstract class AbstractViewModelTest<VM : BaseViewModel<T>, T : Any> {
     private fun updateLoadingContinuation(isLoading: Boolean) {
         if (isLoading) {
             loadingJob?.cancel()
-            loadingJob = GlobalScope.launch {
+            loadingJob = viewModel.coroutineScope.launch {
                 suspendCancellableCoroutine {
                     loadingContinuation?.cancel()
                     loadingContinuation = it
@@ -57,6 +57,12 @@ abstract class AbstractViewModelTest<VM : BaseViewModel<T>, T : Any> {
             loadingContinuation?.resume(Unit)
             loadingContinuation = null
         }
+    }
+
+    protected fun assertState(state: T, isLoading: Boolean = false, error: Throwable? = null) {
+        assertEquals(state, this.state)
+        assertEquals(isLoading, this.isLoading)
+        assertEquals(error, this.error)
     }
 }
 

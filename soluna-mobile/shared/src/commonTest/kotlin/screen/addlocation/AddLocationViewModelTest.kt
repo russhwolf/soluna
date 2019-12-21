@@ -1,8 +1,8 @@
 package com.russhwolf.soluna.mobile.screen.addlocation
 
-import com.russhwolf.soluna.mobile.GeocodeData
-import com.russhwolf.soluna.mobile.MockLocationRepository
+import com.russhwolf.soluna.mobile.repository.GeocodeData
 import com.russhwolf.soluna.mobile.repository.MockGeocodeRepository
+import com.russhwolf.soluna.mobile.repository.MockLocationRepository
 import com.russhwolf.soluna.mobile.screen.AbstractViewModelTest
 import com.russhwolf.soluna.mobile.suspendTest
 import com.russhwolf.soluna.mobile.util.EventTrigger

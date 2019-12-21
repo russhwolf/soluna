@@ -1,6 +1,7 @@
-package com.russhwolf.soluna.mobile
+package com.russhwolf.soluna.mobile.repository
 
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
+import com.russhwolf.soluna.mobile.suspendTest
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpHeaders

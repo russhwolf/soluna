@@ -1,16 +1,14 @@
-package com.russhwolf.soluna.mobile
+package com.russhwolf.soluna.mobile.repository
 
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.LocationSummary
-import com.russhwolf.soluna.mobile.db.Reminder
-import com.russhwolf.soluna.mobile.db.ReminderType
-import com.russhwolf.soluna.mobile.db.ReminderWithLocation
+import com.russhwolf.soluna.mobile.runBlocking
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 
-class MockLocationRepository(locations: List<Location> = mutableListOf()) : LocationRepository {
+class MockLocationRepository(vararg locations: Location) : LocationRepository {
     private var nextLocationId = 0L
     private val locations = locations.toMutableList()
 
@@ -18,7 +16,7 @@ class MockLocationRepository(locations: List<Location> = mutableListOf()) : Loca
 
     override suspend fun getLocations(): List<LocationSummary> = locations.map { LocationSummary.Impl(it.id, it.label) }
 
-    override fun getLocationsFlow(): Flow<List<LocationSummary>> = callbackFlow<List<LocationSummary>> {
+    override fun getLocationsFlow(): Flow<List<LocationSummary>> = callbackFlow {
         val listener: () -> Unit = { offer(runBlocking { getLocations() }) }
 
         locationListeners.add(listener)
@@ -29,7 +27,7 @@ class MockLocationRepository(locations: List<Location> = mutableListOf()) : Loca
 
     override suspend fun getLocation(id: Long): Location? = locations.find { it.id == id }
 
-    override fun getLocationFlow(id: Long): Flow<Location?> = callbackFlow<Location?> {
+    override fun getLocationFlow(id: Long): Flow<Location?> = callbackFlow {
         val listener: () -> Unit = { offer(runBlocking { getLocation(id) }) }
 
         locationListeners.add(listener)

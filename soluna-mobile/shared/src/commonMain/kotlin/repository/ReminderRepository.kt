@@ -1,10 +1,10 @@
-package com.russhwolf.soluna.mobile
+package com.russhwolf.soluna.mobile.repository
 
 import com.russhwolf.soluna.mobile.db.ReminderType
 import com.russhwolf.soluna.mobile.db.ReminderWithLocation
 import com.russhwolf.soluna.mobile.db.SolunaDb
+import com.russhwolf.soluna.mobile.db.asListFlow
 import com.russhwolf.soluna.mobile.util.runInBackground
-import db.asListFlow
 import kotlinx.coroutines.flow.Flow
 
 interface ReminderRepository {

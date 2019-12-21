@@ -42,7 +42,7 @@ class LocationListViewController: BaseViewController<LocationListViewModel, Loca
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        items.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -58,8 +58,7 @@ class LocationListViewController: BaseViewController<LocationListViewModel, Loca
         let index = indexPath.row
         viewModel.navigateToLocationDetails(locationSummary: items[index])
     }
-    
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let locationDetailViewController = segue.destination as? LocationDetailViewController else {
             return

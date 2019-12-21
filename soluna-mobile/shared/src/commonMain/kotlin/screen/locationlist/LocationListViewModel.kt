@@ -1,14 +1,11 @@
 package com.russhwolf.soluna.mobile.screen.locationlist
 
-import com.russhwolf.soluna.mobile.LocationRepository
 import com.russhwolf.soluna.mobile.db.LocationSummary
+import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import com.russhwolf.soluna.mobile.util.EventTrigger
 import com.russhwolf.soluna.mobile.util.mainDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 class LocationListViewModel(
     private val locationRepository: LocationRepository,

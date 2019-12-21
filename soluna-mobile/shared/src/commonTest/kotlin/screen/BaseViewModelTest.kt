@@ -37,10 +37,27 @@ class BaseViewModelTest : AbstractViewModelTest<TestViewModel, String>() {
     }
 
     @Test
-    fun loading() {
+    fun loadingAction() {
         viewModel.awaitAsyncState()
         assertEquals("Initial", state)
         assertTrue(isLoading)
+        assertNull(error)
+    }
+
+    @Test
+    fun loadingUpdate() {
+        viewModel.awaitAsyncState()
+        assertEquals("Initial", state)
+        assertTrue(isLoading)
+        assertNull(error)
+    }
+
+    @Test
+    fun doActionAsync() {
+        viewModel.awaitAsyncAction()
+        viewModel.resumeAsyncState { "Unused" }
+        assertEquals("Initial", state)
+        assertFalse(isLoading)
         assertNull(error)
     }
 
@@ -86,6 +103,12 @@ class TestViewModel(state: String) : BaseViewModel<String>(state, Dispatchers.Un
     private val continuations = mutableMapOf<Int, Continuation<String>>()
 
     fun updateState(updater: () -> String) = update { updater() }
+
+    fun awaitAsyncAction(id: Int = 0) = doAsync {
+        suspendCoroutine<String> {
+            continuations[id] = it
+        }
+    }
 
     fun awaitAsyncState(id: Int = 0) = updateAsync {
         suspendCoroutine {

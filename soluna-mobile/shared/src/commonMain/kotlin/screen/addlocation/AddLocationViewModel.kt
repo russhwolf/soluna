@@ -1,8 +1,8 @@
 package com.russhwolf.soluna.mobile.screen.addlocation
 
-import com.russhwolf.soluna.mobile.GeocodeData
-import com.russhwolf.soluna.mobile.GeocodeRepository
-import com.russhwolf.soluna.mobile.LocationRepository
+import com.russhwolf.soluna.mobile.repository.GeocodeData
+import com.russhwolf.soluna.mobile.repository.GeocodeRepository
+import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import com.russhwolf.soluna.mobile.util.EventTrigger
 import com.russhwolf.soluna.mobile.util.mainDispatcher
