@@ -11,6 +11,13 @@ fun assertNearEquals(
     message: String = "expected:<$expected±$tolerance> but was:<$actual>"
 ) = assertTrue(abs(expected - actual) <= tolerance, message)
 
+fun assertNearEquals(
+    expected: Long,
+    actual: Long,
+    tolerance: Long,
+    message: String = "expected:<$expected±$tolerance> but was:<$actual>"
+) = assertTrue(abs(expected - actual) <= tolerance, message)
+
 fun <T> multipleAssert(vararg values: MultipleAssert<T, Double>, tolerance: Double, operator: (T) -> Double) =
     values.forEach { (input, expected) ->
         val actual = operator(input)

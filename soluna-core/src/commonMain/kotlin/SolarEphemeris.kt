@@ -21,6 +21,7 @@ import com.russhwolf.soluna.math.times
 import com.russhwolf.soluna.math.toDegrees
 import com.russhwolf.soluna.math.toHourAngle
 import com.russhwolf.soluna.math.unaryMinus
+import kotlin.math.roundToLong
 import kotlin.math.sqrt
 
 fun sunTimes(
@@ -30,13 +31,13 @@ fun sunTimes(
     offset: Double, // Hours
     latitude: Double, // Degrees
     longitude: Double // Degrees
-): Pair<Double?, Double?> {
+): Pair<Long?, Long?> {
     val JD = julianDayNumber(year, month, day)
     val size = { _: Degree -> (50.0 / 60.0).deg }
     val riseTime = timeAtAltitude(::solarEphemeris, size, latitude.deg, longitude.deg, JD, offset.hour, +1)
     val setTime = timeAtAltitude(::solarEphemeris, size, latitude.deg, longitude.deg, JD, offset.hour, -1)
 
-    return riseTime?.value to setTime?.value
+    return riseTime?.toMillisTime(JD, offset) to setTime?.toMillisTime(JD, offset)
 }
 
 fun moonTimes(
@@ -46,7 +47,7 @@ fun moonTimes(
     offset: Double, // Hours
     latitude: Double, // Degrees
     longitude: Double // Degrees
-): Pair<Double?, Double?> {
+): Pair<Long?, Long?> {
     val lunarEphemerisAtLocation = { JD: Int, UT: HourAngle -> lunarEphemeris(JD, UT, latitude.deg, longitude.deg) }
     val size = { pi: Degree -> (34.0 / 60.0).deg + 0.7275 * pi }
     val JD = julianDayNumber(year, month, day)
@@ -54,7 +55,14 @@ fun moonTimes(
     val riseTime = timeAtAltitude(lunarEphemerisAtLocation, size, latitude.deg, longitude.deg, JD, offset.hour, +1)
     val setTime = timeAtAltitude(lunarEphemerisAtLocation, size, latitude.deg, longitude.deg, JD, offset.hour, -1)
 
-    return riseTime?.value to setTime?.value
+    return riseTime?.toMillisTime(JD, offset) to setTime?.toMillisTime(JD, offset)
+}
+
+private val JDepoch = julianDayNumber(1970, 1, 1)
+private fun HourAngle.toMillisTime(JD: Int, offset: Double): Long {
+    val daysSinceEpoch = JD - JDepoch
+    val millisSinceEpoch = ((daysSinceEpoch * 24) + this.value - offset) * 60 * 60 * 1000
+    return millisSinceEpoch.roundToLong()
 }
 
 internal fun solarEphemeris(

@@ -10,6 +10,7 @@ import com.russhwolf.soluna.math.rad
 import com.russhwolf.soluna.math.times
 import com.russhwolf.soluna.math.toDegrees
 import com.russhwolf.soluna.test.assertNearEquals
+import kotlin.math.roundToLong
 import kotlin.test.Test
 
 // TODO better testing needed here
@@ -49,8 +50,17 @@ class SolarEphemerisTest {
             "0614" to "1642",
             "0615" to "1641",
             "0616" to "1639"
-        ).map {
-            it.toList().map { it.substring(0,2).toDouble() + it.substring(2, 4).toDouble()/60 }.let { it[0] to it[1] }
+        ).mapIndexed { index, pair ->
+            pair.toList()
+                .map { it.substring(0, 2).toDouble() + it.substring(2, 4).toDouble() / 60 }
+                .map {
+                    (((julianDayNumber(2019, 10, index + 1) - julianDayNumber(
+                        1970,
+                        1,
+                        1
+                    )) * 24 + it + 5) * 60 * 60 * 1000).roundToLong()
+                }
+                .let { it[0] to it[1] }
         }
 
         (1..31).map { day ->
@@ -64,7 +74,7 @@ class SolarEphemerisTest {
             )
         }.forEachIndexed { index, it ->
             it.toList().zip(expected[index].toList()).forEach {
-                assertNearEquals(it.second, it.first ?: 0.0, tolerance = 1/60.0)
+                assertNearEquals(it.second, it.first ?: 0, tolerance = 60 * 1000)
             }
         }
     }
@@ -104,8 +114,19 @@ class SolarEphemerisTest {
             "0746" to "1803",
             "0858" to "1844",
             "1005" to "1930"
-        ).map {
-            it.toList().map { it?.let { it.substring(0,2).toDouble() + it.substring(2, 4).toDouble()/60 } }.let { it[0] to it[1] }
+        ).mapIndexed { index, it ->
+            it.toList()
+                .map { it?.let { it.substring(0, 2).toDouble() + it.substring(2, 4).toDouble() / 60 } }
+                .map {
+                    it?.let {
+                        (((julianDayNumber(2019, 10, index + 1) - julianDayNumber(
+                            1970,
+                            1,
+                            1
+                        )) * 24 + it + 5) * 60 * 60 * 1000).roundToLong()
+                    }
+                }
+                .let { it[0] to it[1] }
         }
 
         (1..31).map { day ->
@@ -119,7 +140,7 @@ class SolarEphemerisTest {
             )
         }.forEachIndexed { index, it ->
             it.toList().zip(expected[index].toList()).forEach {
-                assertNearEquals(it.second ?: 0.0, it.first ?: 0.0, tolerance = 6/60.0)
+                assertNearEquals(it.second ?: 0, it.first ?: 0, tolerance = 6 * 60 * 1000)
             }
         }
     }
@@ -148,7 +169,7 @@ class SolarEphemerisTest {
     }
 
     @Test
-    fun linarEphemerisTest() {
+    fun lunarEphemerisTest() {
         // Test case adapted from Astronomical Algorithms, Example 47.a (p. 342-343)
         val JD = 2448724
         val UT = 0.hour

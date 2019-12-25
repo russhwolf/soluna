@@ -14,8 +14,8 @@ import java.awt.geom.Line2D
 import java.awt.image.BufferedImage
 import java.io.File
 import java.time.DayOfWeek
+import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalTime
 import java.time.Month
 import java.time.Year
 import java.time.YearMonth
@@ -26,7 +26,6 @@ import java.time.format.FormatStyle
 import java.time.temporal.WeekFields
 import javax.imageio.ImageIO
 import kotlin.math.abs
-import kotlin.math.floor
 import kotlin.math.roundToInt
 
 
@@ -127,11 +126,11 @@ private class CalendarRenderer(
             val zoneOffsetSeconds = date.atTime(12, 0).atZone(timeZone).offset.totalSeconds
             val zoneOffsetHours = zoneOffsetSeconds / 3600.0
             val (sunRiseTime, sunSetTime) = sunTimes(year, month.value, i, zoneOffsetHours, latitude, longitude)
-            val sunRiseDate = sunRiseTime?.toDateTime(date, timeZone)
-            val sunSetDate = sunSetTime?.toDateTime(date, timeZone)
+            val sunRiseDate = sunRiseTime?.toDateTime(timeZone)
+            val sunSetDate = sunSetTime?.toDateTime(timeZone)
             val (moonRiseTime, moonSetTime) = moonTimes(year, month.value, i, zoneOffsetHours, latitude, longitude)
-            val moonRiseDate = moonRiseTime?.toDateTime(date, timeZone)
-            val moonSetDate = moonSetTime?.toDateTime(date, timeZone)
+            val moonRiseDate = moonRiseTime?.toDateTime(timeZone)
+            val moonSetDate = moonSetTime?.toDateTime(timeZone)
 
             val weekDayValue = date.get(weekFields.dayOfWeek())
             val weekValue = date.get(weekFields.weekOfMonth())
@@ -144,7 +143,7 @@ private class CalendarRenderer(
             drawString("Sunrise: ${sunRiseDate?.formatTime() ?: "None"}", 0, 0)
             translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
             drawString("Sunset: ${sunSetDate?.formatTime() ?: "None"}", 0, 0)
-            if ((moonRiseTime ?: Double.NEGATIVE_INFINITY) < (moonSetTime ?: Double.POSITIVE_INFINITY)) {
+            if ((moonRiseTime ?: Long.MIN_VALUE) < (moonSetTime ?: Long.MAX_VALUE)) {
                 translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
                 drawString("Moonrise: ${moonRiseDate?.formatTime() ?: "None"}", 0, 0)
                 translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
@@ -245,19 +244,8 @@ private class CalendarRenderer(
 
     private fun cellX(dayOfWeek: Int) = MARGIN_HORIZONTAL + CELL_WIDTH * (dayOfWeek - 1) + MARGIN_INTERNAL
     private fun cellY(weekOfMonth: Int) = MARGIN_HEADER + CELL_HEIGHT * (weekOfMonth - 1) + MARGIN_INTERNAL
-    private fun Double.toDateTime(localDate: LocalDate, timeZone: ZoneId): ZonedDateTime {
-        var date = localDate
-        var hours = floor(this).toInt()
-        var minutes = ((this - hours) * 60).roundToInt()
-        if (minutes >= 60) {
-            minutes -= 60
-            hours += 1
-        }
-        if (hours >= 24) {
-            hours -= 24
-            date = date.plusDays(1)
-        }
-        return ZonedDateTime.of(date, LocalTime.of(hours, minutes), timeZone)
+    private fun Long.toDateTime(timeZone: ZoneId): ZonedDateTime {
+        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(this), timeZone)
     }
 
     private fun ZonedDateTime.formatTime(): String {
