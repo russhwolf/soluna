@@ -1,8 +1,8 @@
 package com.russhwolf.soluna.mobile.screen.locationdetail
 
 import com.russhwolf.soluna.mobile.db.Location
+import com.russhwolf.soluna.mobile.db.Reminder
 import com.russhwolf.soluna.mobile.db.ReminderType
-import com.russhwolf.soluna.mobile.db.ReminderWithLocation
 import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.repository.ReminderRepository
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
@@ -67,7 +67,7 @@ class LocationDetailViewModel(
 
 data class LocationDetailViewState(
     val location: Location?,
-    val reminders: List<ReminderWithLocation> = emptyList(),
+    val reminders: List<Reminder> = emptyList(),
     val addReminderTrigger: EventTrigger<Unit> = EventTrigger.empty(),
     val exitTrigger: EventTrigger<Unit> = EventTrigger.empty()
 )

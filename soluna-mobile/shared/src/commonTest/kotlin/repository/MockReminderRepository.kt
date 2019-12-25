@@ -21,10 +21,14 @@ class MockReminderRepository(
     override suspend fun getReminders(): List<ReminderWithLocation> =
         reminders
             .map { reminder ->
+                val location = locationRepository.getLocation(reminder.locationId)!!
                 ReminderWithLocation.Impl(
                     reminder.id,
-                    reminder.locationId,
-                    locationRepository.getLocations().first { it.id == reminder.locationId }.label,
+                    location.id,
+                    location.label,
+                    location.latitude,
+                    location.longitude,
+                    location.timeZone,
                     reminder.type,
                     reminder.minutesBefore,
                     reminder.enabled
@@ -40,21 +44,10 @@ class MockReminderRepository(
         }
     }.distinctUntilChanged()
 
-    override suspend fun getRemindersForLocation(locationId: Long): List<ReminderWithLocation> =
-        reminders
-            .filter { it.locationId == locationId }
-            .map { reminder ->
-                ReminderWithLocation.Impl(
-                    reminder.id,
-                    reminder.locationId,
-                    locationRepository.getLocations().first { it.id == reminder.locationId }.label,
-                    reminder.type,
-                    reminder.minutesBefore,
-                    reminder.enabled
-                )
-            }
+    override suspend fun getRemindersForLocation(locationId: Long): List<Reminder> =
+        reminders.filter { it.locationId == locationId }
 
-    override fun getRemindersForLocationFlow(locationId: Long): Flow<List<ReminderWithLocation>> =
+    override fun getRemindersForLocationFlow(locationId: Long): Flow<List<Reminder>> =
         callbackFlow {
             val listener: () -> Unit = { offer(runBlocking { getRemindersForLocation(locationId) }) }
 

@@ -17,7 +17,7 @@ class LocationDetailViewController: BaseViewController<LocationDetailViewModel, 
     @IBOutlet var latitudeText: UILabel!
     @IBOutlet var titleView: UITextField!
 
-    private var reminders: [ReminderWithLocation] = []
+    private var reminders: [Reminder] = []
     @IBOutlet var reminderList: UITableView!
 
     override func initViewModel() -> LocationDetailViewModel {
@@ -74,7 +74,7 @@ class LocationDetailViewController: BaseViewController<LocationDetailViewModel, 
         viewModel.addReminder(type: type, minutesBefore: minutes)
     }
 
-    private func setReminders(reminders: [ReminderWithLocation]) {
+    private func setReminders(reminders: [Reminder]) {
         self.reminders = reminders
         reminderList.reloadData()
     }
@@ -100,8 +100,8 @@ class LocationDetailViewController: BaseViewController<LocationDetailViewModel, 
 }
 
 class ReminderListItem: UITableViewCell {
-    private var _reminder: ReminderWithLocation? = nil
-    var reminder: ReminderWithLocation? {
+    private var _reminder: Reminder? = nil
+    var reminder: Reminder? {
         get {
             self._reminder
         }

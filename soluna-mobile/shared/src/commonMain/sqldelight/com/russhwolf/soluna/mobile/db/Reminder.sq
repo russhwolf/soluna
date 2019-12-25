@@ -10,14 +10,23 @@ CREATE TABLE reminder (
 );
 
 CREATE VIEW reminderWithLocation AS
-SELECT reminder.id, location.id AS locationId, location.label AS locationLabel, reminder.type, reminder.minutesBefore, reminder.enabled
+SELECT
+reminder.id,
+location.id AS locationId,
+location.label AS locationLabel,
+location.latitude AS locationLatitude,
+location.longitude AS locationLongitude,
+location.timeZone AS locationTimeZone,
+reminder.type,
+reminder.minutesBefore,
+reminder.enabled
 FROM reminder INNER JOIN location ON reminder.locationId = location.id;
 
 selectAllReminders:
 SELECT * FROM reminderWithLocation;
 
 selectRemindersByLocationId:
-SELECT * FROM reminderWithLocation
+SELECT * FROM reminder
 WHERE locationId = ?;
 
 insertReminder:

@@ -3,7 +3,6 @@ package com.russhwolf.soluna.mobile.screen.locationdetail
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.Reminder
 import com.russhwolf.soluna.mobile.db.ReminderType
-import com.russhwolf.soluna.mobile.db.ReminderWithLocation
 import com.russhwolf.soluna.mobile.repository.MockLocationRepository
 import com.russhwolf.soluna.mobile.repository.MockReminderRepository
 import com.russhwolf.soluna.mobile.screen.AbstractViewModelTest
@@ -11,7 +10,6 @@ import com.russhwolf.soluna.mobile.suspendTest
 import com.russhwolf.soluna.mobile.util.EventTrigger
 import kotlinx.coroutines.Dispatchers
 import kotlin.test.Test
-
 
 class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewModel, LocationDetailViewState>() {
     private var locations: Array<Location> = emptyArray()
@@ -40,7 +38,7 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
         assertState(
             LocationDetailViewState(
                 location = location,
-                reminders = listOf(reminder2.withLocation(location))
+                reminders = listOf(reminder2)
             )
         )
     }
@@ -94,7 +92,7 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
         assertState(
             LocationDetailViewState(
                 location = location,
-                reminders = listOf(expectedReminder.withLocation(location))
+                reminders = listOf(expectedReminder)
             )
         )
     }
@@ -125,7 +123,7 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
         assertState(
             LocationDetailViewState(
                 location = location,
-                reminders = listOf(reminder.withLocation(location).copy(enabled = false))
+                reminders = listOf(reminder.copy(enabled = false))
             )
         )
     }
@@ -143,20 +141,8 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
         assertState(
             LocationDetailViewState(
                 location = location,
-                reminders = listOf(reminder.withLocation(location).copy(minutesBefore = 20))
+                reminders = listOf(reminder.copy(minutesBefore = 20))
             )
         )
     }
 }
-
-private fun Reminder.withLocation(location: Location) =
-    if (locationId == location.id) {
-        ReminderWithLocation.Impl(
-            id,
-            location.id,
-            location.label,
-            type,
-            minutesBefore,
-            enabled
-        )
-    } else error("Mismatched location id! reminder.locationId=$locationId, location.id=${location.id}")

@@ -1,5 +1,6 @@
 package com.russhwolf.soluna.mobile.repository
 
+import com.russhwolf.soluna.mobile.db.Reminder
 import com.russhwolf.soluna.mobile.db.ReminderType
 import com.russhwolf.soluna.mobile.db.ReminderWithLocation
 import com.russhwolf.soluna.mobile.db.SolunaDb
@@ -13,9 +14,9 @@ interface ReminderRepository {
 
     fun getRemindersFlow(): Flow<List<ReminderWithLocation>>
 
-    suspend fun getRemindersForLocation(locationId: Long): List<ReminderWithLocation>
+    suspend fun getRemindersForLocation(locationId: Long): List<Reminder>
 
-    fun getRemindersForLocationFlow(locationId: Long): Flow<List<ReminderWithLocation>>
+    fun getRemindersForLocationFlow(locationId: Long): Flow<List<Reminder>>
 
     suspend fun addReminder(locationId: Long, type: ReminderType, minutesBefore: Int, enabled: Boolean)
 
@@ -37,15 +38,15 @@ interface ReminderRepository {
                 .selectAllReminders()
                 .asListFlow()
 
-        override suspend fun getRemindersForLocation(locationId: Long): List<ReminderWithLocation> =
+        override suspend fun getRemindersForLocation(locationId: Long): List<Reminder> =
             database.getRemindersForLocation(locationId)
 
-        private suspend fun SolunaDb.getRemindersForLocation(locationId: Long): List<ReminderWithLocation> =
+        private suspend fun SolunaDb.getRemindersForLocation(locationId: Long): List<Reminder> =
             runInBackground {
                 reminderQueries.selectRemindersByLocationId(locationId).executeAsList()
             }
 
-        override fun getRemindersForLocationFlow(locationId: Long): Flow<List<ReminderWithLocation>> =
+        override fun getRemindersForLocationFlow(locationId: Long): Flow<List<Reminder>> =
             database.reminderQueries
                 .selectRemindersByLocationId(locationId)
                 .asListFlow()

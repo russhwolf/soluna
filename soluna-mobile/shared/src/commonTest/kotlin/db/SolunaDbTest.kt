@@ -119,6 +119,9 @@ class SolunaDbTest {
                     id = 1,
                     locationId = 1,
                     locationLabel = "Location 1",
+                    locationLatitude = 42.3956001,
+                    locationLongitude = -71.1387674,
+                    locationTimeZone = "America/New_York",
                     type = ReminderType.Sunset,
                     minutesBefore = 15,
                     enabled = true
@@ -127,6 +130,9 @@ class SolunaDbTest {
                     id = 2,
                     locationId = 2,
                     locationLabel = "Location 2",
+                    locationLatitude = 27.7790026,
+                    locationLongitude = -82.7949071,
+                    locationTimeZone = "America/New_York",
                     type = ReminderType.Sunrise,
                     minutesBefore = 15,
                     enabled = false
@@ -135,6 +141,9 @@ class SolunaDbTest {
                     id = 3,
                     locationId = 2,
                     locationLabel = "Location 2",
+                    locationLatitude = 27.7790026,
+                    locationLongitude = -82.7949071,
+                    locationTimeZone = "America/New_York",
                     type = ReminderType.Sunset,
                     minutesBefore = 30,
                     enabled = true
@@ -147,10 +156,9 @@ class SolunaDbTest {
             database.reminderQueries.selectRemindersByLocationId(1).executeAsList()
         assertEquals(
             expected = listOf(
-                ReminderWithLocation.Impl(
+                Reminder.Impl(
                     id = 1,
                     locationId = 1,
-                    locationLabel = "Location 1",
                     type = ReminderType.Sunset,
                     minutesBefore = 15,
                     enabled = true
@@ -169,6 +177,9 @@ class SolunaDbTest {
                     id = 1,
                     locationId = 1,
                     locationLabel = "Location 1",
+                    locationLatitude = 42.3956001,
+                    locationLongitude = -71.1387674,
+                    locationTimeZone = "America/New_York",
                     type = ReminderType.Sunset,
                     minutesBefore = 15,
                     enabled = false
@@ -177,6 +188,9 @@ class SolunaDbTest {
                     id = 2,
                     locationId = 2,
                     locationLabel = "Location 2",
+                    locationLatitude = 27.7790026,
+                    locationLongitude = -82.7949071,
+                    locationTimeZone = "America/New_York",
                     type = ReminderType.Sunrise,
                     minutesBefore = 15,
                     enabled = false
@@ -185,6 +199,9 @@ class SolunaDbTest {
                     id = 3,
                     locationId = 2,
                     locationLabel = "Location 2",
+                    locationLatitude = 27.7790026,
+                    locationLongitude = -82.7949071,
+                    locationTimeZone = "America/New_York",
                     type = ReminderType.Sunset,
                     minutesBefore = 45,
                     enabled = true
@@ -202,6 +219,9 @@ class SolunaDbTest {
                     id = 1,
                     locationId = 1,
                     locationLabel = "Location 1",
+                    locationLatitude = 42.3956001,
+                    locationLongitude = -71.1387674,
+                    locationTimeZone = "America/New_York",
                     type = ReminderType.Sunset,
                     minutesBefore = 15,
                     enabled = false
@@ -210,6 +230,9 @@ class SolunaDbTest {
                     id = 3,
                     locationId = 2,
                     locationLabel = "Location 2",
+                    locationLatitude = 27.7790026,
+                    locationLongitude = -82.7949071,
+                    locationTimeZone = "America/New_York",
                     type = ReminderType.Sunset,
                     minutesBefore = 45,
                     enabled = true

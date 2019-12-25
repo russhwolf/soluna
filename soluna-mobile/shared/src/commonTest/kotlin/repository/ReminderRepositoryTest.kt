@@ -4,6 +4,7 @@ import com.russhwolf.soluna.mobile.AndroidJUnit4
 import com.russhwolf.soluna.mobile.RunWith
 import com.russhwolf.soluna.mobile.blockUntilIdle
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
+import com.russhwolf.soluna.mobile.db.Reminder
 import com.russhwolf.soluna.mobile.db.ReminderType
 import com.russhwolf.soluna.mobile.db.ReminderWithLocation
 import com.russhwolf.soluna.mobile.db.SolunaDb
@@ -52,7 +53,7 @@ class ReminderRepositoryTest {
 
         assertEquals(1, reminders.size)
         assertEquals(
-            expected = dummyReminder,
+            expected = dummyReminderWithLocation,
             actual = reminders[0]
         )
     }
@@ -80,7 +81,7 @@ class ReminderRepositoryTest {
         assertEquals(
             expected = listOf(
                 emptyList(),
-                listOf(dummyReminder.copy(id = 2))
+                listOf(dummyReminderWithLocation.copy(id = 2))
             ),
             actual = values
         )
@@ -174,7 +175,7 @@ class ReminderRepositoryTest {
 
         val reminder = database.reminderQueries.selectAllReminders().executeAsOne()
         assertEquals(
-            expected = dummyReminder,
+            expected = dummyReminderWithLocation,
             actual = reminder
         )
     }
@@ -203,11 +204,7 @@ class ReminderRepositoryTest {
 
         val reminder = database.reminderQueries.selectAllReminders().executeAsOne()
         assertEquals(
-            expected = ReminderWithLocation.Impl(
-                id = 1,
-                locationId = 1,
-                locationLabel = "Test Location 1",
-                type = ReminderType.Sunset,
+            expected = dummyReminderWithLocation.copy(
                 minutesBefore = 30,
                 enabled = false
             ),
@@ -221,10 +218,21 @@ class ReminderRepositoryTest {
     }
 }
 
-private val dummyReminder = ReminderWithLocation.Impl(
+private val dummyReminder = Reminder.Impl(
+    id = 1,
+    locationId = 1,
+    type = ReminderType.Sunset,
+    minutesBefore = 15,
+    enabled = true
+)
+
+private val dummyReminderWithLocation = ReminderWithLocation.Impl(
     id = 1,
     locationId = 1,
     locationLabel = "Test Location 1",
+    locationLatitude = 42.3956001,
+    locationLongitude = -71.1387674,
+    locationTimeZone = "America/New_York",
     type = ReminderType.Sunset,
     minutesBefore = 15,
     enabled = true
