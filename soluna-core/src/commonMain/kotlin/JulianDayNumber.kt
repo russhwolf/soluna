@@ -9,9 +9,9 @@ internal fun julianDayNumber(
     // Section 15.11.3, Algorithm 3 (p. 618)
     val Y = year
     val M = month
-    val D = day - 1 // Algorithm assumes 0-indexed day (apparently)
+    val D = day
 
-    val (y, j, m, n, r, p, q, v, u, s, t, w) = calendar
+    val (y, j, m, n, r, p, q, _, u, s, t, _) = calendar
 
     val h = M - m
     val g = Y + y - (n - h) / n
@@ -26,6 +26,28 @@ internal fun julianDayNumber(
             } else 0
 
     return J
+}
+
+internal fun dateFromJulianDayNumber(
+    JD: Int,
+    calendar: Calendar = GregorianCalendar
+): Triple<Int, Int, Int> {
+    val J = JD
+    val (y, j, m, n, r, p, _, v, u, s, _, w) = calendar
+
+    val f = J + j + if (calendar is LeapDayCalendar) {
+        val B = calendar.B
+        val C = calendar.C
+        (((4 * J + B) / 146_097) * 3) / 4 + C
+    } else 0
+    val e = r * f + v
+    val g = e % p / r
+    val h = u * g + w
+    val D = h % s / u + 1
+    val M = (h / s + m) % n + 1
+    val Y = e / p - y + (n + m - M) / n
+
+    return Triple(Y, M, D)
 }
 
 // Based on table 15.14 (p. 617)
