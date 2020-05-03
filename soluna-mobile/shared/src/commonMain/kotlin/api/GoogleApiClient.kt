@@ -6,7 +6,10 @@ import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.features.defaultRequest
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.features.logging.LogLevel
+import io.ktor.client.features.logging.Logger
 import io.ktor.client.features.logging.Logging
+import io.ktor.client.features.logging.SIMPLE
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -16,6 +19,7 @@ import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 
 interface GoogleApiClient {
     suspend fun getPlaceAutocomplete(query: String): PlaceAutocompleteResponse
@@ -25,7 +29,7 @@ interface GoogleApiClient {
     suspend fun getTimeZone(latitude: Double, longitude: Double, timestamp: Long): TimeZoneResponse
 
     class Impl(httpClientEngine: HttpClientEngine) : GoogleApiClient {
-        @UseExperimental(UnstableDefault::class)
+        @OptIn(UnstableDefault::class)
         private val httpClient = HttpClient(httpClientEngine) {
             defaultRequest {
                 url.protocol = URLProtocol.HTTPS
@@ -33,9 +37,20 @@ interface GoogleApiClient {
                 parameter("key", BuildKonfig.GOOGLE_API_KEY)
             }
             install(JsonFeature) {
-                serializer = KotlinxSerializer(Json.nonstrict)
+                serializer = KotlinxSerializer(
+                    Json(
+                        JsonConfiguration(
+                            isLenient = true,
+                            ignoreUnknownKeys = true,
+                            serializeSpecialFloatingPointValues = true
+                        )
+                    )
+                )
             }
-            install(Logging)
+            install(Logging) {
+                logger = Logger.SIMPLE
+                level = LogLevel.ALL
+            }
         }
 
         override suspend fun getPlaceAutocomplete(query: String): PlaceAutocompleteResponse =

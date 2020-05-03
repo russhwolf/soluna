@@ -9,17 +9,17 @@ import java.util.Properties
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
-    id("kotlinx-serialization") version "1.3.61"
-    id("com.squareup.sqldelight") version "1.2.1"
-    id("com.codingfeline.buildkonfig") version "0.4.1"
+    id("kotlinx-serialization") version "1.3.72"
+    id("com.squareup.sqldelight") version "1.3.0"
+    id("com.codingfeline.buildkonfig") version "0.5.1"
 }
 
-val coroutineVersion = "1.3.3"
-val coroutineWorkerVersion = "0.4.0"
-val ktorVersion = "1.2.6"
-val sqldelightVersion = "1.2.1"
-val serializationVersion = "0.14.0"
-val statelyVersion = "0.9.5"
+val coroutineVersion = "1.3.5"
+val coroutineWorkerVersion = "0.5.0"
+val ktorVersion = "1.3.2"
+val sqldelightVersion = "1.3.0"
+val serializationVersion = "0.20.0"
+val statelyVersion = "1.0.2"
 
 kotlin {
     android()
@@ -33,7 +33,7 @@ kotlin {
                 transitiveExport = true
             }
         }
-        compilations["main"].extraOpts.add("-Xobjc-generics")
+        compilations["main"].kotlinOptions.freeCompilerArgs += "-Xobjc-generics"
     }
 
     sourceSets {
@@ -50,17 +50,18 @@ kotlin {
                 implementation(kotlin("stdlib-common"))
                 implementation(project(":soluna-core"))
 
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutineVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutineVersion")
 
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializationVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serializationVersion")
 
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("io.ktor:ktor-client-json:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
-                implementation("io.ktor:ktor-client-logging:$ktorVersion")
+                implementation("io.ktor:ktor-client-core-native:$ktorVersion")
+                implementation("io.ktor:ktor-client-json-native:$ktorVersion")
+                implementation("io.ktor:ktor-client-serialization-native:$ktorVersion")
+                implementation("io.ktor:ktor-client-logging-native:$ktorVersion")
 
                 implementation("com.autodesk:coroutineworker:$coroutineWorkerVersion")
-                implementation("co.touchlab:stately:$statelyVersion")
+                implementation("co.touchlab:stately-common:$statelyVersion")
+                implementation("co.touchlab:stately-concurrency:$statelyVersion")
             }
         }
         commonTest {
@@ -68,7 +69,7 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
 
-                implementation("io.ktor:ktor-client-mock:$ktorVersion")
+                implementation("io.ktor:ktor-client-mock-native:$ktorVersion")
             }
         }
         val androidMain by getting {
@@ -76,16 +77,9 @@ kotlin {
                 implementation(kotlin("stdlib"))
                 implementation("com.squareup.sqldelight:android-driver:$sqldelightVersion")
 
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion")
 
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
-
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
-                implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
-                implementation("io.ktor:ktor-client-json-jvm:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization-jvm:$ktorVersion")
-                implementation("io.ktor:ktor-client-logging-jvm:$ktorVersion")
             }
         }
         val androidTest by getting {
@@ -95,31 +89,20 @@ kotlin {
 
                 implementation("androidx.test:core:1.2.0")
                 implementation("androidx.test.ext:junit:1.1.1")
-                implementation("org.robolectric:robolectric:4.3")
+                implementation("org.robolectric:robolectric:4.3.1")
 
                 implementation("io.ktor:ktor-client-mock-jvm:$ktorVersion")
-
-                implementation("com.squareup.sqldelight:sqlite-driver:$sqldelightVersion")
             }
         }
         val iosMain by getting {
             dependencies {
-                implementation("com.squareup.sqldelight:ios-driver:$sqldelightVersion")
-
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutineVersion")
-
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serializationVersion")
+                implementation("com.squareup.sqldelight:native-driver:$sqldelightVersion")
 
                 implementation("io.ktor:ktor-client-ios:$ktorVersion")
-                implementation("io.ktor:ktor-client-core-native:$ktorVersion")
-                implementation("io.ktor:ktor-client-json-native:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization-native:$ktorVersion")
-                implementation("io.ktor:ktor-client-logging-native:$ktorVersion")
             }
         }
         val iosTest by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-mock-native:$ktorVersion")
             }
         }
     }
@@ -196,15 +179,3 @@ kotlin.targets.withType<KotlinNativeTarget>().configureEach {
         }
     }
 }
-
-tasks.create("iosTest") {
-    dependsOn("linkDebugTestIos")
-    doLast {
-        val testBinaryPath =
-            (kotlin.targets["ios"] as KotlinNativeTarget).binaries.getTest("DEBUG").outputFile.absolutePath
-        exec {
-            commandLine("xcrun", "simctl", "spawn", "--standalone", "iPhone 11", testBinaryPath)
-        }
-    }
-}
-tasks["check"].dependsOn("iosTest")

@@ -3,8 +3,8 @@ package com.russhwolf.soluna.mobile
 import co.touchlab.sqliter.DatabaseConfiguration
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.drivers.ios.NativeSqliteDriver
-import com.squareup.sqldelight.drivers.ios.wrapConnection
+import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
+import com.squareup.sqldelight.drivers.native.wrapConnection
 import kotlinx.coroutines.CoroutineScope
 import platform.CoreFoundation.CFRunLoopRunInMode
 import platform.CoreFoundation.kCFRunLoopDefaultMode

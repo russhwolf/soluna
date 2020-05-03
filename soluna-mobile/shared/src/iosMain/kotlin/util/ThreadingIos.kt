@@ -27,7 +27,7 @@ actual val isMainThread: Boolean get() = NSThread.isMainThread
 actual val mainDispatcher: CoroutineDispatcher = NsQueueDispatcher(dispatch_get_main_queue())
 
 // Adapted from https://github.com/Kotlin/kotlinx.coroutines/issues/470#issuecomment-440080970
-@UseExperimental(InternalCoroutinesApi::class, ExperimentalCoroutinesApi::class)
+@OptIn(InternalCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 private class NsQueueDispatcher(
     private val dispatchQueue: dispatch_queue_t
 ) : CoroutineDispatcher(), Delay {
