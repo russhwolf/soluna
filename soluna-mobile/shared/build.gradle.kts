@@ -1,6 +1,8 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
+import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 import org.jetbrains.kotlin.gradle.plugin.mpp.Framework.BitcodeEmbeddingMode.BITCODE
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.Properties
 
@@ -9,7 +11,6 @@ plugins {
     id("com.android.library")
     id("kotlinx-serialization") version "1.3.61"
     id("com.squareup.sqldelight") version "1.2.1"
-    id("org.jetbrains.kotlin.xcode-compat") version "0.2.5"
     id("com.codingfeline.buildkonfig") version "0.4.1"
 }
 
@@ -22,14 +23,18 @@ val statelyVersion = "0.9.5"
 
 kotlin {
     android()
-    xcode {
-        setupFramework("ios") {
-            baseName = "Shared"
-            embedBitcode = BITCODE
-            transitiveExport = true
+    val isDevice = System.getenv("SDK_NAME")?.startsWith("iphoneos") == true
+    val ios: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = if (isDevice) ::iosArm64 else ::iosX64
+    ios("ios") {
+        binaries {
+            framework {
+                baseName = "Shared"
+                embedBitcode = BITCODE
+                transitiveExport = true
+            }
         }
+        compilations["main"].extraOpts.add("-Xobjc-generics")
     }
-    (targets["ios"] as KotlinNativeTarget).compilations["main"].extraOpts.add("-Xobjc-generics")
 
     sourceSets {
         all {
@@ -159,6 +164,36 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+}
+
+// Adapted from Jetbrains xcode-compat plugin
+kotlin.targets.withType<KotlinNativeTarget>().configureEach {
+    binaries.withType<Framework>().configureEach {
+        val buildType = NativeBuildType.valueOf(
+            System.getenv("CONFIGURATION")?.toUpperCase()
+                ?: "DEBUG"
+        )
+        if (this.buildType == buildType) {
+            var dsymTask: Sync? = null
+
+            if (buildType == NativeBuildType.DEBUG) {
+                dsymTask = project.task<Sync>("buildForXcodeDSYM") {
+                    dependsOn(linkTask)
+                    val outputFile = linkTask.outputFile.get()
+                    val outputDSYM = File(outputFile.parent, outputFile.name + ".dSYM")
+                    from(outputDSYM)
+                    into(File(System.getenv("CONFIGURATION_BUILD_DIR"), outputDSYM.name))
+                }
+            }
+
+            val buildForXcodeTask = project.task<Sync>("buildForXcode") {
+                dependsOn(dsymTask ?: linkTask)
+                val outputFile = linkTask.outputFile.get()
+                from(outputFile)
+                into(File(System.getenv("CONFIGURATION_BUILD_DIR"), outputFile.name))
+            }
+        }
     }
 }
 
