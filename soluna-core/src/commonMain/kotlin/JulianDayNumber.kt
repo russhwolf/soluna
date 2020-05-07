@@ -32,6 +32,7 @@ internal fun dateFromJulianDayNumber(
     JD: Int,
     calendar: Calendar = GregorianCalendar
 ): Triple<Int, Int, Int> {
+    // Section 15.11.4, Algorithm 4 (p. 619)
     val J = JD
     val (y, j, m, n, r, p, _, v, u, s, _, w) = calendar
 

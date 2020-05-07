@@ -72,7 +72,7 @@ internal fun solarEphemeris(
     // Based on Section 12.3.1.1 (p. 513)
 
     // Centuries since J2000.0 (eq. 12.6)
-    val T = (JD + 0.5 + UT / HourAngle.MAX - 2_451_545.0) / 36_525.0
+    val T = (JD - 0.5 + UT / HourAngle.MAX - 2_451_545.0) / 36_525.0
 
     // Solar arguments (eq. 12.7)
     // Mean longitude corrected for aberration
@@ -107,7 +107,7 @@ internal fun lunarEphemeris(
     longitude: Degree
 ): EphemerisPoint {
     // Centuries since J2000.0 (eq. 12.6)
-    val T = (JD + 0.5 + UT / HourAngle.MAX - 2_451_545.0) / 36_525.0
+    val T = (JD - 0.5 + UT / HourAngle.MAX - 2_451_545.0) / 36_525.0
 
     // Remaining formula from page D22 of Astronomical Almanac 2019
     val lambda = 218.32.deg + 481_267.881.deg * T +
@@ -137,7 +137,7 @@ internal fun lunarEphemeris(
     @Suppress("UnnecessaryVariable")
     val lambda_prime = longitude
 
-    val T_nu = (JD - 2451545.0) / 36_525
+    val T_nu = (JD - 0.5 - 2451545.0) / 36_525
     val theta_0 = 100.46.deg + 36_000.77.deg * T_nu + lambda_prime + UT.toDegrees()
 
     val x_prime = x - cos(phi_prime) * cos(theta_0)
@@ -150,7 +150,7 @@ internal fun lunarEphemeris(
     val pi_prime = asin(1 / r_prime)
 
     // Earth Rotation Angle (eq 3.3, p. 78)
-    val t_u = (JD + 0.5 + UT / HourAngle.MAX - 2_451_545.0)
+    val t_u = (JD - 0.5 + UT / HourAngle.MAX - 2_451_545.0)
     val Theta = TAU * (0.779_057_273_264_0 + 1.002_737_811_911_354_48 * t_u).rad
 
     // Hour Angle via Earth Rotation Angle and Right Ascension (is this right?) (eq. 3.15, p. 80)
@@ -169,7 +169,7 @@ private fun timeAtAltitude(
     sign: Int // +1 for rise, -1 for set
 ): HourAngle? {
     // Based on section 12.3.3 (p. 515)
-    var UT = 12.hour + offset
+    var UT = (-12).hour + offset
 
     var converged = false
     for (i in 1..100) {
@@ -210,8 +210,8 @@ fun moonPhase(
     longitude: Double // Degrees
 ): MoonPhase? {
     val JD = julianDayNumber(year, month, day)
-    val UTstart = offset.hour
-    val UTend = (24 + offset).hour
+    val UTstart = (-12 + offset).hour
+    val UTend = (12 + offset).hour
 
     val phaseStart = moonPhaseTable(JD, UTstart, longitude.deg, longitude.deg)
     val phaseEnd = moonPhaseTable(JD, UTend, longitude.deg, longitude.deg)
