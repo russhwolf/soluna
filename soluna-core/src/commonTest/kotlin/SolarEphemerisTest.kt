@@ -12,6 +12,7 @@ import com.russhwolf.soluna.math.toDegrees
 import com.russhwolf.soluna.test.assertNearEquals
 import kotlin.math.roundToLong
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 // TODO better testing needed here
 class SolarEphemerisTest {
@@ -189,5 +190,11 @@ class SolarEphemerisTest {
             actual = delta.value,
             tolerance = 2e-1
         )
+    }
+
+    @Test
+    fun moonPhaseTest() {
+        // Test case adapted from Astronomical Algorithms, Example 49.a (p. 353)
+        assertEquals(MoonPhase.NEW, moonPhase(1977, 2, 18, 0.0, 0.0))
     }
 }
