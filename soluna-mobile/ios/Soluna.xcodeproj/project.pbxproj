@@ -245,7 +245,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 57DDB727806B425312C0D7CB /* Build configuration list for PBXProject "Shared" */;
+			buildConfigurationList = 57DDB727806B425312C0D7CB /* Build configuration list for PBXProject "Soluna" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -307,7 +307,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$SRCROOT/../../../gradlew\" -p \"$SRCROOT/..\" \":soluna-mobile:shared:buildForXcode\"\n";
+			shellScript = "\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/..\" \":soluna-mobile:shared:buildForXcode\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -662,7 +662,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		57DDB727806B425312C0D7CB /* Build configuration list for PBXProject "Shared" */ = {
+		57DDB727806B425312C0D7CB /* Build configuration list for PBXProject "Soluna" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FCB0D00EFDD62A334273D425 /* Debug */,
