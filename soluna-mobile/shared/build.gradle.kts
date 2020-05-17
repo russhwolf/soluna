@@ -17,6 +17,7 @@ plugins {
 val coroutineVersion = "1.3.5"
 val coroutineWorkerVersion = "0.5.0"
 val ktorVersion = "1.3.2"
+val koinVersion = "3.0.0-alpha-2"
 val sqldelightVersion = "1.3.0"
 val serializationVersion = "0.20.0"
 val statelyVersion = "1.0.2"
@@ -62,12 +63,15 @@ kotlin {
                 implementation("com.autodesk:coroutineworker:$coroutineWorkerVersion")
                 implementation("co.touchlab:stately-common:$statelyVersion")
                 implementation("co.touchlab:stately-concurrency:$statelyVersion")
+
+                implementation("org.koin:koin-core:$koinVersion")
             }
         }
         commonTest {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                implementation(project(":soluna-mobile:koinTest"))
 
                 implementation("io.ktor:ktor-client-mock-native:$ktorVersion")
             }

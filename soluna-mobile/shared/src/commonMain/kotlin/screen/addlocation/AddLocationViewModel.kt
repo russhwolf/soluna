@@ -5,16 +5,15 @@ import com.russhwolf.soluna.mobile.repository.GeocodeRepository
 import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import com.russhwolf.soluna.mobile.util.EventTrigger
-import com.russhwolf.soluna.mobile.util.mainDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 
 class AddLocationViewModel(
     private val locationRepository: LocationRepository,
     private val geocodeRepository: GeocodeRepository,
-    dispatcher: CoroutineDispatcher = mainDispatcher
-) :
-    BaseViewModel<AddLocationViewState>(AddLocationViewState(), dispatcher) {
+    dispatcher: CoroutineDispatcher
+) : BaseViewModel<AddLocationViewState>(AddLocationViewState(), dispatcher) {
+
     fun addLocation(label: String, latitude: String, longitude: String, timeZone: String): Job = updateAsync {
         val latitudeDouble = latitude.toDouble()
         val longitudeDouble = longitude.toDouble()

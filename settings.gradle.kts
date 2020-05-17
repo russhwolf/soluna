@@ -21,4 +21,8 @@ rootProject.name = "Soluna"
 
 enableFeaturePreview("GRADLE_METADATA")
 
-include(":soluna-core", ":soluna-calendar", ":soluna-mobile", ":soluna-mobile:shared")
+include(":soluna-core")
+include(":soluna-calendar")
+include(":soluna-mobile")
+include(":soluna-mobile:shared")
+include(":soluna-mobile:koinTest")

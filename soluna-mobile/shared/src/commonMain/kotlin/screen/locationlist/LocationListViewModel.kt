@@ -4,14 +4,12 @@ import com.russhwolf.soluna.mobile.db.LocationSummary
 import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import com.russhwolf.soluna.mobile.util.EventTrigger
-import com.russhwolf.soluna.mobile.util.mainDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 
 class LocationListViewModel(
     private val locationRepository: LocationRepository,
-    dispatcher: CoroutineDispatcher = mainDispatcher
-) :
-    BaseViewModel<LocationListViewState>(LocationListViewState(emptyList()), dispatcher) {
+    dispatcher: CoroutineDispatcher
+) : BaseViewModel<LocationListViewState>(LocationListViewState(emptyList()), dispatcher) {
 
     init {
         locationRepository

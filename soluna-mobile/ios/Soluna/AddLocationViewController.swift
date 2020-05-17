@@ -17,7 +17,7 @@ class AddLocationViewController: BaseViewController<AddLocationViewModel, AddLoc
     @IBOutlet var timeZoneInput: UITextField!
 
     override func initViewModel() -> AddLocationViewModel {
-        SwiftKotlinBridgeKt.getAddLocationViewModel()
+        SwiftKotlinBridge().getAddLocationViewModel()
     }
 
     override func onUpdateState(state: AddLocationViewState) {

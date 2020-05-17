@@ -7,7 +7,6 @@ import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.repository.ReminderRepository
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import com.russhwolf.soluna.mobile.util.EventTrigger
-import com.russhwolf.soluna.mobile.util.mainDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 
 // TODO this VM could use some debouncing
@@ -15,9 +14,8 @@ class LocationDetailViewModel(
     private val locationId: Long,
     private val locationRepository: LocationRepository,
     private val reminderRepository: ReminderRepository,
-    dispatcher: CoroutineDispatcher = mainDispatcher
-) :
-    BaseViewModel<LocationDetailViewState>(LocationDetailViewState(null), dispatcher) {
+    dispatcher: CoroutineDispatcher
+) : BaseViewModel<LocationDetailViewState>(LocationDetailViewState(null), dispatcher) {
 
     init {
         locationRepository

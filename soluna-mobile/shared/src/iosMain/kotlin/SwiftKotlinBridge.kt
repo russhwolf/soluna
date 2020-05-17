@@ -2,26 +2,23 @@
 
 package com.russhwolf.soluna.mobile
 
-import com.russhwolf.soluna.mobile.api.GoogleApiClient
-import com.russhwolf.soluna.mobile.db.SolunaDb
-import com.russhwolf.soluna.mobile.db.createDatabase
-import com.russhwolf.soluna.mobile.repository.GeocodeRepository
-import com.russhwolf.soluna.mobile.repository.LocationRepository
-import com.russhwolf.soluna.mobile.repository.ReminderRepository
 import com.russhwolf.soluna.mobile.screen.addlocation.AddLocationViewModel
 import com.russhwolf.soluna.mobile.screen.locationdetail.LocationDetailViewModel
 import com.russhwolf.soluna.mobile.screen.locationlist.LocationListViewModel
-import com.squareup.sqldelight.drivers.native.NativeSqliteDriver
-import io.ktor.client.engine.ios.Ios
+import org.koin.core.KoinComponent
+import org.koin.core.get
+import org.koin.core.parameter.parametersOf
+import org.koin.dsl.module
 
+object SwiftKotlinBridge : KoinComponent {
+    fun initKoin() {
+        val appModule = module {
 
-private val database by lazy { createDatabase(NativeSqliteDriver(SolunaDb.Schema, "Soluna.db")) }
-private val googleApiClient by lazy { GoogleApiClient.Impl(Ios.create()) }
+        }
+        initKoin(appModule)
+    }
 
-private val locationRepository by lazy { LocationRepository.Impl(database) }
-private val reminderRepository by lazy { ReminderRepository.Impl(database) }
-private val geocodeRepository by lazy { GeocodeRepository.Impl(googleApiClient) }
-
-fun getLocationListViewModel() = LocationListViewModel(locationRepository)
-fun getAddLocationViewModel() = AddLocationViewModel(locationRepository, geocodeRepository)
-fun getLocationDetailViewModel(id: Long) = LocationDetailViewModel(id, locationRepository, reminderRepository)
+    fun getLocationListViewModel(): LocationListViewModel = get()
+    fun getAddLocationViewModel(): AddLocationViewModel = get()
+    fun getLocationDetailViewModel(id: Long): LocationDetailViewModel = get { parametersOf(id) }
+}

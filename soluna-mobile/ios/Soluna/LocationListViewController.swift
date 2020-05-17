@@ -17,7 +17,7 @@ class LocationListViewController: BaseViewController<LocationListViewModel, Loca
     @IBOutlet var locationList: UITableView!
 
     override func initViewModel() -> LocationListViewModel {
-        SwiftKotlinBridgeKt.getLocationListViewModel()
+        SwiftKotlinBridge().getLocationListViewModel()
     }
 
     override func onUpdateState(state: LocationListViewState) {

@@ -21,7 +21,7 @@ class LocationDetailViewController: BaseViewController<LocationDetailViewModel, 
     @IBOutlet var reminderList: UITableView!
 
     override func initViewModel() -> LocationDetailViewModel {
-        SwiftKotlinBridgeKt.getLocationDetailViewModel(id: id)
+        SwiftKotlinBridge().getLocationDetailViewModel(id: id)
     }
 
     override func onUpdateState(state: LocationDetailViewState) {
