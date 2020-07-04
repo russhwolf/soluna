@@ -3,9 +3,22 @@ package com.russhwolf.soluna.calendar
 import com.russhwolf.soluna.MoonPhase
 import com.russhwolf.soluna.calendar.CalendarRenderer.Companion.PAGE_HEIGHT
 import com.russhwolf.soluna.calendar.CalendarRenderer.Companion.PAGE_WIDTH
-import com.russhwolf.soluna.moonPhase
-import com.russhwolf.soluna.moonTimes
-import com.russhwolf.soluna.sunTimes
+import com.russhwolf.soluna.time.moonPhase
+import com.russhwolf.soluna.time.moonTimes
+import com.russhwolf.soluna.time.sunTimes
+import io.islandtime.Date
+import io.islandtime.DayOfWeek
+import io.islandtime.Month
+import io.islandtime.TimeZone
+import io.islandtime.YearMonth
+import io.islandtime.ZonedDateTime
+import io.islandtime.at
+import io.islandtime.atTime
+import io.islandtime.calendar.WeekSettings
+import io.islandtime.jvm.toJavaYearMonth
+import io.islandtime.jvm.toJavaZonedDateTime
+import io.islandtime.measures.milliseconds
+import io.islandtime.weekOfMonth
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Font
@@ -13,20 +26,12 @@ import java.awt.Graphics2D
 import java.awt.geom.Line2D
 import java.awt.image.BufferedImage
 import java.io.File
-import java.time.DayOfWeek
-import java.time.Instant
-import java.time.LocalDate
-import java.time.Month
-import java.time.Year
-import java.time.YearMonth
-import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import java.time.temporal.WeekFields
 import javax.imageio.ImageIO
 import kotlin.math.abs
 import kotlin.math.roundToInt
+import java.time.DayOfWeek as JavaDayOfWeek
 
 
 fun renderCalendars(
@@ -34,7 +39,7 @@ fun renderCalendars(
     year: Int,
     latitude: Double,
     longitude: Double,
-    timeZone: ZoneId
+    timeZone: TimeZone
 ) {
     for (month in Month.values()) {
         renderCalendarToFile(locationName, month, year, latitude, longitude, timeZone)
@@ -47,18 +52,24 @@ private fun renderCalendarToFile(
     year: Int,
     latitude: Double,
     longitude: Double,
-    timeZone: ZoneId
+    timeZone: TimeZone
 ) {
     val image = BufferedImage(PAGE_WIDTH.roundToInt(), PAGE_HEIGHT.roundToInt(), BufferedImage.TYPE_INT_RGB)
     image.createGraphics().run {
         renderCalendar(month, year, latitude, longitude, timeZone)
         dispose()
     }
-    val file = File("$locationName-$year-${month.value}.png")
+    val file = File("$locationName-$year-${month.number}.png")
     ImageIO.write(image, "png", file)
 }
 
-private fun Graphics2D.renderCalendar(month: Month, year: Int, latitude: Double, longitude: Double, timeZone: ZoneId) =
+private fun Graphics2D.renderCalendar(
+    month: Month,
+    year: Int,
+    latitude: Double,
+    longitude: Double,
+    timeZone: TimeZone
+) =
     CalendarRenderer(this, month, year, latitude, longitude, timeZone)
 
 private class CalendarRenderer(
@@ -67,14 +78,14 @@ private class CalendarRenderer(
     private val year: Int,
     private val latitude: Double,
     private val longitude: Double,
-    private val timeZone: ZoneId
+    private val timeZone: TimeZone
 ) {
     private val innerStroke = BasicStroke(STROKE_WIDTH_INNER)
     private val outerStroke = BasicStroke(STROKE_WIDTH_OUTER)
-    private val numberOfDays = month.length(Year.isLeap(year.toLong()))
-    private val weekFields = WeekFields.of(DayOfWeek.SUNDAY, 1)
-    private val lastDay = LocalDate.of(year, month, numberOfDays)
-    private val rows = lastDay.get(weekFields.weekOfMonth())
+    private val numberOfDays = month.lastDayIn(year)
+    private val weekSettings = WeekSettings(DayOfWeek.SUNDAY, 1)
+    private val lastDay = Date(year, month, numberOfDays)
+    private val rows = lastDay.weekOfMonth(weekSettings)
 
     private val baseFont =
         Font.createFont(0, Thread.currentThread().contextClassLoader.getResourceAsStream("Roboto-Medium.ttf"))
@@ -122,18 +133,11 @@ private class CalendarRenderer(
     private fun Graphics2D.drawCellContents() {
         val previousTransform = transform
         for (i in 1..numberOfDays) {
-            val date = LocalDate.of(year, month, i)
-            val zoneOffsetSeconds = date.atTime(12, 0).atZone(timeZone).offset.totalSeconds
-            val zoneOffsetHours = zoneOffsetSeconds / 3600.0
-            val (sunRiseTime, sunSetTime) = sunTimes(year, month.value, i, zoneOffsetHours, latitude, longitude)
-            val sunRiseDate = sunRiseTime?.toDateTime(timeZone)
-            val sunSetDate = sunSetTime?.toDateTime(timeZone)
-            val (moonRiseTime, moonSetTime) = moonTimes(year, month.value, i, zoneOffsetHours, latitude, longitude)
-            val moonRiseDate = moonRiseTime?.toDateTime(timeZone)
-            val moonSetDate = moonSetTime?.toDateTime(timeZone)
-
-            val weekDayValue = date.get(weekFields.dayOfWeek())
-            val weekValue = date.get(weekFields.weekOfMonth())
+            val date = Date(year, month, i)
+            val (sunRiseDate, sunSetDate) = sunTimes(date, timeZone, latitude, longitude)
+            val (moonRiseDate, moonSetDate) = moonTimes(date, timeZone, latitude, longitude)
+            val weekDayValue = date.dayOfWeek.number(weekSettings)
+            val weekValue = date.weekOfMonth(weekSettings)
 
             font = dateFont
             translate(cellX(weekDayValue), cellY(weekValue) + fontMetrics.ascent)
@@ -143,7 +147,11 @@ private class CalendarRenderer(
             drawString("Sunrise: ${sunRiseDate?.formatTime() ?: "None"}", 0, 0)
             translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
             drawString("Sunset: ${sunSetDate?.formatTime() ?: "None"}", 0, 0)
-            if ((moonRiseTime ?: Long.MIN_VALUE) < (moonSetTime ?: Long.MAX_VALUE)) {
+            if (
+                (moonRiseDate?.millisecondsSinceUnixEpoch ?: Long.MIN_VALUE.milliseconds)
+                <
+                (moonSetDate?.millisecondsSinceUnixEpoch ?: Long.MAX_VALUE.milliseconds)
+            ) {
                 translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
                 drawString("Moonrise: ${moonRiseDate?.formatTime() ?: "None"}", 0, 0)
                 translate(0.0, MARGIN_INTERNAL / 2 + fontMetrics.ascent)
@@ -156,7 +164,7 @@ private class CalendarRenderer(
             }
             transform = previousTransform
 
-            val phase = when (moonPhase(year, month.value, i, zoneOffsetHours, longitude)) {
+            val phase = when (moonPhase(date, timeZone, longitude)) {
                 MoonPhase.NEW -> "\uD83C\uDF11"
                 MoonPhase.FIRST_QUARTER -> "\uD83C\uDF13"
                 MoonPhase.FULL -> "\uD83C\uDF15"
@@ -173,8 +181,8 @@ private class CalendarRenderer(
                 transform = previousTransform
             }
 
-            val zoneOffsetStart = date.atTime(0, 0).atZone(timeZone).offset.totalSeconds
-            val zoneOffsetEnd = date.atTime(23, 59, 59, 999999999).atZone(timeZone).offset.totalSeconds
+            val zoneOffsetStart = date.atTime(0, 0).at(timeZone).offset.totalSeconds
+            val zoneOffsetEnd = date.atTime(23, 59, 59, 999999999).at(timeZone).offset.totalSeconds
             val dstString = when {
                 zoneOffsetStart > zoneOffsetEnd -> "DST ends"
                 zoneOffsetStart < zoneOffsetEnd -> "DST starts"
@@ -195,8 +203,8 @@ private class CalendarRenderer(
 
     private fun Graphics2D.drawTitle() {
         font = titleFont
-        val yearMonth = YearMonth.of(year, month)
-        val titleString = yearMonth.format(DateTimeFormatter.ofPattern("MMMM, yyyy"))
+        val yearMonth = YearMonth(year, month)
+        val titleString = yearMonth.toJavaYearMonth().format(DateTimeFormatter.ofPattern("MMMM, yyyy"))
         val stringWidth = fontMetrics.stringWidth(titleString)
         drawString(
             titleString,
@@ -211,8 +219,8 @@ private class CalendarRenderer(
         val formatter = DateTimeFormatter.ofPattern("eeee")
         translate(MARGIN_HORIZONTAL, MARGIN_HEADER - MARGIN_COLUMN_HEADER)
         for (i in 1..COLUMNS) {
-            val dayOfWeek = weekFields.firstDayOfWeek.plus((i - 1).toLong())
-            val dayString = formatter.format(dayOfWeek)
+            val dayOfWeek = weekSettings.firstDayOfWeek
+            val dayString = formatter.format(dayOfWeek.toJavaDayOfWeek())
             val stringWidth = fontMetrics.stringWidth(dayString)
             drawString(dayString, CELL_WIDTH.toFloat() * (i - 0.5f) - stringWidth / 2, 0f)
         }
@@ -244,12 +252,9 @@ private class CalendarRenderer(
 
     private fun cellX(dayOfWeek: Int) = MARGIN_HORIZONTAL + CELL_WIDTH * (dayOfWeek - 1) + MARGIN_INTERNAL
     private fun cellY(weekOfMonth: Int) = MARGIN_HEADER + CELL_HEIGHT * (weekOfMonth - 1) + MARGIN_INTERNAL
-    private fun Long.toDateTime(timeZone: ZoneId): ZonedDateTime {
-        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(this), timeZone)
-    }
 
     private fun ZonedDateTime.formatTime(): String {
-        return DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(toLocalTime())
+        return DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(toJavaZonedDateTime().toLocalTime())
     }
 
     private fun Double.latitudeString(): String = positionString(if (this < 0) "S" else "N")
@@ -257,7 +262,7 @@ private class CalendarRenderer(
     private fun Double.positionString(direction: String): String = "%1.3f°$direction".format(abs(this))
 
     companion object {
-        internal const val SCALE = 2.0
+        private const val SCALE = 2.0
         internal const val PAGE_WIDTH = SCALE * 3300.0
         internal const val PAGE_HEIGHT = SCALE * 2550.0
         private const val MARGIN_HORIZONTAL = SCALE * 200.0
@@ -275,6 +280,9 @@ private class CalendarRenderer(
         private const val CELL_HEIGHT = (PAGE_HEIGHT - (MARGIN_HEADER + MARGIN_FOOTER)) / ROWS
 
         private const val FOOTER_LEFT_FORMAT = "Times computed for %s, %s using timezone %s"
-        private const val FOOTER_RIGHT = "Copyright © 2019 Russell Wolf. All rights reserved"
+        private const val FOOTER_RIGHT = "Copyright © 2020 Russell Wolf. All rights reserved"
     }
 }
+
+// This helper doesn't exist in Island Time (yet?)
+private fun DayOfWeek.toJavaDayOfWeek(): JavaDayOfWeek = JavaDayOfWeek.values()[ordinal]

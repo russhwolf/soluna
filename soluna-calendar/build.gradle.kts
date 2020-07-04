@@ -19,7 +19,8 @@ tasks.withType(JavaExec::class) {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation(project(":soluna-core"))
+    implementation(project(":soluna-core-time"))
+    implementation("io.islandtime:core:0.2.4")
 }
 
 tasks.withType<KotlinCompile> {

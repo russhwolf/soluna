@@ -2,29 +2,22 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("org.jetbrains.kotlin.multiplatform")
-    id("maven-publish")
 }
 repositories {
     mavenCentral()
 }
-group = "com.example"
-version = "0.0.1"
 
 kotlin {
     jvm()
     iosArm64()
     iosX64()
     sourceSets {
-        all {
-            languageSettings.apply {
-                enableLanguageFeature("InlineClasses")
-                progressiveMode = true
-            }
-        }
-
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
+                api(project(":soluna-core"))
+
+                implementation("io.islandtime:core:0.2.4")
             }
         }
         val commonTest by getting {
@@ -50,3 +43,4 @@ kotlin {
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
+
