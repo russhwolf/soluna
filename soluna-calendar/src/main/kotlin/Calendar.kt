@@ -46,14 +46,14 @@ fun renderCalendars(
     }
 }
 
-private fun renderCalendarToFile(
+internal fun renderCalendarToFile(
     locationName: String,
     month: Month,
     year: Int,
     latitude: Double,
     longitude: Double,
     timeZone: TimeZone
-) {
+): File {
     val image = BufferedImage(PAGE_WIDTH.roundToInt(), PAGE_HEIGHT.roundToInt(), BufferedImage.TYPE_INT_RGB)
     image.createGraphics().run {
         renderCalendar(month, year, latitude, longitude, timeZone)
@@ -61,6 +61,7 @@ private fun renderCalendarToFile(
     }
     val file = File("$locationName-$year-${month.number}.png")
     ImageIO.write(image, "png", file)
+    return file
 }
 
 private fun Graphics2D.renderCalendar(

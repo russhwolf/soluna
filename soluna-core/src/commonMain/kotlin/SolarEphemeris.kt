@@ -190,7 +190,7 @@ private fun timeAtAltitude(
         UT = (UT0 + -(GHA + lambda + sign * t).toHourAngle() + offset).coerceInRange() - offset
 
         if (abs(UT0 - UT) < 0.008.hour) {
-            converged = true
+            converged = cos_t > -1 && cos_t < 1 // Only mark as converged if we had a valid angle
             break
         }
     }
