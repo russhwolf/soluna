@@ -9,18 +9,18 @@ import java.util.Properties
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
-    id("kotlinx-serialization") version "1.3.72"
-    id("com.squareup.sqldelight") version "1.3.0"
-    id("com.codingfeline.buildkonfig") version "0.5.1"
+    id("kotlinx-serialization") version "1.4.0"
+    id("com.squareup.sqldelight") version "1.4.2"
+    id("com.codingfeline.buildkonfig") version "0.7.0"
 }
 
-val coroutineVersion = "1.3.5"
-val coroutineWorkerVersion = "0.5.0"
-val ktorVersion = "1.3.2"
-val koinVersion = "3.0.0-alpha-2"
-val sqldelightVersion = "1.3.0"
-val serializationVersion = "0.20.0"
-val statelyVersion = "1.0.2"
+val coroutineVersion = "1.3.9-native-mt" // NB need to use native-mt for ktor
+val coroutineWorkerVersion = "0.6.1"
+val ktorVersion = "1.4.0"
+val koinVersion = "3.0.1-alpha-2"
+val sqldelightVersion = "1.4.2"
+val serializationVersion = "1.0.0-RC"
+val statelyVersion = "1.1.0"
 
 kotlin {
     android()
@@ -34,14 +34,13 @@ kotlin {
                 transitiveExport = true
             }
         }
-        compilations["main"].kotlinOptions.freeCompilerArgs += "-Xobjc-generics"
     }
 
     sourceSets {
         all {
             languageSettings.apply {
                 progressiveMode = true
-                useExperimentalAnnotation("kotlin.Experimental")
+                useExperimentalAnnotation("kotlin.RequiresOptIn")
                 useExperimentalAnnotation("kotlinx.coroutines.ExperimentalCoroutinesApi")
             }
         }
@@ -51,14 +50,18 @@ kotlin {
                 implementation(kotlin("stdlib-common"))
                 implementation(project(":soluna-core"))
 
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutineVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core") {
+                    version {
+                        strictly(coroutineVersion)
+                    }
+                }
 
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serializationVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
 
-                implementation("io.ktor:ktor-client-core-native:$ktorVersion")
-                implementation("io.ktor:ktor-client-json-native:$ktorVersion")
-                implementation("io.ktor:ktor-client-serialization-native:$ktorVersion")
-                implementation("io.ktor:ktor-client-logging-native:$ktorVersion")
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation("io.ktor:ktor-client-json:$ktorVersion")
+                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
+                implementation("io.ktor:ktor-client-logging:$ktorVersion")
 
                 implementation("com.autodesk:coroutineworker:$coroutineWorkerVersion")
                 implementation("co.touchlab:stately-common:$statelyVersion")
@@ -73,7 +76,7 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
                 implementation(project(":soluna-mobile:koinTest"))
 
-                implementation("io.ktor:ktor-client-mock-native:$ktorVersion")
+                implementation("io.ktor:ktor-client-mock:$ktorVersion")
             }
         }
         val androidMain by getting {
@@ -141,7 +144,7 @@ sqldelight {
 }
 
 android {
-    compileSdkVersion(28)
+    compileSdkVersion(30)
     defaultConfig {
         minSdkVersion(15)
     }

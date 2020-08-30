@@ -22,7 +22,7 @@ class MockReminderRepository(
         reminders
             .map { reminder ->
                 val location = locationRepository.getLocation(reminder.locationId)!!
-                ReminderWithLocation.Impl(
+                ReminderWithLocation(
                     reminder.id,
                     location.id,
                     location.label,
@@ -58,7 +58,7 @@ class MockReminderRepository(
         }.distinctUntilChanged()
 
     override suspend fun addReminder(locationId: Long, type: ReminderType, minutesBefore: Int, enabled: Boolean) {
-        reminders.add(Reminder.Impl(nextReminderId++, locationId, type, minutesBefore, enabled))
+        reminders.add(Reminder(nextReminderId++, locationId, type, minutesBefore, enabled))
         reminderListeners.forEach { it() }
     }
 
@@ -73,7 +73,7 @@ class MockReminderRepository(
 
         val prevReminder = reminders[index]
         reminders[index] =
-            Reminder.Impl(
+            Reminder(
                 id,
                 prevReminder.locationId,
                 prevReminder.type,

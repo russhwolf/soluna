@@ -17,7 +17,7 @@ kotlin {
                 implementation(kotlin("stdlib-common"))
                 api(project(":soluna-core"))
 
-                implementation("io.islandtime:core:0.2.4")
+                implementation("io.islandtime:core:0.3.0")
             }
         }
         val commonTest by getting {

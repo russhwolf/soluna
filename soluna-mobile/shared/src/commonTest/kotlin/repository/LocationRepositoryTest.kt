@@ -52,7 +52,7 @@ class LocationRepositoryTest {
 
         assertEquals(1, locations.size)
         assertEquals(
-            expected = LocationSummary.Impl(
+            expected = LocationSummary(
                 id = 1,
                 label = "Test Location 1"
             ),
@@ -80,17 +80,17 @@ class LocationRepositoryTest {
         assertEquals(
             expected = listOf(
                 listOf(
-                    LocationSummary.Impl(
+                    LocationSummary(
                         id = 1,
                         label = "Test Location 1"
                     )
                 ),
                 listOf(
-                    LocationSummary.Impl(
+                    LocationSummary(
                         id = 1,
                         label = "Test Location 1"
                     ),
-                    LocationSummary.Impl(
+                    LocationSummary(
                         id = 2,
                         label = "Test Location 2"
                     )
@@ -184,7 +184,7 @@ class LocationRepositoryTest {
         val locations = database.locationQueries.selectAllLocations().executeAsList()
         assertEquals(
             expected = listOf(
-                LocationSummary.Impl(
+                LocationSummary(
                     id = 1,
                     label = "Updated Location"
                 )
@@ -199,7 +199,7 @@ class LocationRepositoryTest {
     }
 }
 
-private val dummyLocation = Location.Impl(
+private val dummyLocation = Location(
     id = 1,
     label = "Test Location 1",
     latitude = 42.3956001,

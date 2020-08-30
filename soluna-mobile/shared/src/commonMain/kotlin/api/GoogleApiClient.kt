@@ -6,10 +6,6 @@ import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.features.defaultRequest
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.features.logging.LogLevel
-import io.ktor.client.features.logging.Logger
-import io.ktor.client.features.logging.Logging
-import io.ktor.client.features.logging.SIMPLE
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -17,9 +13,7 @@ import io.ktor.http.URLProtocol
 import io.ktor.http.encodeURLQueryComponent
 import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 
 interface GoogleApiClient {
     suspend fun getPlaceAutocomplete(query: String): PlaceAutocompleteResponse
@@ -29,7 +23,6 @@ interface GoogleApiClient {
     suspend fun getTimeZone(latitude: Double, longitude: Double, timestamp: Long): TimeZoneResponse
 
     class Impl(httpClientEngine: HttpClientEngine) : GoogleApiClient {
-        @OptIn(UnstableDefault::class)
         private val httpClient = HttpClient(httpClientEngine) {
             defaultRequest {
                 url.protocol = URLProtocol.HTTPS
@@ -38,19 +31,18 @@ interface GoogleApiClient {
             }
             install(JsonFeature) {
                 serializer = KotlinxSerializer(
-                    Json(
-                        JsonConfiguration(
-                            isLenient = true,
-                            ignoreUnknownKeys = true,
-                            serializeSpecialFloatingPointValues = true
-                        )
-                    )
+                    Json {
+                        isLenient = true
+                        ignoreUnknownKeys = true
+                        allowSpecialFloatingPointValues = true
+                    }
                 )
             }
-            install(Logging) {
-                logger = Logger.SIMPLE
-                level = LogLevel.ALL
-            }
+            // TODO Logging disabled due to https://youtrack.jetbrains.com/issue/KTOR-924
+//            install(Logging) {
+//                logger = Logger.SIMPLE
+//                level = LogLevel.ALL
+//            }
         }
 
         override suspend fun getPlaceAutocomplete(query: String): PlaceAutocompleteResponse =

@@ -26,21 +26,21 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
 
     @Test
     fun initialState_populated() = suspendTest {
-        locationRepository = MockLocationRepository(Location.Impl(0, "Home", 27.18, 62.83, "UTC"))
+        locationRepository = MockLocationRepository(Location(0, "Home", 27.18, 62.83, "UTC"))
         awaitLoading()
-        assertEquals(listOf(LocationSummary.Impl(0, "Home")), state.locations)
+        assertEquals(listOf(LocationSummary(0, "Home")), state.locations)
     }
 
     @Test
     fun locationsFlow() = suspendTest {
         awaitLoading()
         locationRepository.addLocation("Home", 27.18, 62.83, "UTC")
-        assertEquals(listOf(LocationSummary.Impl(0, "Home")), state.locations)
+        assertEquals(listOf(LocationSummary(0, "Home")), state.locations)
     }
 
     @Test
     fun removeLocation() = suspendTest {
-        locationRepository = MockLocationRepository(Location.Impl(0, "Home", 27.18, 62.83, "UTC"))
+        locationRepository = MockLocationRepository(Location(0, "Home", 27.18, 62.83, "UTC"))
         viewModel.removeLocation(0).join()
         assertTrue(state.locations.isEmpty())
     }
@@ -53,7 +53,7 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
 
     @Test
     fun locationDetailsTrigger() {
-        viewModel.navigateToLocationDetails(LocationSummary.Impl(0, "Home"))
+        viewModel.navigateToLocationDetails(LocationSummary(0, "Home"))
         assertEquals(0L, state.locationDetailsTrigger.consume())
     }
 }

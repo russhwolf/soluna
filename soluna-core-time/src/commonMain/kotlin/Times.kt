@@ -59,7 +59,7 @@ fun moonPhase(
 }
 
 private fun Long?.toZonedDateTime(zone: TimeZone) =
-    this?.let { ZonedDateTime.fromUnixEpochMillisecond(it, zone) }
+    this?.let { ZonedDateTime.fromMillisecondOfUnixEpoch(it, zone) }
 
 private fun offsetHoursAtNoon(date: Date, zone: TimeZone) =
     date.atTime(12, 0).at(zone).offset.totalSeconds.toLong() / 3600.0

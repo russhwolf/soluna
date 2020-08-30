@@ -9,7 +9,7 @@ plugins {
     id("com.android.library")
 }
 
-val koinVersion = "3.0.0-alpha-2"
+val koinVersion = "3.0.1-alpha-2"
 
 kotlin {
     android()
@@ -23,7 +23,7 @@ kotlin {
                 transitiveExport = true
             }
         }
-        compilations["main"].kotlinOptions.freeCompilerArgs += listOf("-Xobjc-generics", "-linker-options", "-lsqlite3")
+        compilations["main"].kotlinOptions.freeCompilerArgs += listOf("-linker-options", "-lsqlite3")
     }
 
     sourceSets {
@@ -64,7 +64,7 @@ tasks.withType<KotlinCompile> {
 }
 
 android {
-    compileSdkVersion(28)
+    compileSdkVersion(30)
     defaultConfig {
         minSdkVersion(15)
 

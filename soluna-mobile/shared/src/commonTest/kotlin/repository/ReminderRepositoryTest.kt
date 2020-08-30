@@ -218,7 +218,7 @@ class ReminderRepositoryTest {
     }
 }
 
-private val dummyReminder = Reminder.Impl(
+private val dummyReminder = Reminder(
     id = 1,
     locationId = 1,
     type = ReminderType.Sunset,
@@ -226,7 +226,7 @@ private val dummyReminder = Reminder.Impl(
     enabled = true
 )
 
-private val dummyReminderWithLocation = ReminderWithLocation.Impl(
+private val dummyReminderWithLocation = ReminderWithLocation(
     id = 1,
     locationId = 1,
     locationLabel = "Test Location 1",

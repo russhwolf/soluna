@@ -37,7 +37,7 @@ class SolunaDbTest {
         val updatedLocations = database.locationQueries.selectAllLocations().executeAsList()
         assertEquals(1, updatedLocations.size)
         assertEquals(
-            expected = LocationSummary.Impl(
+            expected = LocationSummary(
                 id = 1,
                 label = "Test Location"
             ),
@@ -46,7 +46,7 @@ class SolunaDbTest {
 
         val location = database.locationQueries.selectLocationById(1).executeAsOne()
         assertEquals(
-            expected = Location.Impl(
+            expected = Location(
                 id = 1,
                 label = "Test Location",
                 latitude = 42.3956001,
@@ -60,7 +60,7 @@ class SolunaDbTest {
 
         val updatedLocation = database.locationQueries.selectLocationById(1).executeAsOne()
         assertEquals(
-            expected = Location.Impl(
+            expected = Location(
                 id = 1,
                 label = "Updated Location",
                 latitude = 42.3956001,
@@ -115,7 +115,7 @@ class SolunaDbTest {
         val insertedReminders = database.reminderQueries.selectAllReminders().executeAsList()
         assertEquals(
             expected = listOf(
-                ReminderWithLocation.Impl(
+                ReminderWithLocation(
                     id = 1,
                     locationId = 1,
                     locationLabel = "Location 1",
@@ -126,7 +126,7 @@ class SolunaDbTest {
                     minutesBefore = 15,
                     enabled = true
                 ),
-                ReminderWithLocation.Impl(
+                ReminderWithLocation(
                     id = 2,
                     locationId = 2,
                     locationLabel = "Location 2",
@@ -137,7 +137,7 @@ class SolunaDbTest {
                     minutesBefore = 15,
                     enabled = false
                 ),
-                ReminderWithLocation.Impl(
+                ReminderWithLocation(
                     id = 3,
                     locationId = 2,
                     locationLabel = "Location 2",
@@ -156,7 +156,7 @@ class SolunaDbTest {
             database.reminderQueries.selectRemindersByLocationId(1).executeAsList()
         assertEquals(
             expected = listOf(
-                Reminder.Impl(
+                Reminder(
                     id = 1,
                     locationId = 1,
                     type = ReminderType.Sunset,
@@ -173,7 +173,7 @@ class SolunaDbTest {
         val updatedReminders = database.reminderQueries.selectAllReminders().executeAsList()
         assertEquals(
             expected = listOf(
-                ReminderWithLocation.Impl(
+                ReminderWithLocation(
                     id = 1,
                     locationId = 1,
                     locationLabel = "Location 1",
@@ -184,7 +184,7 @@ class SolunaDbTest {
                     minutesBefore = 15,
                     enabled = false
                 ),
-                ReminderWithLocation.Impl(
+                ReminderWithLocation(
                     id = 2,
                     locationId = 2,
                     locationLabel = "Location 2",
@@ -195,7 +195,7 @@ class SolunaDbTest {
                     minutesBefore = 15,
                     enabled = false
                 ),
-                ReminderWithLocation.Impl(
+                ReminderWithLocation(
                     id = 3,
                     locationId = 2,
                     locationLabel = "Location 2",
@@ -215,7 +215,7 @@ class SolunaDbTest {
         val updatedRemindersAfterDelete = database.reminderQueries.selectAllReminders().executeAsList()
         assertEquals(
             expected = listOf(
-                ReminderWithLocation.Impl(
+                ReminderWithLocation(
                     id = 1,
                     locationId = 1,
                     locationLabel = "Location 1",
@@ -226,7 +226,7 @@ class SolunaDbTest {
                     minutesBefore = 15,
                     enabled = false
                 ),
-                ReminderWithLocation.Impl(
+                ReminderWithLocation(
                     id = 3,
                     locationId = 2,
                     locationLabel = "Location 2",

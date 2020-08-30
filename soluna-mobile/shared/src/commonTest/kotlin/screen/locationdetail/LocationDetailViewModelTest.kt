@@ -28,9 +28,9 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
 
     @Test
     fun initialState_populated() = suspendTest {
-        val location = Location.Impl(0, "Home", 27.18, 62.83, "UTC")
-        val reminder1 = Reminder.Impl(0, 1, ReminderType.Sunset, 15, true)
-        val reminder2 = Reminder.Impl(1, 0, ReminderType.Sunset, 15, true)
+        val location = Location(0, "Home", 27.18, 62.83, "UTC")
+        val reminder1 = Reminder(0, 1, ReminderType.Sunset, 15, true)
+        val reminder2 = Reminder(1, 0, ReminderType.Sunset, 15, true)
         locations = arrayOf(location)
         reminders = arrayOf(reminder1, reminder2)
         awaitLoading()
@@ -45,7 +45,7 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
 
     @Test
     fun updateLabel() = suspendTest {
-        val location = Location.Impl(0, "Home", 27.18, 62.83, "UTC")
+        val location = Location(0, "Home", 27.18, 62.83, "UTC")
         locations = arrayOf(location)
         awaitLoading()
 
@@ -60,7 +60,7 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
 
     @Test
     fun deleteLocation() = suspendTest {
-        val location = Location.Impl(0, "Home", 27.18, 62.83, "UTC")
+        val location = Location(0, "Home", 27.18, 62.83, "UTC")
         locations = arrayOf(location)
         awaitLoading()
 
@@ -76,12 +76,12 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
 
     @Test
     fun addReminder() = suspendTest {
-        val location = Location.Impl(0, "Home", 27.18, 62.83, "UTC")
+        val location = Location(0, "Home", 27.18, 62.83, "UTC")
         locations = arrayOf(location)
         awaitLoading()
 
         viewModel.addReminder(type = ReminderType.Sunset, minutesBefore = 15)
-        val expectedReminder = Reminder.Impl(
+        val expectedReminder = Reminder(
             id = 0,
             locationId = 0,
             type = ReminderType.Sunset,
@@ -99,8 +99,8 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
 
     @Test
     fun deleteReminder() = suspendTest {
-        val location = Location.Impl(0, "Home", 27.18, 62.83, "UTC")
-        val reminder = Reminder.Impl(0, 0, ReminderType.Sunset, 15, true)
+        val location = Location(0, "Home", 27.18, 62.83, "UTC")
+        val reminder = Reminder(0, 0, ReminderType.Sunset, 15, true)
         locations = arrayOf(location)
         reminders = arrayOf(reminder)
         awaitLoading()
@@ -112,8 +112,8 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
 
     @Test
     fun updateReminderEnabled() = suspendTest {
-        val location = Location.Impl(0, "Home", 27.18, 62.83, "UTC")
-        val reminder = Reminder.Impl(0, 0, ReminderType.Sunset, 15, true)
+        val location = Location(0, "Home", 27.18, 62.83, "UTC")
+        val reminder = Reminder(0, 0, ReminderType.Sunset, 15, true)
         locations = arrayOf(location)
         reminders = arrayOf(reminder)
         awaitLoading()
@@ -130,8 +130,8 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
 
     @Test
     fun updateReminderMinutesBefore() = suspendTest {
-        val location = Location.Impl(0, "Home", 27.18, 62.83, "UTC")
-        val reminder = Reminder.Impl(0, 0, ReminderType.Sunset, 15, true)
+        val location = Location(0, "Home", 27.18, 62.83, "UTC")
+        val reminder = Reminder(0, 0, ReminderType.Sunset, 15, true)
         locations = arrayOf(location)
         reminders = arrayOf(reminder)
         awaitLoading()

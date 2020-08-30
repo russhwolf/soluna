@@ -2,7 +2,7 @@ package com.russhwolf.soluna.mobile
 
 import org.koin.dsl.module
 
-@Throws
+@Throws(Throwable::class)
 fun testCheckModules() {
     val testAppModule = module {
 

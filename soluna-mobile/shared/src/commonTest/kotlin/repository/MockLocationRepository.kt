@@ -14,7 +14,7 @@ class MockLocationRepository(vararg locations: Location) : LocationRepository {
 
     private val locationListeners = mutableListOf<() -> Unit>()
 
-    override suspend fun getLocations(): List<LocationSummary> = locations.map { LocationSummary.Impl(it.id, it.label) }
+    override suspend fun getLocations(): List<LocationSummary> = locations.map { LocationSummary(it.id, it.label) }
 
     override fun getLocationsFlow(): Flow<List<LocationSummary>> = callbackFlow {
         val listener: () -> Unit = { offer(runBlocking { getLocations() }) }
@@ -37,7 +37,7 @@ class MockLocationRepository(vararg locations: Location) : LocationRepository {
     }.distinctUntilChanged()
 
     override suspend fun addLocation(label: String, latitude: Double, longitude: Double, timeZone: String) {
-        locations.add(Location.Impl(nextLocationId++, label, latitude, longitude, timeZone))
+        locations.add(Location(nextLocationId++, label, latitude, longitude, timeZone))
         locationListeners.forEach { it() }
     }
 
@@ -52,7 +52,7 @@ class MockLocationRepository(vararg locations: Location) : LocationRepository {
 
         val prevLocation = locations[index]
         locations[index] =
-            Location.Impl(id, label, prevLocation.latitude, prevLocation.longitude, prevLocation.timeZone)
+            Location(id, label, prevLocation.latitude, prevLocation.longitude, prevLocation.timeZone)
 
         locationListeners.forEach { it() }
     }
