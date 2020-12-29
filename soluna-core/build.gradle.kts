@@ -24,7 +24,6 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-common"))
             }
         }
         val commonTest by getting {
@@ -35,7 +34,6 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                implementation(kotlin("stdlib"))
             }
         }
         val jvmTest by getting {

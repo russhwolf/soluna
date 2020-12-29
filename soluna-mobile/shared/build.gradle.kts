@@ -9,18 +9,18 @@ import java.util.Properties
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
-    id("kotlinx-serialization") version "1.4.0"
-    id("com.squareup.sqldelight") version "1.4.2"
+    id("kotlinx-serialization") version "1.4.21"
+    id("com.squareup.sqldelight") version "1.4.4"
     id("com.codingfeline.buildkonfig") version "0.7.0"
 }
 
-val coroutineVersion = "1.3.9-native-mt" // NB need to use native-mt for ktor
-val coroutineWorkerVersion = "0.6.1"
-val ktorVersion = "1.4.0"
-val koinVersion = "3.0.1-alpha-2"
-val sqldelightVersion = "1.4.2"
-val serializationVersion = "1.0.0-RC"
-val statelyVersion = "1.1.0"
+val coroutineVersion = "1.4.2-native-mt"
+val coroutineWorkerVersion = "0.6.3"
+val ktorVersion = "1.5.0"
+val koinVersion = "3.0.0-alpha-4"
+val sqldelightVersion = "1.4.4"
+val serializationVersion = "1.0.1"
+val statelyVersion = "1.1.1"
 
 kotlin {
     android()
@@ -47,7 +47,6 @@ kotlin {
 
         commonMain {
             dependencies {
-                implementation(kotlin("stdlib-common"))
                 implementation(project(":soluna-core"))
 
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core") {
@@ -81,12 +80,7 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation(kotlin("stdlib"))
                 implementation("com.squareup.sqldelight:android-driver:$sqldelightVersion")
-
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion")
-
-                implementation("io.ktor:ktor-client-android:$ktorVersion")
             }
         }
         val androidTest by getting {
@@ -94,11 +88,9 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
 
-                implementation("androidx.test:core:1.2.0")
-                implementation("androidx.test.ext:junit:1.1.1")
-                implementation("org.robolectric:robolectric:4.3.1")
-
-                implementation("io.ktor:ktor-client-mock-jvm:$ktorVersion")
+                implementation("androidx.test:core:1.3.0")
+                implementation("androidx.test.ext:junit:1.1.2")
+                implementation("org.robolectric:robolectric:4.4")
             }
         }
         val iosMain by getting {

@@ -14,10 +14,9 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-common"))
                 api(project(":soluna-core"))
 
-                implementation("io.islandtime:core:0.3.0")
+                implementation("io.islandtime:core:0.4.0")
             }
         }
         val commonTest by getting {
@@ -28,7 +27,6 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                implementation(kotlin("stdlib"))
             }
         }
         val jvmTest by getting {

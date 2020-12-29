@@ -18,10 +18,9 @@ tasks.withType(JavaExec::class) {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
     implementation(project(":soluna-core-time"))
     implementation("io.islandtime:core:0.3.0")
-    testImplementation("junit:junit:4.13")
+    testImplementation("junit:junit:4.13.1")
     testImplementation(kotlin("test-junit"))
 }
 

@@ -9,7 +9,7 @@ plugins {
     id("com.android.library")
 }
 
-val koinVersion = "3.0.1-alpha-2"
+val koinVersion = "3.0.0-alpha-4"
 
 kotlin {
     android()
@@ -29,7 +29,6 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(kotlin("stdlib-common"))
                 implementation(project(":soluna-mobile:shared"))
 
                 implementation("org.koin:koin-core:$koinVersion")
@@ -42,14 +41,12 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation(kotlin("stdlib"))
-
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
 
-                implementation("androidx.test:core:1.2.0")
-                implementation("androidx.test.ext:junit:1.1.1")
-                implementation("org.robolectric:robolectric:4.3.1")
+                implementation("androidx.test:core:1.3.0")
+                implementation("androidx.test.ext:junit:1.1.2")
+                implementation("org.robolectric:robolectric:4.4")
             }
         }
         val iosMain by getting {
