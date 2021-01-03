@@ -4,6 +4,7 @@ pluginManagement {
         mavenCentral()
         maven(url = "https://plugins.gradle.org/m2/")
         jcenter()
+        maven { url = uri("https://maven.pkg.jetbrains.space/public/p/compose/dev") }
     }
     resolutionStrategy {
         eachPlugin {
@@ -18,8 +19,6 @@ pluginManagement {
     }
 }
 rootProject.name = "Soluna"
-
-enableFeaturePreview("GRADLE_METADATA")
 
 include(":soluna-core")
 include(":soluna-core-time")

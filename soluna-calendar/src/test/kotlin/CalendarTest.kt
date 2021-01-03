@@ -70,7 +70,7 @@ class CalendarTest {
         longitude: Double,
         timeZone: TimeZone
     ) {
-        val actualFile = renderCalendarToFile(locationName, month, year, latitude, longitude, timeZone)
+        val actualFile = renderComposeCalendarToFile(locationName, month, year, latitude, longitude, timeZone)
 
         try {
             val expected = Thread.currentThread().contextClassLoader.getResourceAsStream(filename)

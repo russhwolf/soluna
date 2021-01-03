@@ -34,19 +34,6 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 import java.time.DayOfWeek as JavaDayOfWeek
 
-
-fun renderCalendars(
-    locationName: String,
-    year: Int,
-    latitude: Double,
-    longitude: Double,
-    timeZone: TimeZone
-) {
-    for (month in Month.values()) {
-        renderCalendarToFile(locationName, month, year, latitude, longitude, timeZone)
-    }
-}
-
 internal fun renderCalendarToFile(
     locationName: String,
     month: Month,
