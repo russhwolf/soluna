@@ -17,6 +17,7 @@ import io.islandtime.atTime
 import io.islandtime.calendar.WeekSettings
 import io.islandtime.jvm.toJavaYearMonth
 import io.islandtime.jvm.toJavaZonedDateTime
+import io.islandtime.measures.IntDays
 import io.islandtime.measures.milliseconds
 import io.islandtime.weekOfMonth
 import java.awt.BasicStroke
@@ -220,7 +221,7 @@ private class CalendarRenderer(
         val formatter = DateTimeFormatter.ofPattern("eeee")
         translate(MARGIN_HORIZONTAL, MARGIN_HEADER - MARGIN_COLUMN_HEADER)
         for (i in 1..COLUMNS) {
-            val dayOfWeek = weekSettings.firstDayOfWeek
+            val dayOfWeek = weekSettings.firstDayOfWeek.plus(IntDays(i - 1))
             val dayString = formatter.format(dayOfWeek.toJavaDayOfWeek())
             val stringWidth = fontMetrics.stringWidth(dayString)
             drawString(dayString, CELL_WIDTH.toFloat() * (i - 0.5f) - stringWidth / 2, 0f)
