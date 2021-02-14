@@ -207,7 +207,9 @@ private val dummyLocation = Location(
     timeZone = "America/New_York"
 )
 
-private fun SolunaDb.insertDummyLocation(id: Long = 1) {
+// TODO this is causing a weird compile error if there's a default value
+private fun SolunaDb.insertDummyLocation() = insertDummyLocation(1)
+private fun SolunaDb.insertDummyLocation(id: Long) {
     locationQueries.insertLocation(
         label = "Test Location $id",
         latitude = 42.3956001,

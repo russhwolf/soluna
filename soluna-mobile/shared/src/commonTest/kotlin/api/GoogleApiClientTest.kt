@@ -14,11 +14,10 @@ import kotlin.test.assertEquals
 import kotlin.test.fail
 
 class GoogleApiClientTest {
-    private val googleApiClient by lazy { GoogleApiClient.Impl(mockEngine) }
 
     @Test
     fun placeAutoComplete_success() = suspendTest {
-        requestValidator = {
+        val requestValidator: (HttpRequestData) -> Unit = {
             assertEquals(
                 expected = HttpMethod.Get,
                 actual = it.method
@@ -32,6 +31,7 @@ class GoogleApiClientTest {
                 actual = it.url.toString()
             )
         }
+        val googleApiClient = GoogleApiClient.Impl(createMockEngine(requestValidator))
 
         val response = googleApiClient.getPlaceAutocomplete("Somerville, MA")
         val expected = PlaceAutocompleteResponse(
@@ -46,7 +46,7 @@ class GoogleApiClientTest {
 
     @Test
     fun geocode_success() = suspendTest {
-        requestValidator = {
+        val requestValidator: (HttpRequestData) -> Unit = {
             assertEquals(
                 expected = HttpMethod.Get,
                 actual = it.method
@@ -60,6 +60,7 @@ class GoogleApiClientTest {
                 actual = it.url.toString()
             )
         }
+        val googleApiClient = GoogleApiClient.Impl(createMockEngine(requestValidator))
 
         val response = googleApiClient.getGeocode("ChIJZeH1eyl344kRA3v52Jl3kHo")
         val expected = GeocodeResponse(
@@ -80,7 +81,7 @@ class GoogleApiClientTest {
 
     @Test
     fun timezone_success() = suspendTest {
-        requestValidator = {
+        val requestValidator: (HttpRequestData) -> Unit = {
             assertEquals(
                 expected = HttpMethod.Get,
                 actual = it.method
@@ -94,6 +95,7 @@ class GoogleApiClientTest {
                 actual = it.url.toString()
             )
         }
+        val googleApiClient = GoogleApiClient.Impl(createMockEngine(requestValidator))
 
         val response =
             googleApiClient.getTimeZone(latitude = 42.3875968, longitude = -71.0994968, timestamp = 1565055420)
@@ -105,15 +107,14 @@ class GoogleApiClientTest {
         )
         assertEquals(expected, response)
     }
+}
 
-    private var requestValidator: ((HttpRequestData) -> Unit)? = null
+fun createMockEngine(requestValidator: (HttpRequestData) -> Unit) = MockEngine { httpRequestData ->
+    requestValidator.invoke(httpRequestData)
 
-    private val mockEngine = MockEngine { httpRequestData ->
-        requestValidator?.invoke(httpRequestData)
-
-        val body = when (val path = httpRequestData.url.encodedPath) {
-            "place/autocomplete/json" ->
-                """
+    val body = when (val path = httpRequestData.url.encodedPath) {
+        "place/autocomplete/json" ->
+            """
                 {
                    "predictions" : [
                       {
@@ -218,8 +219,8 @@ class GoogleApiClientTest {
                    "status" : "OK"
                 }
                 """.trimIndent()
-            "geocode/json" ->
-                """
+        "geocode/json" ->
+            """
                 {
                    "results" : [
                       {
@@ -280,8 +281,8 @@ class GoogleApiClientTest {
                    "status" : "OK"
                 }
                 """.trimIndent()
-            "timezone/json" ->
-                """
+        "timezone/json" ->
+            """
                 {
                    "dstOffset" : 3600,
                    "rawOffset" : -18000,
@@ -290,12 +291,11 @@ class GoogleApiClientTest {
                    "timeZoneName" : "Eastern Daylight Time"
                 }
                 """.trimIndent()
-            else -> fail("Invalid path $path")
-        }
-        respond(
-            content = body,
-            status = HttpStatusCode.OK,
-            headers = headersOf(HttpHeaders.ContentType, "application/json")
-        )
+        else -> fail("Invalid path $path")
     }
+    respond(
+        content = body,
+        status = HttpStatusCode.OK,
+        headers = headersOf(HttpHeaders.ContentType, "application/json")
+    )
 }
