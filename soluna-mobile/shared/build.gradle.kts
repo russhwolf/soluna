@@ -80,6 +80,12 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android") {
+                    version {
+                        strictly(coroutineVersion)
+                    }
+                }
+
                 implementation("com.squareup.sqldelight:android-driver:$sqldelightVersion")
 
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
