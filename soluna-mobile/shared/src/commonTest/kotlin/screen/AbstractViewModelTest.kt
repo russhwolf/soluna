@@ -1,21 +1,21 @@
 package com.russhwolf.soluna.mobile.screen
 
+import co.touchlab.stately.ensureNeverFrozen
 import com.russhwolf.soluna.mobile.runBlocking
-import kotlinx.coroutines.CancellableContinuation
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.resume
+import kotlinx.coroutines.CompletableDeferred
 import kotlin.properties.Delegates
 import kotlin.test.assertEquals
 
 abstract class AbstractViewModelTest<VM : BaseViewModel<T>, T : Any> {
+    init {
+        ensureNeverFrozen()
+    }
+
     protected lateinit var state: T
     protected var isLoading: Boolean by Delegates.notNull()
     protected var error: Throwable? = null
 
-    private var loadingJob: Job? = null
-    private var loadingContinuation: CancellableContinuation<Unit>? = null
+    private var loadingDeferred: CompletableDeferred<Unit>? = null
 
     protected val viewModel: VM by lazy {
         runBlocking {
@@ -32,7 +32,7 @@ abstract class AbstractViewModelTest<VM : BaseViewModel<T>, T : Any> {
 
     protected suspend fun awaitLoading() {
         initializeViewModel()
-        loadingJob?.join()
+        loadingDeferred?.await()
     }
 
     abstract suspend fun createViewModel(): VM
@@ -43,19 +43,11 @@ abstract class AbstractViewModelTest<VM : BaseViewModel<T>, T : Any> {
 
     private fun updateLoadingContinuation(isLoading: Boolean) {
         if (isLoading) {
-            loadingJob?.cancel()
-            loadingJob = viewModel.coroutineScope.launch {
-                suspendCancellableCoroutine {
-                    loadingContinuation?.cancel()
-                    loadingContinuation = it
-                    it.invokeOnCancellation {
-                        loadingContinuation = null
-                    }
-                }
-            }
+            loadingDeferred?.cancel()
+            loadingDeferred = CompletableDeferred()
         } else {
-            loadingContinuation?.resume(Unit)
-            loadingContinuation = null
+            loadingDeferred?.complete(Unit)
+            loadingDeferred = null
         }
     }
 

@@ -10,12 +10,16 @@ interface GeocodeRepository {
     class Impl(private val googleApiClient: GoogleApiClient) : GeocodeRepository {
 
         override suspend fun geocodeLocation(location: String): GeocodeData? {
-            val placeId =
-                googleApiClient.getPlaceAutocomplete(location).predictions.firstOrNull()?.place_id ?: return null
-            val coords =
-                googleApiClient.getGeocode(placeId).results.firstOrNull()?.geometry?.location ?: return null
-            val timeZone =
-                googleApiClient.getTimeZone(coords.lat, coords.lng, epochSeconds).timeZoneId
+            val placeId = googleApiClient.getPlaceAutocomplete(location)?.predictions?.firstOrNull()?.place_id
+                ?: return null
+            val coords = googleApiClient.getGeocode(placeId)?.results?.firstOrNull()?.geometry?.location
+                ?: return null
+            val timeZone = googleApiClient.getTimeZone(
+                coords.lat ?: return null,
+                coords.lng ?: return null,
+                epochSeconds
+            )?.timeZoneId
+                ?: return null
             return GeocodeData(
                 latitude = coords.lat,
                 longitude = coords.lng,

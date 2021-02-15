@@ -5,6 +5,7 @@ import com.russhwolf.soluna.mobile.suspendTest
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.request.HttpRequestData
+import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
@@ -296,6 +297,6 @@ fun createMockEngine(requestValidator: (HttpRequestData) -> Unit) = MockEngine {
     respond(
         content = body,
         status = HttpStatusCode.OK,
-        headers = headersOf(HttpHeaders.ContentType, "application/json")
+        headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
     )
 }

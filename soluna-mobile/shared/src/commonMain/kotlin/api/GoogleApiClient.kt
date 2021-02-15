@@ -3,6 +3,7 @@ package com.russhwolf.soluna.mobile.api
 import com.russhwolf.soluna.mobile.BuildKonfig
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.defaultRequest
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
@@ -15,16 +16,17 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.URLProtocol
 import io.ktor.http.encodeURLQueryComponent
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 interface GoogleApiClient {
-    suspend fun getPlaceAutocomplete(query: String): PlaceAutocompleteResponse
+    suspend fun getPlaceAutocomplete(query: String): PlaceAutocompleteResponse?
 
-    suspend fun getGeocode(placeId: String): GeocodeResponse
+    suspend fun getGeocode(placeId: String): GeocodeResponse?
 
-    suspend fun getTimeZone(latitude: Double, longitude: Double, timestamp: Long): TimeZoneResponse
+    suspend fun getTimeZone(latitude: Double, longitude: Double, timestamp: Long): TimeZoneResponse?
 
     class Impl(httpClientEngine: HttpClientEngine) : GoogleApiClient {
         private val httpClient = HttpClient(httpClientEngine) {
@@ -44,13 +46,12 @@ interface GoogleApiClient {
             }
             install(Logging) {
                 logger = Logger.SIMPLE
-                level =
-                    LogLevel.HEADERS // TODO Can't use LogLevel.ALL due to https://youtrack.jetbrains.com/issue/KTOR-924
+                level = LogLevel.ALL
             }
         }
 
-        override suspend fun getPlaceAutocomplete(query: String): PlaceAutocompleteResponse =
-            httpClient.getWithTimeout {
+        override suspend fun getPlaceAutocomplete(query: String): PlaceAutocompleteResponse? =
+            httpClient.getWithTimeoutOrNull {
                 url {
                     encodedPath = "place/autocomplete/json"
                     parameter("input", query.encodeURLQueryComponent(spaceToPlus = true))
@@ -58,16 +59,16 @@ interface GoogleApiClient {
                 }
             }
 
-        override suspend fun getGeocode(placeId: String): GeocodeResponse =
-            httpClient.getWithTimeout {
+        override suspend fun getGeocode(placeId: String): GeocodeResponse? =
+            httpClient.getWithTimeoutOrNull {
                 url {
                     encodedPath = "geocode/json"
                     parameter("place_id", placeId)
                 }
             }
 
-        override suspend fun getTimeZone(latitude: Double, longitude: Double, timestamp: Long): TimeZoneResponse =
-            httpClient.getWithTimeout {
+        override suspend fun getTimeZone(latitude: Double, longitude: Double, timestamp: Long): TimeZoneResponse? =
+            httpClient.getWithTimeoutOrNull {
                 url {
                     encodedPath = "timezone/json"
                     parameter("location", "$latitude,$longitude")
@@ -78,31 +79,58 @@ interface GoogleApiClient {
 }
 
 @Serializable
-data class PlaceAutocompleteResponse(val status: String, val predictions: List<Prediction>) {
+data class PlaceAutocompleteResponse(
+    val status: String? = null,
+    val predictions: List<Prediction>? = null
+) {
 
     @Serializable
-    data class Prediction(val place_id: String)
+    data class Prediction(
+        val place_id: String? = null
+    )
 }
 
 @Serializable
-data class GeocodeResponse(val status: String, val results: List<Result>) {
+data class GeocodeResponse(
+    val status: String? = null,
+    val results: List<Result>? = null
+) {
 
     @Serializable
-    data class Result(val geometry: Geometry) {
+    data class Result(
+        val geometry: Geometry? = null
+    ) {
 
         @Serializable
-        data class Geometry(val location: Location) {
+        data class Geometry(
+            val location: Location? = null
+        ) {
 
             @Serializable
-            data class Location(val lat: Double, val lng: Double)
+            data class Location(
+                val lat: Double? = null,
+                val lng: Double? = null
+            )
         }
     }
 }
 
 @Serializable
-data class TimeZoneResponse(val status: String, val rawOffset: Int, val dstOffset: Int, val timeZoneId: String)
+data class TimeZoneResponse(
+    val status: String? = null,
+    val rawOffset: Int? = null,
+    val dstOffset: Int? = null,
+    val timeZoneId: String? = null
+)
 
-private suspend inline fun <reified T> HttpClient.getWithTimeout(
+private suspend inline fun <reified T> HttpClient.getWithTimeoutOrNull(
     timeout: Long = 10_000,
     crossinline block: HttpRequestBuilder.() -> Unit
-): T = withTimeout(timeout) { get<T>(block = block) }
+): T? =
+    try {
+        withTimeout(timeout) { get(block = block) }
+    } catch (exception: TimeoutCancellationException) {
+        null
+    } catch (exception: ClientRequestException) {
+        null
+    }

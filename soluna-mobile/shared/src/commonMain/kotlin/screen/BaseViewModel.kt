@@ -1,5 +1,6 @@
 package com.russhwolf.soluna.mobile.screen
 
+import co.touchlab.stately.ensureNeverFrozen
 import com.russhwolf.soluna.mobile.util.EventTrigger
 import com.russhwolf.soluna.mobile.util.SupervisorScope
 import kotlinx.coroutines.CoroutineDispatcher
@@ -10,6 +11,10 @@ import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
 abstract class BaseViewModel<S>(initialState: S, dispatcher: CoroutineDispatcher) {
+    init {
+        ensureNeverFrozen()
+    }
+
     val coroutineScope = SupervisorScope(dispatcher)
 
     private var viewStateListener: ViewStateListener<S>? = null
