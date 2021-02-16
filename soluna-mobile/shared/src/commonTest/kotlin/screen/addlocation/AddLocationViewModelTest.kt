@@ -1,20 +1,25 @@
 package com.russhwolf.soluna.mobile.screen.addlocation
 
+import com.russhwolf.soluna.mobile.AndroidJUnit4
+import com.russhwolf.soluna.mobile.RunWith
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
+import com.russhwolf.soluna.mobile.createInMemorySqlDriver
+import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.repository.GeocodeData
 import com.russhwolf.soluna.mobile.repository.GeocodeRepository
-import com.russhwolf.soluna.mobile.repository.MockLocationRepository
+import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.repository.createGeocodeMockClientEngine
 import com.russhwolf.soluna.mobile.screen.AbstractViewModelTest
 import com.russhwolf.soluna.mobile.suspendTest
 import com.russhwolf.soluna.mobile.util.EventTrigger
 import kotlinx.coroutines.Dispatchers
+import kotlin.test.AfterTest
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
-
+@RunWith(AndroidJUnit4::class)
 class AddLocationViewModelTest : AbstractViewModelTest<AddLocationViewModel, AddLocationViewState>() {
-    private val locationRepository = MockLocationRepository()
+    private val driver = createInMemorySqlDriver()
+    private val locationRepository = LocationRepository.Impl(createDatabase(driver))
     private val geocodeRepository = GeocodeRepository.Impl(
         GoogleApiClient.Impl(
             createGeocodeMockClientEngine(
@@ -30,27 +35,32 @@ class AddLocationViewModelTest : AbstractViewModelTest<AddLocationViewModel, Add
     fun addLocation_valid() = suspendTest {
         viewModel.addLocation("Home", "27.18", "62.83", "UTC").join()
         val expectedState = AddLocationViewState(exitTrigger = EventTrigger.create())
-        assertEquals(expectedState, state)
+        assertState(expectedState)
     }
 
     @Test
     fun addLocation_invalid() = suspendTest {
         viewModel.addLocation("Home", "Foo", "62.83", "UTC").join()
         val expectedState = AddLocationViewState(exitTrigger = EventTrigger.empty())
-        assertEquals(expectedState, state)
+        assertState(expectedState, error = NumberFormatException())
     }
 
     @Test
     fun geocodeLocation_valid() = suspendTest {
         viewModel.geocodeLocation("Home").join()
         val expectedState = AddLocationViewState(geocodeTrigger = EventTrigger.create(GeocodeData(27.18, 62.83, "UTC")))
-        assertEquals(expectedState, state)
+        assertState(expectedState)
     }
 
     @Test
     fun geocodeLocation_invalid() = suspendTest {
         viewModel.geocodeLocation("Away").join()
         val expectedState = AddLocationViewState(geocodeTrigger = EventTrigger.empty())
-        assertEquals(expectedState, state)
+        assertState(expectedState)
+    }
+
+    @AfterTest
+    fun tearDown() {
+        driver.close()
     }
 }

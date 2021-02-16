@@ -12,6 +12,7 @@ abstract class AbstractViewModelTest<VM : BaseViewModel<T>, T : Any> {
     }
 
     protected lateinit var state: T
+    private var isLoadingSet = false
     protected var isLoading: Boolean by Delegates.notNull()
     protected var error: Throwable? = null
 
@@ -22,8 +23,11 @@ abstract class AbstractViewModelTest<VM : BaseViewModel<T>, T : Any> {
             val viewModel = createViewModel()
             viewModel.setViewStateListener { state = it }
             viewModel.setLoadingListener {
-                isLoading = it
-                updateLoadingContinuation(it)
+                if (!isLoadingSet || isLoading != it) {
+                    isLoadingSet = true
+                    isLoading = it
+                    updateLoadingContinuation(it)
+                }
             }
             viewModel.setErrorListener { error = it }
             viewModel
@@ -42,19 +46,21 @@ abstract class AbstractViewModelTest<VM : BaseViewModel<T>, T : Any> {
     }
 
     private fun updateLoadingContinuation(isLoading: Boolean) {
-        if (isLoading) {
+        loadingDeferred = if (isLoading) {
             loadingDeferred?.cancel()
-            loadingDeferred = CompletableDeferred()
+            CompletableDeferred()
         } else {
             loadingDeferred?.complete(Unit)
-            loadingDeferred = null
+            null
         }
     }
 
     protected fun assertState(state: T, isLoading: Boolean = false, error: Throwable? = null) {
-        assertEquals(state, this.state)
+        // TODO messages might not match across platforms, eg NumberFormatException
+//        assertEquals(error?.message, this.error?.message)
+        assertEquals(error?.let { it::class }, this.error?.let { it::class })
         assertEquals(isLoading, this.isLoading)
-        assertEquals(error, this.error)
+        assertEquals(state, this.state)
     }
 }
 

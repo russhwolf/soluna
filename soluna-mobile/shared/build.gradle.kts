@@ -15,7 +15,6 @@ plugins {
 }
 
 val coroutineVersion = "1.4.2-native-mt"
-val coroutineWorkerVersion = "0.6.3"
 val ktorVersion = "1.5.0"
 val koinVersion = "3.0.0-alpha-4"
 val sqldelightVersion = "1.4.4"
@@ -62,7 +61,6 @@ kotlin {
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
                 implementation("io.ktor:ktor-client-logging:$ktorVersion")
 
-                implementation("com.autodesk:coroutineworker:$coroutineWorkerVersion")
                 implementation("co.touchlab:stately-common:$statelyVersion")
                 implementation("co.touchlab:stately-concurrency:$statelyVersion")
 
