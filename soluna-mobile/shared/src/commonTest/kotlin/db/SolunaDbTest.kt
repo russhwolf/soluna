@@ -91,19 +91,16 @@ class SolunaDbTest {
         assertTrue(initialReminders.isEmpty())
 
         database.reminderQueries.insertReminder(
-            locationId = 1,
             type = ReminderType.Sunset,
             minutesBefore = 15,
             enabled = true
         )
         database.reminderQueries.insertReminder(
-            locationId = 2,
             type = ReminderType.Sunrise,
             minutesBefore = 15,
             enabled = false
         )
         database.reminderQueries.insertReminder(
-            locationId = 2,
             type = ReminderType.Sunset,
             minutesBefore = 30,
             enabled = true
@@ -112,35 +109,20 @@ class SolunaDbTest {
         val insertedReminders = database.reminderQueries.selectAllReminders().executeAsList()
         assertEquals(
             expected = listOf(
-                ReminderWithLocation(
+                Reminder(
                     id = 1,
-                    locationId = 1,
-                    locationLabel = "Location 1",
-                    locationLatitude = 42.3956001,
-                    locationLongitude = -71.1387674,
-                    locationTimeZone = "America/New_York",
                     type = ReminderType.Sunset,
                     minutesBefore = 15,
                     enabled = true
                 ),
-                ReminderWithLocation(
+                Reminder(
                     id = 2,
-                    locationId = 2,
-                    locationLabel = "Location 2",
-                    locationLatitude = 27.7790026,
-                    locationLongitude = -82.7949071,
-                    locationTimeZone = "America/New_York",
                     type = ReminderType.Sunrise,
                     minutesBefore = 15,
                     enabled = false
                 ),
-                ReminderWithLocation(
+                Reminder(
                     id = 3,
-                    locationId = 2,
-                    locationLabel = "Location 2",
-                    locationLatitude = 27.7790026,
-                    locationLongitude = -82.7949071,
-                    locationTimeZone = "America/New_York",
                     type = ReminderType.Sunset,
                     minutesBefore = 30,
                     enabled = true
@@ -148,57 +130,27 @@ class SolunaDbTest {
             ),
             actual = insertedReminders
         )
-
-        val insertedRemindersForLocation1 =
-            database.reminderQueries.selectRemindersByLocationId(1).executeAsList()
-        assertEquals(
-            expected = listOf(
-                Reminder(
-                    id = 1,
-                    locationId = 1,
-                    type = ReminderType.Sunset,
-                    minutesBefore = 15,
-                    enabled = true
-                )
-            ),
-            actual = insertedRemindersForLocation1
-        )
-
+        
         database.reminderQueries.updateReminderEnabledById(false, 1)
         database.reminderQueries.updateReminderMinutesBeforeById(45, 3)
 
         val updatedReminders = database.reminderQueries.selectAllReminders().executeAsList()
         assertEquals(
             expected = listOf(
-                ReminderWithLocation(
+                Reminder(
                     id = 1,
-                    locationId = 1,
-                    locationLabel = "Location 1",
-                    locationLatitude = 42.3956001,
-                    locationLongitude = -71.1387674,
-                    locationTimeZone = "America/New_York",
                     type = ReminderType.Sunset,
                     minutesBefore = 15,
                     enabled = false
                 ),
-                ReminderWithLocation(
+                Reminder(
                     id = 2,
-                    locationId = 2,
-                    locationLabel = "Location 2",
-                    locationLatitude = 27.7790026,
-                    locationLongitude = -82.7949071,
-                    locationTimeZone = "America/New_York",
                     type = ReminderType.Sunrise,
                     minutesBefore = 15,
                     enabled = false
                 ),
-                ReminderWithLocation(
+                Reminder(
                     id = 3,
-                    locationId = 2,
-                    locationLabel = "Location 2",
-                    locationLatitude = 27.7790026,
-                    locationLongitude = -82.7949071,
-                    locationTimeZone = "America/New_York",
                     type = ReminderType.Sunset,
                     minutesBefore = 45,
                     enabled = true
@@ -212,24 +164,14 @@ class SolunaDbTest {
         val updatedRemindersAfterDelete = database.reminderQueries.selectAllReminders().executeAsList()
         assertEquals(
             expected = listOf(
-                ReminderWithLocation(
+                Reminder(
                     id = 1,
-                    locationId = 1,
-                    locationLabel = "Location 1",
-                    locationLatitude = 42.3956001,
-                    locationLongitude = -71.1387674,
-                    locationTimeZone = "America/New_York",
                     type = ReminderType.Sunset,
                     minutesBefore = 15,
                     enabled = false
                 ),
-                ReminderWithLocation(
+                Reminder(
                     id = 3,
-                    locationId = 2,
-                    locationLabel = "Location 2",
-                    locationLatitude = 27.7790026,
-                    locationLongitude = -82.7949071,
-                    locationTimeZone = "America/New_York",
                     type = ReminderType.Sunset,
                     minutesBefore = 45,
                     enabled = true

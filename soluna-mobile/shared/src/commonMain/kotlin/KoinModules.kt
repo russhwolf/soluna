@@ -8,6 +8,7 @@ import com.russhwolf.soluna.mobile.repository.ReminderRepository
 import com.russhwolf.soluna.mobile.screen.addlocation.AddLocationViewModel
 import com.russhwolf.soluna.mobile.screen.locationdetail.LocationDetailViewModel
 import com.russhwolf.soluna.mobile.screen.locationlist.LocationListViewModel
+import com.russhwolf.soluna.mobile.screen.reminderlist.ReminderListViewModel
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
@@ -30,7 +31,8 @@ internal val commonModule = module {
 
     factory { LocationListViewModel(get(), get(mainDispatcherQualifier)) }
     factory { AddLocationViewModel(get(), get(), get(mainDispatcherQualifier)) }
-    factory { (id: Long) -> LocationDetailViewModel(id, get(), get(), get(mainDispatcherQualifier)) }
+    factory { (id: Long) -> LocationDetailViewModel(id, get(), get(mainDispatcherQualifier)) }
+    factory { ReminderListViewModel(get(), get(mainDispatcherQualifier)) }
 }
 
 internal expect val platformModule: Module

@@ -2,7 +2,6 @@ package com.russhwolf.soluna.mobile.repository
 
 import com.russhwolf.soluna.mobile.db.Reminder
 import com.russhwolf.soluna.mobile.db.ReminderType
-import com.russhwolf.soluna.mobile.db.ReminderWithLocation
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
@@ -12,15 +11,11 @@ import kotlinx.coroutines.withContext
 
 interface ReminderRepository {
 
-    suspend fun getReminders(): List<ReminderWithLocation>
+    suspend fun getReminders(): List<Reminder>
 
-    fun getRemindersFlow(): Flow<List<ReminderWithLocation>>
+    fun getRemindersFlow(): Flow<List<Reminder>>
 
-    suspend fun getRemindersForLocation(locationId: Long): List<Reminder>
-
-    fun getRemindersForLocationFlow(locationId: Long): Flow<List<Reminder>>
-
-    suspend fun addReminder(locationId: Long, type: ReminderType, minutesBefore: Int, enabled: Boolean)
+    suspend fun addReminder(type: ReminderType, minutesBefore: Int, enabled: Boolean)
 
     suspend fun deleteReminder(id: Long)
 
@@ -31,44 +26,29 @@ interface ReminderRepository {
         private val backgroundDispatcher: CoroutineDispatcher
     ) : ReminderRepository {
 
-        override suspend fun getReminders(): List<ReminderWithLocation> =
+        override suspend fun getReminders(): List<Reminder> =
             database.getReminders()
 
-        private suspend fun SolunaDb.getReminders(): List<ReminderWithLocation> = withContext(backgroundDispatcher) {
+        private suspend fun SolunaDb.getReminders(): List<Reminder> = withContext(backgroundDispatcher) {
             reminderQueries.selectAllReminders().executeAsList()
         }
 
-        override fun getRemindersFlow(): Flow<List<ReminderWithLocation>> =
+        override fun getRemindersFlow(): Flow<List<Reminder>> =
             database.reminderQueries
                 .selectAllReminders()
                 .asFlow()
                 .mapToList(backgroundDispatcher)
 
-        override suspend fun getRemindersForLocation(locationId: Long): List<Reminder> =
-            database.getRemindersForLocation(locationId)
-
-        private suspend fun SolunaDb.getRemindersForLocation(locationId: Long): List<Reminder> =
-            withContext(backgroundDispatcher) {
-                reminderQueries.selectRemindersByLocationId(locationId).executeAsList()
-            }
-
-        override fun getRemindersForLocationFlow(locationId: Long): Flow<List<Reminder>> =
-            database.reminderQueries
-                .selectRemindersByLocationId(locationId)
-                .asFlow()
-                .mapToList(backgroundDispatcher)
-
-        override suspend fun addReminder(locationId: Long, type: ReminderType, minutesBefore: Int, enabled: Boolean) =
-            database.addReminder(locationId, type, minutesBefore, enabled)
+        override suspend fun addReminder(type: ReminderType, minutesBefore: Int, enabled: Boolean) =
+            database.addReminder(type, minutesBefore, enabled)
 
         private suspend fun SolunaDb.addReminder(
-            locationId: Long,
             type: ReminderType,
             minutesBefore: Int,
             enabled: Boolean
         ) = withContext(backgroundDispatcher) {
             reminderQueries
-                .insertReminder(locationId, type, minutesBefore, enabled)
+                .insertReminder(type, minutesBefore, enabled)
         }
 
         override suspend fun deleteReminder(id: Long) = database.deleteReminder(id)
