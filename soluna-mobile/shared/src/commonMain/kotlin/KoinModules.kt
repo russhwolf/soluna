@@ -18,13 +18,14 @@ fun initKoin(appModule: Module) = startKoin {
 }
 
 internal val mainDispatcherQualifier = named("MainDispatcher")
+internal val dbDispatcherQualifier = named("DbDispatcher")
 
 internal val commonModule = module {
     single { createDatabase(get()) }
     single<GoogleApiClient> { GoogleApiClient.Impl(get()) }
 
-    single<LocationRepository> { LocationRepository.Impl(get()) }
-    single<ReminderRepository> { ReminderRepository.Impl(get()) }
+    single<LocationRepository> { LocationRepository.Impl(get(), get(dbDispatcherQualifier)) }
+    single<ReminderRepository> { ReminderRepository.Impl(get(), get(dbDispatcherQualifier)) }
     single<GeocodeRepository> { GeocodeRepository.Impl(get()) }
 
     factory { LocationListViewModel(get(), get(mainDispatcherQualifier)) }

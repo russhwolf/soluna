@@ -1,7 +1,5 @@
 package com.russhwolf.soluna.mobile.screen.addlocation
 
-import com.russhwolf.soluna.mobile.AndroidJUnit4
-import com.russhwolf.soluna.mobile.RunWith
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.createDatabase
@@ -16,10 +14,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlin.test.AfterTest
 import kotlin.test.Test
 
-@RunWith(AndroidJUnit4::class)
 class AddLocationViewModelTest : AbstractViewModelTest<AddLocationViewModel, AddLocationViewState>() {
     private val driver = createInMemorySqlDriver()
-    private val locationRepository = LocationRepository.Impl(createDatabase(driver))
+    private val locationRepository = LocationRepository.Impl(createDatabase(driver), Dispatchers.Unconfined)
     private val geocodeRepository = GeocodeRepository.Impl(
         GoogleApiClient.Impl(
             createGeocodeMockClientEngine(

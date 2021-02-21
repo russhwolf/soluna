@@ -13,4 +13,5 @@ actual val platformModule: Module = module {
     single<SqlDriver> { AndroidSqliteDriver(SolunaDb.Schema, get()) }
     single { Android.create() }
     single<CoroutineDispatcher>(mainDispatcherQualifier) { Dispatchers.Main }
+    single(dbDispatcherQualifier) { Dispatchers.Default }
 }

@@ -20,6 +20,7 @@ val koinVersion = "3.0.0-alpha-4"
 val sqldelightVersion = "1.4.4"
 val serializationVersion = "1.0.1"
 val statelyVersion = "1.1.1"
+val turbineVersion = "0.4.0"
 
 kotlin {
     android()
@@ -41,6 +42,7 @@ kotlin {
                 progressiveMode = true
                 useExperimentalAnnotation("kotlin.RequiresOptIn")
                 useExperimentalAnnotation("kotlinx.coroutines.ExperimentalCoroutinesApi")
+                useExperimentalAnnotation("kotlin.time.ExperimentalTime")
             }
         }
 
@@ -54,6 +56,8 @@ kotlin {
                     }
                 }
 
+                implementation("com.squareup.sqldelight:coroutines-extensions:$sqldelightVersion")
+
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
 
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
@@ -65,6 +69,8 @@ kotlin {
                 implementation("co.touchlab:stately-concurrency:$statelyVersion")
 
                 implementation("org.koin:koin-core:$koinVersion")
+
+                implementation("app.cash.turbine:turbine:$turbineVersion")
             }
         }
         commonTest {
@@ -97,6 +103,8 @@ kotlin {
                 implementation("androidx.test:core:1.3.0")
                 implementation("androidx.test.ext:junit:1.1.2")
                 implementation("org.robolectric:robolectric:4.4")
+
+                implementation("com.squareup.sqldelight:sqlite-driver:$sqldelightVersion")
             }
         }
         val iosMain by getting {

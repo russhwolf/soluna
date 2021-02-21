@@ -1,22 +1,14 @@
 package com.russhwolf.soluna.mobile.repository
 
-import com.russhwolf.soluna.mobile.AndroidJUnit4
-import com.russhwolf.soluna.mobile.RunWith
-import com.russhwolf.soluna.mobile.blockUntilIdle
+import app.cash.turbine.test
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.LocationSummary
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.suspendTest
-import com.russhwolf.soluna.mobile.util.runInBackground
 import com.squareup.sqldelight.db.SqlDriver
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.Dispatchers
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -24,7 +16,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-@RunWith(AndroidJUnit4::class)
 class LocationRepositoryTest {
 
     private lateinit var driver: SqlDriver
@@ -35,7 +26,7 @@ class LocationRepositoryTest {
     fun setup() {
         driver = createInMemorySqlDriver()
         database = createDatabase(driver)
-        repository = LocationRepository.Impl(database)
+        repository = LocationRepository.Impl(database, Dispatchers.Unconfined)
     }
 
     @Test
@@ -62,30 +53,24 @@ class LocationRepositoryTest {
 
     @Test
     fun getLocationsFlow() = suspendTest {
-        val values = withTimeout(1000) {
-            repository.getLocationsFlow()
-                .onStart {
-                    launch {
-                        delay(5)
-                        runInBackground { database.insertDummyLocation(1) }
-                        blockUntilIdle()
-                        delay(5)
-                        runInBackground { database.insertDummyLocation(2) }
-                        blockUntilIdle()
-                    }
-                }
-                .take(2)
-                .toList()
-        }
-        assertEquals(
-            expected = listOf(
-                listOf(
+        repository.getLocationsFlow().test {
+            assertEquals(emptyList(), expectItem())
+
+            database.insertDummyLocation(1)
+            assertEquals(
+                expected = listOf(
                     LocationSummary(
                         id = 1,
                         label = "Test Location 1"
                     )
                 ),
-                listOf(
+                actual = expectItem()
+            )
+            expectNoEvents()
+
+            database.insertDummyLocation(2)
+            assertEquals(
+                expected = listOf(
                     LocationSummary(
                         id = 1,
                         label = "Test Location 1"
@@ -94,10 +79,11 @@ class LocationRepositoryTest {
                         id = 2,
                         label = "Test Location 2"
                     )
-                )
-            ),
-            actual = values
-        )
+                ),
+                actual = expectItem()
+            )
+            expectNoEvents()
+        }
     }
 
     @Test
@@ -121,31 +107,23 @@ class LocationRepositoryTest {
     fun getLocationFlow() = suspendTest {
         database.insertDummyLocation()
 
-        val values = withTimeout(1000) {
-            repository.getLocationFlow(1)
-                .onStart {
-                    launch {
-                        delay(5)
-                        runInBackground { database.locationQueries.updateLocationLabelById("Updated location", 1) }
-                        blockUntilIdle()
-                        delay(5)
-                        runInBackground { database.insertDummyLocation(2) }
-                        blockUntilIdle()
-                        delay(5)
-                        runInBackground { database.locationQueries.deleteLocationById(1) }
-                        blockUntilIdle()
-                    }
-                }
-                .take(2)
-                .toList()
+        repository.getLocationFlow(1).test {
+            assertEquals(dummyLocation, expectItem())
+            expectNoEvents()
+
+            database.locationQueries.updateLocationLabelById("Updated location", 1)
+            assertEquals(dummyLocation.copy(label = "Updated location"), expectItem())
+            expectNoEvents()
+
+            database.insertDummyLocation(2)
+            // TODO is it a SqlDelight bug that this re-emits?
+            assertEquals(dummyLocation.copy(label = "Updated location"), expectItem())
+            expectNoEvents()
+
+            database.locationQueries.deleteLocationById(1)
+            assertNull(expectItem())
+            expectNoEvents()
         }
-        assertEquals(
-            expected = listOf(
-                dummyLocation.copy(label = "Updated location"),
-                null
-            ),
-            actual = values
-        )
     }
 
     @Test
@@ -217,3 +195,4 @@ private fun SolunaDb.insertDummyLocation(id: Long) {
         timeZone = "America/New_York"
     )
 }
+

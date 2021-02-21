@@ -1,8 +1,5 @@
 package com.russhwolf.soluna.mobile.screen.locationdetail
 
-import com.russhwolf.soluna.mobile.AndroidJUnit4
-import com.russhwolf.soluna.mobile.RunWith
-import com.russhwolf.soluna.mobile.blockUntilIdle
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.Reminder
@@ -16,11 +13,9 @@ import com.russhwolf.soluna.mobile.screen.AbstractViewModelTest
 import com.russhwolf.soluna.mobile.suspendTest
 import com.russhwolf.soluna.mobile.util.EventTrigger
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlin.test.AfterTest
 import kotlin.test.Test
 
-@RunWith(AndroidJUnit4::class)
 class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewModel, LocationDetailViewState>() {
     private var locations: Array<Location> = emptyArray()
     private var reminders: Array<Reminder> = emptyArray()
@@ -28,11 +23,11 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
     private val database = createDatabase(driver)
     private val locationRepository by lazy {
         database.configureMockLocationData(*locations)
-        LocationRepository.Impl(database)
+        LocationRepository.Impl(database, Dispatchers.Unconfined)
     }
     private val reminderRepository by lazy {
         database.configureMockReminders(*reminders)
-        ReminderRepository.Impl(database)
+        ReminderRepository.Impl(database, Dispatchers.Unconfined)
     }
 
     override suspend fun createViewModel(): LocationDetailViewModel =
@@ -68,8 +63,6 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
         awaitLoading()
 
         viewModel.setLabel("Updated").join()
-        blockUntilIdle()
-        delay(10)
 
         assertState(
             LocationDetailViewState(
@@ -85,8 +78,6 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
         awaitLoading()
 
         viewModel.delete().join()
-        blockUntilIdle()
-        delay(10)
 
 
         assertState(
@@ -104,8 +95,6 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
         awaitLoading()
 
         viewModel.addReminder(type = ReminderType.Sunset, minutesBefore = 15).join()
-        blockUntilIdle()
-        delay(10)
 
         val expectedReminder = Reminder(
             id = 1,
@@ -132,8 +121,6 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
         awaitLoading()
 
         viewModel.deleteReminder(reminderId = 1).join()
-        blockUntilIdle()
-        delay(10)
 
         assertState(LocationDetailViewState(location = location))
     }
@@ -147,8 +134,6 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
         awaitLoading()
 
         viewModel.setReminderEnabled(reminderId = 1, enabled = false).join()
-        blockUntilIdle()
-        delay(10)
 
         assertState(
             LocationDetailViewState(
@@ -167,8 +152,6 @@ class LocationDetailViewModelTest : AbstractViewModelTest<LocationDetailViewMode
         awaitLoading()
 
         viewModel.setReminderMinutesBefore(reminderId = 1, minutesBefore = 20).join()
-        blockUntilIdle()
-        delay(10)
 
         assertState(
             LocationDetailViewState(

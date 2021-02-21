@@ -1,8 +1,6 @@
 package com.russhwolf.soluna.mobile.repository
 
-import com.russhwolf.soluna.mobile.AndroidJUnit4
-import com.russhwolf.soluna.mobile.RunWith
-import com.russhwolf.soluna.mobile.blockUntilIdle
+import app.cash.turbine.test
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.Reminder
 import com.russhwolf.soluna.mobile.db.ReminderType
@@ -10,21 +8,14 @@ import com.russhwolf.soluna.mobile.db.ReminderWithLocation
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.suspendTest
-import com.russhwolf.soluna.mobile.util.runInBackground
 import com.squareup.sqldelight.db.SqlDriver
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.Dispatchers
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-@RunWith(AndroidJUnit4::class)
 class ReminderRepositoryTest {
 
     private lateinit var driver: SqlDriver
@@ -35,7 +26,7 @@ class ReminderRepositoryTest {
     fun setup() {
         driver = createInMemorySqlDriver()
         database = createDatabase(driver)
-        repository = ReminderRepository.Impl(database)
+        repository = ReminderRepository.Impl(database, Dispatchers.Unconfined)
     }
 
     @Test
@@ -63,28 +54,18 @@ class ReminderRepositoryTest {
         database.insertDummyLocation()
         database.insertDummyReminder()
 
-        val values = withTimeout(1000) {
-            repository.getRemindersFlow()
-                .onStart {
-                    launch {
-                        delay(100)
-                        runInBackground { database.reminderQueries.deleteReminderById(1) }
-                        blockUntilIdle()
-                        delay(100)
-                        runInBackground { database.insertDummyReminder() }
-                        blockUntilIdle()
-                    }
-                }
-                .take(2)
-                .toList()
+        repository.getRemindersFlow().test {
+            assertEquals(listOf(dummyReminderWithLocation), expectItem())
+            expectNoEvents()
+
+            database.reminderQueries.deleteReminderById(1)
+            assertEquals(emptyList(), expectItem())
+            expectNoEvents()
+
+            database.insertDummyReminder()
+            assertEquals(listOf(dummyReminderWithLocation.copy(id = 2)), expectItem())
+            expectNoEvents()
         }
-        assertEquals(
-            expected = listOf(
-                emptyList(),
-                listOf(dummyReminderWithLocation.copy(id = 2))
-            ),
-            actual = values
-        )
     }
 
     @Test
@@ -124,31 +105,23 @@ class ReminderRepositoryTest {
         database.insertDummyLocation(2)
         database.insertDummyReminder(1)
 
-        val values = withTimeout(1000) {
-            repository.getRemindersForLocationFlow(1)
-                .onStart {
-                    launch {
-                        delay(100)
-                        runInBackground { database.reminderQueries.deleteReminderById(1) }
-                        blockUntilIdle()
-                        delay(100)
-                        runInBackground { database.insertDummyReminder(2) }
-                        blockUntilIdle()
-                        delay(100)
-                        runInBackground { database.insertDummyReminder(1) }
-                        blockUntilIdle()
-                    }
-                }
-                .take(2)
-                .toList()
+        repository.getRemindersForLocationFlow(1).test {
+            assertEquals(listOf(dummyReminder), expectItem())
+            expectNoEvents()
+
+            database.reminderQueries.deleteReminderById(1)
+            assertEquals(emptyList(), expectItem())
+            expectNoEvents()
+
+            database.insertDummyReminder(2)
+            // TODO is it a SqlDelight bug that this re-emits?
+            assertEquals(emptyList(), expectItem())
+            expectNoEvents()
+
+            database.insertDummyReminder(1)
+            assertEquals(listOf(dummyReminder.copy(id = 3)), expectItem())
+            expectNoEvents()
         }
-        assertEquals(
-            expected = listOf(
-                emptyList(),
-                listOf(dummyReminder.copy(id = 3))
-            ),
-            actual = values
-        )
     }
 
     @Test

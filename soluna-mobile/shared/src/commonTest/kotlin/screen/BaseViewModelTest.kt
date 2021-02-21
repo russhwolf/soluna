@@ -1,10 +1,7 @@
 package com.russhwolf.soluna.mobile.screen
 
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -100,28 +97,28 @@ class BaseViewModelTest : AbstractViewModelTest<TestViewModel, String>() {
 }
 
 class TestViewModel(state: String) : BaseViewModel<String>(state, Dispatchers.Unconfined) {
-    private val continuations = mutableMapOf<Int, Continuation<String>>()
+    private val deferreds = mutableMapOf<Int, CompletableDeferred<String>>()
 
     fun updateState(updater: () -> String) = update { updater() }
 
     fun awaitAsyncAction(id: Int = 0) = doAsync {
-        suspendCoroutine<String> {
-            continuations[id] = it
-        }
+        val deferred = CompletableDeferred<String>()
+        deferreds[id] = deferred
+        deferred.await()
     }
 
     fun awaitAsyncState(id: Int = 0) = updateAsync {
-        suspendCoroutine {
-            continuations[id] = it
-        }
+        val deferred = CompletableDeferred<String>()
+        deferreds[id] = deferred
+        deferred.await()
     }
 
     fun resumeAsyncState(id: Int = 0, updater: () -> String) {
-        val continuation = continuations[id]!!
+        val deferred = deferreds[id]!!
         try {
-            continuation.resume(updater())
+            deferred.complete(updater())
         } catch (throwable: Throwable) {
-            continuation.resumeWithException(throwable)
+            deferred.completeExceptionally(throwable)
         }
     }
 }

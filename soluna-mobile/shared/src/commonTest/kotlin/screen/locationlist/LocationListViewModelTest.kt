@@ -1,8 +1,5 @@
 package com.russhwolf.soluna.mobile.screen.locationlist
 
-import com.russhwolf.soluna.mobile.AndroidJUnit4
-import com.russhwolf.soluna.mobile.RunWith
-import com.russhwolf.soluna.mobile.blockUntilIdle
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.LocationSummary
@@ -12,14 +9,12 @@ import com.russhwolf.soluna.mobile.repository.configureMockLocationData
 import com.russhwolf.soluna.mobile.screen.AbstractViewModelTest
 import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-@RunWith(AndroidJUnit4::class)
 class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, LocationListViewState>() {
     private var locations: Array<Location> = emptyArray()
 
@@ -27,7 +22,7 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
     private val locationRepository by lazy {
         val database = createDatabase(driver)
         database.configureMockLocationData(*locations)
-        LocationRepository.Impl(database)
+        LocationRepository.Impl(database, Dispatchers.Unconfined)
     }
 
     override suspend fun createViewModel(): LocationListViewModel =
@@ -50,8 +45,6 @@ class LocationListViewModelTest : AbstractViewModelTest<LocationListViewModel, L
     fun locationsFlow() = suspendTest {
         awaitLoading()
         locationRepository.addLocation("Home", 27.18, 62.83, "UTC")
-        blockUntilIdle()
-        delay(50)
         assertEquals(listOf(LocationSummary(1, "Home")), state.locations)
     }
 
