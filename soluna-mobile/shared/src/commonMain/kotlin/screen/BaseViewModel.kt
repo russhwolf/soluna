@@ -1,90 +1,33 @@
 package com.russhwolf.soluna.mobile.screen
 
-import co.touchlab.stately.ensureNeverFrozen
-import com.russhwolf.soluna.mobile.util.EventTrigger
 import com.russhwolf.soluna.mobile.util.SupervisorScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import kotlin.properties.Delegates
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 
-abstract class BaseViewModel<S>(initialState: S, dispatcher: CoroutineDispatcher) {
-    init {
-        ensureNeverFrozen()
-    }
+/**
+ * @param State The type which is emitted from this viewmodel's [state] flow
+ * @param Event The type which is emitted from this viewmodel's [events] flow
+ * @param Action The type which is accepted by this viewmodel's [performAction] function
+ */
+abstract class BaseViewModel<State, Event, Action>(initialState: State, dispatcher: CoroutineDispatcher) {
+    protected val coroutineScope = SupervisorScope(dispatcher)
 
-    val coroutineScope = SupervisorScope(dispatcher)
+    private val mutableState: MutableStateFlow<State> = MutableStateFlow(initialState)
+    val state: StateFlow<State> get() = mutableState
 
-    private var viewStateListener: ViewStateListener<S>? = null
-    private var loadingListener: LoadingListener? = null
-    private var errorListener: ErrorListener? = null
+    private val mutableEvents: MutableSharedFlow<Event> = MutableSharedFlow()
+    val events: SharedFlow<Event> get() = mutableEvents
 
-    private var loadCount: Int by Delegates.observable(0) { _, _, newValue ->
-        isLoading = newValue > 0
-    }
+    abstract suspend fun performAction(action: Action)
 
-    protected var state: S by Delegates.observable(initialState) { _, _, newValue ->
-        viewStateListener?.invoke(newValue)
-    }
+    suspend fun emitState(state: State) = mutableState.emit(state)
 
-    private var isLoading: Boolean by Delegates.observable(false) { _, _, newValue ->
-        loadingListener?.invoke(newValue)
-    }
+    suspend fun emitEvent(event: Event) = mutableEvents.emit(event)
 
-    protected var error: EventTrigger<Throwable> by Delegates.observable(EventTrigger.empty()) { _, _, newValue ->
-        newValue.consume { errorListener?.invoke(it) }
-    }
-
-    protected fun updateAsync(action: suspend () -> S): Job = doAsync { state = action() }
-
-    protected fun doAsync(action: suspend () -> Unit): Job =
-        coroutineScope.launch {
-            loadCount++
-            try {
-                action()
-            } catch (e: Throwable) {
-                error = EventTrigger.create(e)
-            }
-            loadCount--
-        }
-
-    protected fun update(action: () -> S) =
-        try {
-            state = action()
-        } catch (e: Throwable) {
-            error = EventTrigger.create(e)
-        }
-
-    protected fun <T> Flow<T>.collectAndUpdate(action: (T) -> S) {
-        coroutineScope.launch {
-            collectLatest { update { action(it) } }
-        }
-    }
-
-    fun setViewStateListener(listener: ViewStateListener<S>) {
-        viewStateListener = listener
-        listener.invoke(state)
-    }
-
-    fun setLoadingListener(listener: LoadingListener) {
-        loadingListener = listener
-        listener.invoke(isLoading)
-    }
-
-    fun setErrorListener(listener: ErrorListener) {
-        errorListener = listener
-        error.consume { listener(it) }
-    }
-
-    fun clearScope() {
+    fun cancelChildren() {
         coroutineScope.clear()
     }
 }
-
-typealias ViewStateListener<S> = (S) -> Unit
-typealias LoadingListener = (Boolean) -> Unit
-typealias ErrorListener = (Throwable) -> Unit
-
-

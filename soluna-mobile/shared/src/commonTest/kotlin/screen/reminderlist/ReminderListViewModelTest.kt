@@ -1,18 +1,21 @@
 package com.russhwolf.soluna.mobile.screen.reminderlist
 
+import app.cash.turbine.test
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.Reminder
 import com.russhwolf.soluna.mobile.db.ReminderType
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.repository.ReminderRepository
 import com.russhwolf.soluna.mobile.repository.configureMockReminders
-import com.russhwolf.soluna.mobile.screen.AbstractViewModelTest
+import com.russhwolf.soluna.mobile.screen.expectViewModelState
+import com.russhwolf.soluna.mobile.screen.stateAndEvents
 import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
 import kotlin.test.AfterTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
-class ReminderListViewModelTest : AbstractViewModelTest<ReminderListViewModel, ReminderListViewState>() {
+class ReminderListViewModelTest {
     private var reminders: Array<Reminder> = emptyArray()
     private val driver = createInMemorySqlDriver()
     private val database = createDatabase(driver)
@@ -21,13 +24,15 @@ class ReminderListViewModelTest : AbstractViewModelTest<ReminderListViewModel, R
         ReminderRepository.Impl(database, Dispatchers.Unconfined)
     }
 
-    override suspend fun createViewModel(): ReminderListViewModel =
+    private val viewModel by lazy {
         ReminderListViewModel(reminderRepository, Dispatchers.Unconfined)
+    }
 
     @Test
     fun initialState_empty() = suspendTest {
-        awaitLoading()
-        assertState(ReminderListViewState())
+        viewModel.stateAndEvents.test {
+            assertEquals(ReminderListViewModel.State(emptyList()), expectViewModelState())
+        }
     }
 
     @Test
@@ -35,58 +40,64 @@ class ReminderListViewModelTest : AbstractViewModelTest<ReminderListViewModel, R
         val reminder1 = Reminder(1, ReminderType.Sunrise, 15, true)
         val reminder2 = Reminder(2, ReminderType.Sunset, 15, true)
         reminders = arrayOf(reminder1, reminder2)
-        awaitLoading()
 
-        assertState(ReminderListViewState(reminders = reminders.toList()))
+        viewModel.stateAndEvents.test {
+            assertEquals(ReminderListViewModel.State(reminders.toList()), expectViewModelState())
+        }
     }
 
     @Test
     fun addReminder() = suspendTest {
-        awaitLoading()
+        viewModel.stateAndEvents.test {
+            assertEquals(ReminderListViewModel.State(emptyList()), expectViewModelState())
+            expectNoEvents()
 
-        viewModel.addReminder(type = ReminderType.Sunset, minutesBefore = 15).join()
-
-        val expectedReminder = Reminder(
-            id = 1,
-            type = ReminderType.Sunset,
-            minutesBefore = 15,
-            enabled = true
-        )
-
-        assertState(ReminderListViewState(reminders = listOf(expectedReminder)))
+            viewModel.performAction(ReminderListViewModel.Action.AddReminder(ReminderType.Sunset, 15))
+            val expectedReminder = Reminder(1, ReminderType.Sunset, 15, true)
+            assertEquals(ReminderListViewModel.State(listOf(expectedReminder)), expectViewModelState())
+        }
     }
 
     @Test
     fun deleteReminder() = suspendTest {
         val reminder = Reminder(1, ReminderType.Sunset, 15, true)
         reminders = arrayOf(reminder)
-        awaitLoading()
 
-        viewModel.deleteReminder(reminderId = 1).join()
+        viewModel.stateAndEvents.test {
+            assertEquals(ReminderListViewModel.State(listOf(reminder)), expectViewModelState())
+            expectNoEvents()
 
-        assertState(ReminderListViewState())
+            viewModel.performAction(ReminderListViewModel.Action.RemoveReminder(1))
+            assertEquals(ReminderListViewModel.State(emptyList()), expectViewModelState())
+        }
     }
 
     @Test
     fun updateReminderEnabled() = suspendTest {
         val reminder = Reminder(1, ReminderType.Sunset, 15, true)
         reminders = arrayOf(reminder)
-        awaitLoading()
 
-        viewModel.setReminderEnabled(reminderId = 1, enabled = false).join()
+        viewModel.stateAndEvents.test {
+            assertEquals(ReminderListViewModel.State(listOf(reminder)), expectViewModelState())
+            expectNoEvents()
 
-        assertState(ReminderListViewState(reminders = listOf(reminder.copy(enabled = false))))
+            viewModel.performAction(ReminderListViewModel.Action.SetReminderEnabled(1, false))
+            assertEquals(ReminderListViewModel.State(listOf(reminder.copy(enabled = false))), expectViewModelState())
+        }
     }
 
     @Test
     fun updateReminderMinutesBefore() = suspendTest {
         val reminder = Reminder(1, ReminderType.Sunset, 15, true)
         reminders = arrayOf(reminder)
-        awaitLoading()
 
-        viewModel.setReminderMinutesBefore(reminderId = 1, minutesBefore = 20).join()
+        viewModel.stateAndEvents.test {
+            assertEquals(ReminderListViewModel.State(listOf(reminder)), expectViewModelState())
+            expectNoEvents()
 
-        assertState(ReminderListViewState(reminders = listOf(reminder.copy(minutesBefore = 20))))
+            viewModel.performAction(ReminderListViewModel.Action.SetReminderMinutesBefore(1, 20))
+            assertEquals(ReminderListViewModel.State(listOf(reminder.copy(minutesBefore = 20))), expectViewModelState())
+        }
     }
 
     @AfterTest

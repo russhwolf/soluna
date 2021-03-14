@@ -3,38 +3,51 @@ package com.russhwolf.soluna.mobile.screen.locationdetail
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
-import com.russhwolf.soluna.mobile.util.EventTrigger
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-// TODO this VM could use some debouncing
 class LocationDetailViewModel(
     private val locationId: Long,
     private val locationRepository: LocationRepository,
     dispatcher: CoroutineDispatcher
-) : BaseViewModel<LocationDetailViewState>(LocationDetailViewState(null), dispatcher) {
-
+) : BaseViewModel<LocationDetailViewModel.State, LocationDetailViewModel.Event, LocationDetailViewModel.Action>(
+    State(null),
+    dispatcher
+) {
     init {
         locationRepository
             .getLocationFlow(locationId)
-            .collectAndUpdate { state.copy(location = it) }
-
-        updateAsync {
-            val location = locationRepository.getLocation(locationId)
-            state.copy(location = location)
-        }
+            .onEach { emitState(State(it)) }
+            .launchIn(coroutineScope)
     }
 
-    fun setLabel(label: String) = doAsync {
+    override suspend fun performAction(action: Action) = when (action) {
+        is Action.SetLabel -> setLabel(action.label)
+        is Action.Delete -> delete()
+    }
+
+    private suspend fun setLabel(label: String) {
         locationRepository.updateLocationLabel(locationId, label)
     }
 
-    fun delete() = updateAsync {
+    private suspend fun delete() {
         locationRepository.deleteLocation(locationId)
-        state.copy(exitTrigger = EventTrigger.create())
+        emitEvent(Event.Exit)
     }
-}
 
-data class LocationDetailViewState(
-    val location: Location?,
-    val exitTrigger: EventTrigger<Unit> = EventTrigger.empty()
-)
+
+    data class State(
+        val location: Location?
+    )
+
+    sealed class Event {
+        object Exit : Event()
+    }
+
+    sealed class Action {
+        data class SetLabel(val label: String) : Action()
+        object Delete : Action()
+    }
+
+}

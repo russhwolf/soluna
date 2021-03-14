@@ -1,20 +1,24 @@
 package com.russhwolf.soluna.mobile.screen.addlocation
 
+import app.cash.turbine.test
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
+import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.repository.GeocodeData
 import com.russhwolf.soluna.mobile.repository.GeocodeRepository
 import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.repository.createGeocodeMockClientEngine
-import com.russhwolf.soluna.mobile.screen.AbstractViewModelTest
+import com.russhwolf.soluna.mobile.screen.expectViewModelEvent
+import com.russhwolf.soluna.mobile.screen.expectViewModelState
+import com.russhwolf.soluna.mobile.screen.stateAndEvents
 import com.russhwolf.soluna.mobile.suspendTest
-import com.russhwolf.soluna.mobile.util.EventTrigger
 import kotlinx.coroutines.Dispatchers
 import kotlin.test.AfterTest
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
-class AddLocationViewModelTest : AbstractViewModelTest<AddLocationViewModel, AddLocationViewState>() {
+class AddLocationViewModelTest {
     private val driver = createInMemorySqlDriver()
     private val locationRepository = LocationRepository.Impl(createDatabase(driver), Dispatchers.Unconfined)
     private val geocodeRepository = GeocodeRepository.Impl(
@@ -25,35 +29,86 @@ class AddLocationViewModelTest : AbstractViewModelTest<AddLocationViewModel, Add
         )
     )
 
-    override suspend fun createViewModel(): AddLocationViewModel =
-        AddLocationViewModel(locationRepository, geocodeRepository, Dispatchers.Unconfined)
+    private val viewModel = AddLocationViewModel(locationRepository, geocodeRepository, Dispatchers.Unconfined)
 
     @Test
     fun addLocation_valid() = suspendTest {
-        viewModel.addLocation("Home", "27.18", "62.83", "UTC").join()
-        val expectedState = AddLocationViewState(exitTrigger = EventTrigger.create())
-        assertState(expectedState)
+        viewModel.stateAndEvents.test {
+            assertEquals(AddLocationViewModel.State(), expectViewModelState())
+
+            viewModel.performAction(AddLocationViewModel.Action.CreateLocation("Home", "27.18", "62.83", "UTC"))
+            assertEquals(AddLocationViewModel.Event.Exit, expectViewModelEvent())
+            assertEquals(Location(1, "Home", 27.18, 62.83, "UTC"), locationRepository.getLocation(1))
+        }
     }
 
     @Test
-    fun addLocation_invalid() = suspendTest {
-        viewModel.addLocation("Home", "Foo", "62.83", "UTC").join()
-        val expectedState = AddLocationViewState(exitTrigger = EventTrigger.empty())
-        assertState(expectedState, error = NumberFormatException())
+    fun addLocation_invalidLatitude() = suspendTest {
+        viewModel.stateAndEvents.test {
+            assertEquals(AddLocationViewModel.State(), expectViewModelState())
+
+            viewModel.performAction(AddLocationViewModel.Action.CreateLocation("Home", "Foo", "62.83", "UTC"))
+            assertEquals(AddLocationViewModel.State(latitudeFormatError = true), expectViewModelState())
+
+            viewModel.performAction(AddLocationViewModel.Action.CreateLocation("Home", "27.18", "62.83", "UTC"))
+            assertEquals(AddLocationViewModel.State(), expectViewModelState())
+            assertEquals(AddLocationViewModel.Event.Exit, expectViewModelEvent())
+        }
+    }
+
+    @Test
+    fun addLocation_invalidLongitude() = suspendTest {
+        viewModel.stateAndEvents.test {
+            assertEquals(AddLocationViewModel.State(), expectViewModelState())
+
+            viewModel.performAction(AddLocationViewModel.Action.CreateLocation("Home", "27.18", "Bar", "UTC"))
+            assertEquals(AddLocationViewModel.State(longitudeFormatError = true), expectViewModelState())
+
+            viewModel.performAction(AddLocationViewModel.Action.CreateLocation("Home", "27.18", "62.83", "UTC"))
+            assertEquals(AddLocationViewModel.State(), expectViewModelState())
+            assertEquals(AddLocationViewModel.Event.Exit, expectViewModelEvent())
+        }
+    }
+
+    @Test
+    fun addLocation_invalidLatitudeAndLongitude() = suspendTest {
+        viewModel.stateAndEvents.test {
+            assertEquals(AddLocationViewModel.State(), expectViewModelState())
+
+            viewModel.performAction(AddLocationViewModel.Action.CreateLocation("Home", "Foo", "Bar", "UTC"))
+            assertEquals(
+                AddLocationViewModel.State(latitudeFormatError = true, longitudeFormatError = true),
+                expectViewModelState()
+            )
+
+            viewModel.performAction(AddLocationViewModel.Action.CreateLocation("Home", "27.18", "62.83", "UTC"))
+            assertEquals(AddLocationViewModel.State(), expectViewModelState())
+            assertEquals(AddLocationViewModel.Event.Exit, expectViewModelEvent())
+        }
     }
 
     @Test
     fun geocodeLocation_valid() = suspendTest {
-        viewModel.geocodeLocation("Home").join()
-        val expectedState = AddLocationViewState(geocodeTrigger = EventTrigger.create(GeocodeData(27.18, 62.83, "UTC")))
-        assertState(expectedState)
+        viewModel.stateAndEvents.test {
+            assertEquals(AddLocationViewModel.State(), expectViewModelState())
+
+            viewModel.performAction(AddLocationViewModel.Action.GeocodeLocation("Home"))
+            assertEquals(AddLocationViewModel.Event.ShowGeocodeData(27.18, 62.83, "UTC"), expectViewModelEvent())
+        }
     }
 
     @Test
     fun geocodeLocation_invalid() = suspendTest {
-        viewModel.geocodeLocation("Away").join()
-        val expectedState = AddLocationViewState(geocodeTrigger = EventTrigger.empty())
-        assertState(expectedState)
+        viewModel.stateAndEvents.test {
+            assertEquals(AddLocationViewModel.State(), expectViewModelState())
+
+            viewModel.performAction(AddLocationViewModel.Action.GeocodeLocation("Away"))
+            assertEquals(AddLocationViewModel.State(geocodeError = true), expectViewModelState())
+
+            viewModel.performAction(AddLocationViewModel.Action.GeocodeLocation("Home"))
+            assertEquals(AddLocationViewModel.State(), expectViewModelState())
+            assertEquals(AddLocationViewModel.Event.ShowGeocodeData(27.18, 62.83, "UTC"), expectViewModelEvent())
+        }
     }
 
     @AfterTest

@@ -1,38 +1,87 @@
 package com.russhwolf.soluna.mobile.screen.addlocation
 
-import com.russhwolf.soluna.mobile.repository.GeocodeData
 import com.russhwolf.soluna.mobile.repository.GeocodeRepository
 import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
-import com.russhwolf.soluna.mobile.util.EventTrigger
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Job
 
 class AddLocationViewModel(
     private val locationRepository: LocationRepository,
     private val geocodeRepository: GeocodeRepository,
     dispatcher: CoroutineDispatcher
-) : BaseViewModel<AddLocationViewState>(AddLocationViewState(), dispatcher) {
+) : BaseViewModel<AddLocationViewModel.State, AddLocationViewModel.Event, AddLocationViewModel.Action>(
+    State(),
+    dispatcher
+) {
 
-    fun addLocation(label: String, latitude: String, longitude: String, timeZone: String): Job = updateAsync {
-        val latitudeDouble = latitude.toDouble()
-        val longitudeDouble = longitude.toDouble()
 
-        locationRepository.addLocation(label, latitudeDouble, longitudeDouble, timeZone)
-        state.copy(exitTrigger = EventTrigger.create())
+    override suspend fun performAction(action: Action) = when (action) {
+        is Action.CreateLocation -> addLocation(action.label, action.latitude, action.longitude, action.timeZone)
+        is Action.GeocodeLocation -> geocodeLocation(action.location)
     }
 
-    fun geocodeLocation(location: String) = updateAsync {
+    private suspend fun addLocation(label: String, latitude: String, longitude: String, timeZone: String) {
+        val latitudeDouble = latitude.toDoubleOrNull()
+        val longitudeDouble = longitude.toDoubleOrNull()
+
+        // Emit both errors if relevant before exiting
+        when {
+            latitudeDouble == null && longitudeDouble == null ->
+                emitState(state.value.copy(latitudeFormatError = true, longitudeFormatError = true))
+            latitudeDouble == null -> emitState(state.value.copy(latitudeFormatError = true))
+            longitudeDouble == null -> emitState(state.value.copy(longitudeFormatError = true))
+        }
+        latitudeDouble ?: return
+        longitudeDouble ?: return
+
+        emitState(state.value.copy(latitudeFormatError = false, longitudeFormatError = false))
+        locationRepository.addLocation(label, latitudeDouble, longitudeDouble, timeZone)
+        emitEvent(Event.Exit)
+    }
+
+    private suspend fun geocodeLocation(location: String) {
         val geocodeData = geocodeRepository.geocodeLocation(location)
         if (geocodeData != null) {
-            state.copy(geocodeTrigger = EventTrigger.create(geocodeData))
+            emitState(state.value.copy(geocodeError = false))
+            emitEvent(
+                Event.ShowGeocodeData(
+                    latitude = geocodeData.latitude,
+                    longitude = geocodeData.longitude,
+                    timeZone = geocodeData.timeZone
+                )
+            )
         } else {
-            state
+            emitState(state.value.copy(geocodeError = true))
         }
+    }
+
+    data class State(
+        val latitudeFormatError: Boolean = false,
+        val longitudeFormatError: Boolean = false,
+        val geocodeError: Boolean = false
+    )
+
+    sealed class Event {
+        data class ShowGeocodeData(
+            val latitude: Double,
+            val longitude: Double,
+            val timeZone: String
+        ) : Event()
+
+        object Exit : Event()
+    }
+
+    sealed class Action {
+        data class CreateLocation(
+            val label: String,
+            val latitude: String,
+            val longitude: String,
+            val timeZone: String
+        ) : Action()
+
+        data class GeocodeLocation(
+            val location: String
+        ) : Action()
     }
 }
 
-data class AddLocationViewState(
-    val geocodeTrigger: EventTrigger<GeocodeData> = EventTrigger.empty(),
-    val exitTrigger: EventTrigger<Unit> = EventTrigger.empty()
-)
