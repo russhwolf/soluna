@@ -7,7 +7,7 @@ import org.koin.core.module.Module
 import org.koin.core.parameter.parametersOf
 import org.koin.test.check.checkModules
 
-fun testCheckModules(appModule: Module) {
+fun koinModulesTest(appModule: Module) {
     initKoin(appModule)
 
     KoinContextHandler.get().checkModules {

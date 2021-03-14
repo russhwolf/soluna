@@ -77,9 +77,10 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                implementation(project(":soluna-mobile:koinTest"))
 
                 implementation("io.ktor:ktor-client-mock:$ktorVersion")
+
+                implementation("org.koin:koin-test:$koinVersion")
             }
         }
         val androidMain by getting {

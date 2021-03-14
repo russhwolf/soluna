@@ -8,13 +8,13 @@ import org.junit.runner.RunWith
 import org.koin.dsl.module
 
 @RunWith(AndroidJUnit4::class)
-class KoinModulesTest {
+class AndroidKoinModulesTest {
     private val testAppModule = module {
         single<Context> { ApplicationProvider.getApplicationContext() }
     }
 
     @Test
     fun checkModules() {
-        testCheckModules(testAppModule)
+        koinModulesTest(testAppModule)
     }
 }
