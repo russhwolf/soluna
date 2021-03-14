@@ -17,7 +17,7 @@ class LocationDetailViewModel(
 ) {
     init {
         locationRepository
-            .getLocationFlow(locationId)
+            .getLocation(locationId)
             .onEach { emitState(State(it)) }
             .launchIn(coroutineScope)
     }

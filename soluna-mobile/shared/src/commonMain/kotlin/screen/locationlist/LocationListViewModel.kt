@@ -17,7 +17,7 @@ class LocationListViewModel(
 
     init {
         locationRepository
-            .getLocationsFlow()
+            .getLocations()
             .onEach { emitState(State(it)) }
             .launchIn(coroutineScope)
     }

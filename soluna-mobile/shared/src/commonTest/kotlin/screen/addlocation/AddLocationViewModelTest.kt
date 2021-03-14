@@ -1,6 +1,8 @@
 package com.russhwolf.soluna.mobile.screen.addlocation
 
 import app.cash.turbine.test
+import com.russhwolf.settings.MockSettings
+import com.russhwolf.settings.coroutines.toFlowSettings
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.Location
@@ -14,13 +16,15 @@ import com.russhwolf.soluna.mobile.screen.expectViewModelState
 import com.russhwolf.soluna.mobile.screen.stateAndEvents
 import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class AddLocationViewModelTest {
     private val driver = createInMemorySqlDriver()
-    private val locationRepository = LocationRepository.Impl(createDatabase(driver), Dispatchers.Unconfined)
+    private val locationRepository =
+        LocationRepository.Impl(createDatabase(driver), MockSettings().toFlowSettings(), Dispatchers.Unconfined)
     private val geocodeRepository = GeocodeRepository.Impl(
         GoogleApiClient.Impl(
             createGeocodeMockClientEngine(
@@ -38,7 +42,7 @@ class AddLocationViewModelTest {
 
             viewModel.performAction(AddLocationViewModel.Action.CreateLocation("Home", "27.18", "62.83", "UTC"))
             assertEquals(AddLocationViewModel.Event.Exit, expectViewModelEvent())
-            assertEquals(Location(1, "Home", 27.18, 62.83, "UTC"), locationRepository.getLocation(1))
+            assertEquals(Location(1, "Home", 27.18, 62.83, "UTC"), locationRepository.getLocation(1).first())
         }
     }
 

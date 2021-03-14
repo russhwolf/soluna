@@ -1,16 +1,17 @@
 package com.russhwolf.soluna.mobile.repository
 
 import app.cash.turbine.test
+import com.russhwolf.settings.MockSettings
+import com.russhwolf.settings.coroutines.toFlowSettings
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.LocationSummary
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.suspendTest
-import com.squareup.sqldelight.db.SqlDriver
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -18,42 +19,14 @@ import kotlin.test.assertTrue
 
 class LocationRepositoryTest {
 
-    private lateinit var driver: SqlDriver
-    private lateinit var database: SolunaDb
-    private lateinit var repository: LocationRepository
-
-    @BeforeTest
-    fun setup() {
-        driver = createInMemorySqlDriver()
-        database = createDatabase(driver)
-        repository = LocationRepository.Impl(database, Dispatchers.Unconfined)
-    }
+    private val driver = createInMemorySqlDriver()
+    private val database = createDatabase(driver)
+    private val settings = MockSettings().toFlowSettings(Dispatchers.Unconfined)
+    private val repository = LocationRepository.Impl(database, settings, Dispatchers.Unconfined)
 
     @Test
-    fun getLocations_empty() = suspendTest {
-        val locations = repository.getLocations()
-        assertTrue(locations.isEmpty())
-    }
-
-    @Test
-    fun getLocations_populated() = suspendTest {
-        database.insertDummyLocation()
-
-        val locations = repository.getLocations()
-
-        assertEquals(1, locations.size)
-        assertEquals(
-            expected = LocationSummary(
-                id = 1,
-                label = "Test Location 1"
-            ),
-            actual = locations[0]
-        )
-    }
-
-    @Test
-    fun getLocationsFlow() = suspendTest {
-        repository.getLocationsFlow().test {
+    fun getLocations() = suspendTest {
+        repository.getLocations().test {
             assertEquals(emptyList(), expectItem())
 
             database.insertDummyLocation(1)
@@ -87,27 +60,10 @@ class LocationRepositoryTest {
     }
 
     @Test
-    fun getLocation_valid() = suspendTest {
+    fun getLocation() = suspendTest {
         database.insertDummyLocation()
 
-        val location = repository.getLocation(1)
-        assertEquals(
-            expected = dummyLocation,
-            actual = location
-        )
-    }
-
-    @Test
-    fun getLocation_invalid() = suspendTest {
-        val location = repository.getLocation(1)
-        assertNull(location)
-    }
-
-    @Test
-    fun getLocationFlow() = suspendTest {
-        database.insertDummyLocation()
-
-        repository.getLocationFlow(1).test {
+        repository.getLocation(1).test {
             assertEquals(dummyLocation, expectItem())
             expectNoEvents()
 
@@ -116,8 +72,6 @@ class LocationRepositoryTest {
             expectNoEvents()
 
             database.insertDummyLocation(2)
-            // TODO is it a SqlDelight bug that this re-emits?
-            assertEquals(dummyLocation.copy(label = "Updated location"), expectItem())
             expectNoEvents()
 
             database.locationQueries.deleteLocationById(1)
@@ -169,6 +123,34 @@ class LocationRepositoryTest {
             ),
             actual = locations
         )
+    }
+
+    @Test
+    fun getSelectedItem() = suspendTest {
+        repository.getSelectedLocation().test {
+            assertNull(expectItem())
+            expectNoEvents()
+
+            database.insertDummyLocation()
+            expectNoEvents()
+
+            settings.putLong("selected_location_id", dummyLocation.id)
+            assertEquals(dummyLocation, expectItem())
+            expectNoEvents()
+
+            database.locationQueries.deleteLocationById(dummyLocation.id)
+            assertNull(expectItem())
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun setSelectedItem() = suspendTest {
+        database.insertDummyLocation()
+
+        repository.setSelectedLocation(dummyLocation)
+
+        assertEquals(dummyLocation, repository.getSelectedLocation().first())
     }
 
     @AfterTest

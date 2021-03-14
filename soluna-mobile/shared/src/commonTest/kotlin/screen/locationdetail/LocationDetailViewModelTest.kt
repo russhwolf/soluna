@@ -1,6 +1,8 @@
 package com.russhwolf.soluna.mobile.screen.locationdetail
 
 import app.cash.turbine.test
+import com.russhwolf.settings.MockSettings
+import com.russhwolf.settings.coroutines.toFlowSettings
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.createDatabase
@@ -18,10 +20,11 @@ import kotlin.test.assertEquals
 class LocationDetailViewModelTest {
     private var locations: Array<Location> = emptyArray()
     private val driver = createInMemorySqlDriver()
-    private val database = createDatabase(driver)
     private val locationRepository by lazy {
+        val database = createDatabase(driver)
         database.configureMockLocationData(*locations)
-        LocationRepository.Impl(database, Dispatchers.Unconfined)
+        val settings = MockSettings().toFlowSettings()
+        LocationRepository.Impl(database, settings, Dispatchers.Unconfined)
     }
 
     val viewModel by lazy {

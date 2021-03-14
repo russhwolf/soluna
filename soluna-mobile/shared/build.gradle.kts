@@ -9,7 +9,7 @@ import java.util.Properties
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
-    id("kotlinx-serialization") version "1.4.21"
+    id("kotlinx-serialization") version "1.4.31"
     id("com.squareup.sqldelight") version "1.4.4"
     id("com.codingfeline.buildkonfig") version "0.7.0"
 }
@@ -19,6 +19,7 @@ val ktorVersion = "1.5.0"
 val koinVersion = "3.0.0-alpha-4"
 val sqldelightVersion = "1.4.4"
 val serializationVersion = "1.0.1"
+val settingsVersion = "0.7.4"
 val statelyVersion = "1.1.1"
 val turbineVersion = "0.4.0"
 
@@ -42,6 +43,8 @@ kotlin {
                 progressiveMode = true
                 useExperimentalAnnotation("kotlin.RequiresOptIn")
                 useExperimentalAnnotation("kotlinx.coroutines.ExperimentalCoroutinesApi")
+                useExperimentalAnnotation("com.russhwolf.settings.ExperimentalSettingsApi")
+                useExperimentalAnnotation("com.russhwolf.settings.ExperimentalSettingsImplementation")
                 useExperimentalAnnotation("kotlin.time.ExperimentalTime")
             }
         }
@@ -66,11 +69,11 @@ kotlin {
                 implementation("io.ktor:ktor-client-logging:$ktorVersion")
 
                 implementation("co.touchlab:stately-common:$statelyVersion")
-                implementation("co.touchlab:stately-concurrency:$statelyVersion")
 
                 implementation("org.koin:koin-core:$koinVersion")
 
-                implementation("app.cash.turbine:turbine:$turbineVersion")
+                implementation("com.russhwolf:multiplatform-settings:$settingsVersion")
+                implementation("com.russhwolf:multiplatform-settings-coroutines-native-mt:$settingsVersion")
             }
         }
         commonTest {
@@ -81,6 +84,10 @@ kotlin {
                 implementation("io.ktor:ktor-client-mock:$ktorVersion")
 
                 implementation("org.koin:koin-test:$koinVersion")
+
+                implementation("com.russhwolf:multiplatform-settings-test:$settingsVersion")
+
+                implementation("app.cash.turbine:turbine:$turbineVersion")
             }
         }
         val androidMain by getting {
@@ -94,6 +101,9 @@ kotlin {
                 implementation("com.squareup.sqldelight:android-driver:$sqldelightVersion")
 
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
+
+                implementation("androidx.datastore:datastore-preferences:1.0.0-alpha08")
+                implementation("com.russhwolf:multiplatform-settings-datastore:$settingsVersion")
             }
         }
         val androidTest by getting {
@@ -103,7 +113,7 @@ kotlin {
 
                 implementation("androidx.test:core:1.3.0")
                 implementation("androidx.test.ext:junit:1.1.2")
-                implementation("org.robolectric:robolectric:4.4")
+                implementation("org.robolectric:robolectric:4.5.1")
 
                 implementation("com.squareup.sqldelight:sqlite-driver:$sqldelightVersion")
             }

@@ -7,6 +7,7 @@ import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.withContext
 
 interface ReminderRepository {
@@ -38,6 +39,7 @@ interface ReminderRepository {
                 .selectAllReminders()
                 .asFlow()
                 .mapToList(backgroundDispatcher)
+                .distinctUntilChanged()
 
         override suspend fun addReminder(type: ReminderType, minutesBefore: Int, enabled: Boolean) =
             database.addReminder(type, minutesBefore, enabled)

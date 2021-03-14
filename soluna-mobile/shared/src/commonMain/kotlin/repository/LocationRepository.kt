@@ -1,5 +1,6 @@
 package com.russhwolf.soluna.mobile.repository
 
+import com.russhwolf.settings.coroutines.FlowSettings
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.LocationSummary
 import com.russhwolf.soluna.mobile.db.SolunaDb
@@ -8,17 +9,16 @@ import com.squareup.sqldelight.runtime.coroutines.mapToList
 import com.squareup.sqldelight.runtime.coroutines.mapToOneOrNull
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.withContext
 
 interface LocationRepository {
 
-    suspend fun getLocations(): List<LocationSummary>
+    fun getLocations(): Flow<List<LocationSummary>>
 
-    fun getLocationsFlow(): Flow<List<LocationSummary>>
-
-    suspend fun getLocation(id: Long): Location?
-
-    fun getLocationFlow(id: Long): Flow<Location?>
+    fun getLocation(id: Long): Flow<Location?>
 
     suspend fun addLocation(label: String, latitude: Double, longitude: Double, timeZone: String)
 
@@ -26,38 +26,33 @@ interface LocationRepository {
 
     suspend fun updateLocationLabel(id: Long, label: String)
 
+    fun getSelectedLocation(): Flow<Location?>
+
+    suspend fun setSelectedLocation(location: Location?)
+
     class Impl(
         private val database: SolunaDb,
+        private val settings: FlowSettings,
         private val backgroundDispatcher: CoroutineDispatcher
     ) : LocationRepository {
 
-        override suspend fun getLocations(): List<LocationSummary> = database.getLocations()
-
-        private suspend fun SolunaDb.getLocations(): List<LocationSummary> = withContext(backgroundDispatcher) {
-            locationQueries
-                .selectAllLocations()
-                .executeAsList()
+        companion object {
+            private const val KEY_SELECTED_LOCATION_ID = "selected_location_id"
         }
 
-        override fun getLocationsFlow(): Flow<List<LocationSummary>> =
+        override fun getLocations(): Flow<List<LocationSummary>> =
             database.locationQueries
                 .selectAllLocations()
                 .asFlow()
                 .mapToList(backgroundDispatcher)
+                .distinctUntilChanged()
 
-        override suspend fun getLocation(id: Long): Location? = database.getLocation(id)
-
-        private suspend fun SolunaDb.getLocation(id: Long): Location? = withContext(backgroundDispatcher) {
-            locationQueries
-                .selectLocationById(id)
-                .executeAsOneOrNull()
-        }
-
-        override fun getLocationFlow(id: Long): Flow<Location?> =
+        override fun getLocation(id: Long): Flow<Location?> =
             database.locationQueries
                 .selectLocationById(id)
                 .asFlow()
                 .mapToOneOrNull(backgroundDispatcher)
+                .distinctUntilChanged()
 
         override suspend fun addLocation(label: String, latitude: Double, longitude: Double, timeZone: String) =
             database.addLocation(label, latitude, longitude, timeZone)
@@ -81,6 +76,24 @@ interface LocationRepository {
         private suspend fun SolunaDb.updateLocationLabel(id: Long, label: String) = withContext(backgroundDispatcher) {
             locationQueries
                 .updateLocationLabelById(label, id)
+        }
+
+        override fun getSelectedLocation(): Flow<Location?> =
+            settings.getLongOrNullFlow(KEY_SELECTED_LOCATION_ID)
+                .flatMapLatest {
+                    if (it != null) {
+                        getLocation(it)
+                    } else {
+                        flowOf(null)
+                    }
+                }
+
+        override suspend fun setSelectedLocation(location: Location?) {
+            if (location != null) {
+                settings.putLong(KEY_SELECTED_LOCATION_ID, location.id)
+            } else {
+                settings.remove(KEY_SELECTED_LOCATION_ID)
+            }
         }
     }
 }
