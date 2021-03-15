@@ -22,7 +22,8 @@ rootProject.name = "Soluna"
 enableFeaturePreview("GRADLE_METADATA")
 
 include(":soluna-core")
-include(":soluna-core-time")
+include(":soluna-core:island-time")
+include(":soluna-core:kotlinx-datetime")
 include(":soluna-calendar")
 include(":soluna-mobile")
 include(":soluna-mobile:shared")
