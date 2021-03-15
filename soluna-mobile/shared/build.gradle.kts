@@ -41,7 +41,6 @@ kotlin {
         all {
             languageSettings.apply {
                 progressiveMode = true
-                useExperimentalAnnotation("kotlin.RequiresOptIn")
                 useExperimentalAnnotation("kotlinx.coroutines.ExperimentalCoroutinesApi")
                 useExperimentalAnnotation("com.russhwolf.settings.ExperimentalSettingsApi")
                 useExperimentalAnnotation("com.russhwolf.settings.ExperimentalSettingsImplementation")

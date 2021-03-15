@@ -2,10 +2,11 @@ package com.russhwolf.soluna.time
 
 import com.russhwolf.soluna.MoonPhase
 import io.islandtime.Date
+import io.islandtime.Instant
 import io.islandtime.TimeZone
-import io.islandtime.ZonedDateTime
 import io.islandtime.at
 import io.islandtime.atTime
+import io.islandtime.measures.milliseconds
 import com.russhwolf.soluna.moonPhase as coreMoonPhase
 import com.russhwolf.soluna.moonTimes as coreMoonTimes
 import com.russhwolf.soluna.sunTimes as coreSunTimes
@@ -15,7 +16,7 @@ fun sunTimes(
     zone: TimeZone,
     latitude: Double, // Degrees
     longitude: Double // Degrees
-): Pair<ZonedDateTime?, ZonedDateTime?> {
+): Pair<Instant?, Instant?> {
     val (riseMillis, setMillis) = coreSunTimes(
         year = date.year,
         month = date.monthNumber,
@@ -24,7 +25,7 @@ fun sunTimes(
         latitude = latitude,
         longitude = longitude
     )
-    return riseMillis.toZonedDateTime(zone) to setMillis.toZonedDateTime(zone)
+    return riseMillis?.let { Instant(it.milliseconds) } to setMillis?.let { Instant(it.milliseconds) }
 }
 
 fun moonTimes(
@@ -32,7 +33,7 @@ fun moonTimes(
     zone: TimeZone,
     latitude: Double, // Degrees
     longitude: Double // Degrees
-): Pair<ZonedDateTime?, ZonedDateTime?> {
+): Pair<Instant?, Instant?> {
     val (riseMillis, setMillis) = coreMoonTimes(
         year = date.year,
         month = date.monthNumber,
@@ -41,7 +42,7 @@ fun moonTimes(
         latitude = latitude,
         longitude = longitude
     )
-    return riseMillis.toZonedDateTime(zone) to setMillis.toZonedDateTime(zone)
+    return riseMillis?.let { Instant(it.milliseconds) } to setMillis?.let { Instant(it.milliseconds) }
 }
 
 fun moonPhase(
@@ -57,9 +58,6 @@ fun moonPhase(
         longitude = longitude
     )
 }
-
-private fun Long?.toZonedDateTime(zone: TimeZone) =
-    this?.let { ZonedDateTime.fromMillisecondOfUnixEpoch(it, zone) }
 
 private fun offsetHoursAtNoon(date: Date, zone: TimeZone) =
     date.atTime(12, 0).at(zone).offset.totalSeconds.toLong() / 3600.0

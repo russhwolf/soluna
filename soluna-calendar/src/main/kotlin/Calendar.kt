@@ -8,17 +8,18 @@ import com.russhwolf.soluna.time.moonTimes
 import com.russhwolf.soluna.time.sunTimes
 import io.islandtime.Date
 import io.islandtime.DayOfWeek
+import io.islandtime.Instant
 import io.islandtime.Month
 import io.islandtime.TimeZone
 import io.islandtime.YearMonth
-import io.islandtime.ZonedDateTime
 import io.islandtime.at
 import io.islandtime.atTime
 import io.islandtime.calendar.WeekSettings
+import io.islandtime.jvm.toJavaLocalDateTime
 import io.islandtime.jvm.toJavaYearMonth
-import io.islandtime.jvm.toJavaZonedDateTime
 import io.islandtime.measures.IntDays
 import io.islandtime.measures.milliseconds
+import io.islandtime.toDateTimeAt
 import io.islandtime.weekOfMonth
 import java.awt.BasicStroke
 import java.awt.Color
@@ -255,8 +256,8 @@ private class CalendarRenderer(
     private fun cellX(dayOfWeek: Int) = MARGIN_HORIZONTAL + CELL_WIDTH * (dayOfWeek - 1) + MARGIN_INTERNAL
     private fun cellY(weekOfMonth: Int) = MARGIN_HEADER + CELL_HEIGHT * (weekOfMonth - 1) + MARGIN_INTERNAL
 
-    private fun ZonedDateTime.formatTime(): String {
-        return DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(toJavaZonedDateTime().toLocalTime())
+    private fun Instant.formatTime(): String {
+        return DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(toDateTimeAt(timeZone).toJavaLocalDateTime())
     }
 
     private fun Double.latitudeString(): String = positionString(if (this < 0) "S" else "N")

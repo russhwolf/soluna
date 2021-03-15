@@ -2,8 +2,9 @@ package com.russhwolf.soluna.time
 
 import com.russhwolf.soluna.MoonPhase
 import io.islandtime.Date
+import io.islandtime.DateTime
+import io.islandtime.Instant
 import io.islandtime.Month
-import io.islandtime.Time
 import io.islandtime.TimeZone
 import io.islandtime.asTimeZone
 import io.islandtime.asUtcOffset
@@ -12,18 +13,22 @@ import io.islandtime.measures.abs
 import io.islandtime.measures.asDuration
 import io.islandtime.measures.durationOf
 import io.islandtime.measures.hours
+import io.islandtime.measures.milliseconds
 import io.islandtime.measures.minutes
 import io.islandtime.measures.seconds
+import io.islandtime.toInstantAt
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
+private val year = 2019
+private val month = Month.OCTOBER
+private val zone = (-5).hours.asUtcOffset().asTimeZone()
 
 class TimesTest {
+
     @Test
     fun sunTimesTest() {
-        val year = 2019
-        val month = Month.OCTOBER
 
         val expected = listOf(
             "0541" to "1726",
@@ -57,31 +62,36 @@ class TimesTest {
             "0614" to "1642",
             "0615" to "1641",
             "0616" to "1639"
-        ).map { pair ->
+        ).mapIndexed { index, pair ->
             pair.toList()
-                .map { Time(it.substring(0, 2).toInt(), it.substring(2, 4).toInt()) }
+                .map {
+                    DateTime(
+                        year,
+                        month,
+                        index + 1,
+                        it.substring(0, 2).toInt(),
+                        it.substring(2, 4).toInt()
+                    ).toInstantAt(zone)
+                }
                 .let { it[0] to it[1] }
         }
 
         (1..31).map {
             sunTimes(
                 date = Date(year, month, it),
-                zone = (-5).hours.asUtcOffset().asTimeZone(),
+                zone = zone,
                 latitude = 42.383,
                 longitude = -71.117
             )
         }.forEachIndexed { index, it ->
             it.toList().zip(expected[index].toList()).forEach { (actual, expected) ->
-                assertNearEquals(expected, actual?.time ?: Time(0, 0), 60.seconds.asDuration())
+                assertNearEquals(expected, actual ?: Instant(0L.milliseconds), 60.seconds.asDuration())
             }
         }
     }
 
     @Test
     fun moonTimesTest() {
-        val year = 2019
-        val month = Month.OCTOBER
-
         val expected = listOf(
             "0858" to "1934",
             "1009" to "2011",
@@ -114,24 +124,34 @@ class TimesTest {
             "0746" to "1803",
             "0858" to "1844",
             "1005" to "1930"
-        ).map { pair ->
+        ).mapIndexed { index, pair ->
             pair.toList()
-                .map { it?.let { Time(it.substring(0, 2).toInt(), it.substring(2, 4).toInt()) } }
+                .map {
+                    it?.let {
+                        DateTime(
+                            year,
+                            month,
+                            index + 1,
+                            it.substring(0, 2).toInt(),
+                            it.substring(2, 4).toInt()
+                        ).toInstantAt(zone)
+                    }
+                }
                 .let { it[0] to it[1] }
         }
 
         (1..31).map {
             moonTimes(
                 date = Date(year, month, it),
-                zone = (-5).hours.asUtcOffset().asTimeZone(),
+                zone = zone,
                 latitude = 42.383,
                 longitude = -71.117
             )
         }.forEachIndexed { index, it ->
             it.toList().zip(expected[index].toList()).forEach { (actual, expected) ->
                 assertNearEquals(
-                    expected ?: Time(0, 0),
-                    actual?.time ?: Time(0, 0),
+                    expected ?: Instant(0L.milliseconds),
+                    actual ?: Instant(0L.milliseconds),
                     (5.minutes + 30.seconds).asDuration()
                 )
             }
@@ -145,12 +165,14 @@ class TimesTest {
     }
 }
 
+private fun DateTime.toInstantAt(zone: TimeZone): Instant = toInstantAt(zone.rules.offsetAt(this))
+
 fun assertNearEquals(
-    expected: Time,
-    actual: Time,
+    expected: Instant,
+    actual: Instant,
     tolerance: Duration,
     message: String = "expected:<$expected±$tolerance> but was:<$actual>"
 ) {
-    val difference = durationOf(expected.nanosecondsSinceStartOfDay - actual.nanosecondsSinceStartOfDay)
+    val difference = durationOf(expected.millisecondsSinceUnixEpoch - actual.millisecondsSinceUnixEpoch)
     assertTrue(abs(difference) <= tolerance, message)
 }
