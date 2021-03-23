@@ -50,7 +50,7 @@ kotlin {
 
         commonMain {
             dependencies {
-                implementation(project(":soluna-core"))
+                implementation(project(":soluna-core:kotlinx-datetime"))
 
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core") {
                     version {
@@ -66,6 +66,8 @@ kotlin {
                 implementation("io.ktor:ktor-client-json:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
                 implementation("io.ktor:ktor-client-logging:$ktorVersion")
+
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.1.1")
 
                 implementation("co.touchlab:stately-common:$statelyVersion")
 
