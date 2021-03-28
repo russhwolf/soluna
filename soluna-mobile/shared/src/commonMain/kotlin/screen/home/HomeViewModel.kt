@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
 import kotlin.time.seconds
 
 class HomeViewModel(
@@ -27,13 +28,20 @@ class HomeViewModel(
             clockRepository.getCurrentTimeFlow(0.1.seconds)
         ) { location, upcomingTimes, instant ->
             if (location != null) {
+                val timeZone = if (location.timeZone in TimeZone.availableZoneIds) {
+                    TimeZone.of(location.timeZone)
+                } else {
+                    // TODO better error handling
+                    TimeZone.UTC
+                }
                 State.Populated(
                     locationName = location.label,
                     currentTime = instant,
                     sunriseTime = upcomingTimes?.sunriseTime,
                     sunsetTime = upcomingTimes?.sunsetTime,
                     moonriseTime = upcomingTimes?.moonriseTime,
-                    moonsetTime = upcomingTimes?.moonsetTime
+                    moonsetTime = upcomingTimes?.moonsetTime,
+                    timeZone = timeZone
                 )
             } else {
                 State.NoLocationSelected
@@ -45,10 +53,15 @@ class HomeViewModel(
 
     override suspend fun performAction(action: Action) = when (action) {
         Action.Locations -> navigateToLocationList()
+        Action.Reminders -> navigateToReminderList()
     }
 
     private suspend fun navigateToLocationList() {
         emitEvent(Event.Locations)
+    }
+
+    private suspend fun navigateToReminderList() {
+        emitEvent(Event.Reminders)
     }
 
 
@@ -61,17 +74,18 @@ class HomeViewModel(
             val sunriseTime: Instant?,
             val sunsetTime: Instant?,
             val moonriseTime: Instant?,
-            val moonsetTime: Instant?
+            val moonsetTime: Instant?,
+            val timeZone: TimeZone
         ) : State()
     }
 
     sealed class Event {
         object Locations : Event()
-//        object Reminders : Event()
+        object Reminders : Event()
     }
 
     sealed class Action {
         object Locations : Action()
-//        object Reminders : Action()
+        object Reminders : Action()
     }
 }

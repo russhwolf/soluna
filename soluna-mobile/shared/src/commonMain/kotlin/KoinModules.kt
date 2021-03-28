@@ -2,6 +2,7 @@ package com.russhwolf.soluna.mobile
 
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.db.createDatabase
+import com.russhwolf.soluna.mobile.provider.TimeZoneProvider
 import com.russhwolf.soluna.mobile.repository.AstronomicalDataRepository
 import com.russhwolf.soluna.mobile.repository.ClockRepository
 import com.russhwolf.soluna.mobile.repository.GeocodeRepository
@@ -30,6 +31,7 @@ internal val commonModule = module {
     single { createDatabase(get()) }
     single<GoogleApiClient> { GoogleApiClient.Impl(get()) }
     single<Clock> { Clock.System }
+    single<TimeZoneProvider> { TimeZoneProvider.Impl() }
 
     single<LocationRepository> { LocationRepository.Impl(get(), get(), get(ioDispatcherQualifier)) }
     single<ReminderRepository> { ReminderRepository.Impl(get(), get(ioDispatcherQualifier)) }

@@ -97,7 +97,8 @@ class HomeViewModelTest {
                     sunriseTime = LocalDate(2021, 1, 2).atTime(6, 2).toInstant(TimeZone.UTC),
                     sunsetTime = LocalDate(2021, 1, 1).atTime(18, 1).toInstant(TimeZone.UTC),
                     moonriseTime = LocalDate(2021, 1, 1).atTime(20, 1).toInstant(TimeZone.UTC),
-                    moonsetTime = LocalDate(2021, 1, 2).atTime(8, 2).toInstant(TimeZone.UTC)
+                    moonsetTime = LocalDate(2021, 1, 2).atTime(8, 2).toInstant(TimeZone.UTC),
+                    timeZone = TimeZone.of("UTC")
                 ),
                 expectViewModelState()
             )
@@ -112,6 +113,17 @@ class HomeViewModelTest {
 
             viewModel.performAction(HomeViewModel.Action.Locations)
             assertEquals(HomeViewModel.Event.Locations, expectViewModelEvent())
+        }
+    }
+
+    @Test
+    fun navigate_reminderList() = suspendTest {
+        viewModel.stateAndEvents.test {
+            assertEquals(HomeViewModel.State.Loading, expectViewModelState())
+            expectNoEvents()
+
+            viewModel.performAction(HomeViewModel.Action.Reminders)
+            assertEquals(HomeViewModel.Event.Reminders, expectViewModelEvent())
         }
     }
 
