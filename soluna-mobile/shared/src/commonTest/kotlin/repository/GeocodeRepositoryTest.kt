@@ -2,6 +2,11 @@ package com.russhwolf.soluna.mobile.repository
 
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.suspendTest
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -18,8 +23,11 @@ class GeocodeRepositoryTest {
             )
         )
     )
+    private val clock = object : Clock {
+        override fun now(): Instant = LocalDateTime(2021, 1, 1, 11, 0).toInstant(TimeZone.UTC)
+    }
 
-    private val repository = GeocodeRepository.Impl(googleApiClient)
+    private val repository = GeocodeRepository.Impl(googleApiClient, clock)
 
     @Test
     fun geocodeLocation_valid() = suspendTest {

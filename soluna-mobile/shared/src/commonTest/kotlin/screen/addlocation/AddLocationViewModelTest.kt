@@ -17,6 +17,11 @@ import com.russhwolf.soluna.mobile.screen.stateAndEvents
 import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -25,12 +30,16 @@ class AddLocationViewModelTest {
     private val driver = createInMemorySqlDriver()
     private val locationRepository =
         LocationRepository.Impl(createDatabase(driver), MockSettings().toFlowSettings(), Dispatchers.Unconfined)
+    private val clock = object : Clock {
+        override fun now(): Instant = LocalDateTime(2021, 1, 1, 11, 0).toInstant(TimeZone.UTC)
+    }
     private val geocodeRepository = GeocodeRepository.Impl(
         GoogleApiClient.Impl(
             createGeocodeMockClientEngine(
                 geocodeMap = mapOf("Home" to GeocodeData(27.18, 62.83, "UTC"))
             )
-        )
+        ),
+        clock
     )
 
     private val viewModel = AddLocationViewModel(locationRepository, geocodeRepository, Dispatchers.Unconfined)
