@@ -35,7 +35,6 @@ interface UpcomingTimesRepository {
                 astronomicalDataRepository.getTimes(tomorrow, zone, location.latitude, location.longitude)
 
             return UpcomingTimes(
-                locationName = location.label,
                 sunriseTime = times.sunriseTime?.takeIf { it > currentInstant } ?: timesTomorrow.sunriseTime,
                 sunsetTime = times.sunsetTime?.takeIf { it > currentInstant } ?: timesTomorrow.sunsetTime,
                 moonriseTime = times.moonriseTime?.takeIf { it > currentInstant } ?: timesTomorrow.moonriseTime,
@@ -46,7 +45,6 @@ interface UpcomingTimesRepository {
 }
 
 data class UpcomingTimes(
-    val locationName: String,
     val sunriseTime: Instant?,
     val sunsetTime: Instant?,
     val moonriseTime: Instant?,

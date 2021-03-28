@@ -14,6 +14,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atTime
 import kotlinx.datetime.toInstant
+import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -52,7 +53,6 @@ class UpcomingTimesRepositoryTest {
 
             assertEquals(
                 UpcomingTimes(
-                    locationName = "Home",
                     sunriseTime = LocalDate(2021, 1, 1).atTime(6, 1).toInstant(TimeZone.UTC),
                     sunsetTime = LocalDate(2021, 1, 1).atTime(18, 1).toInstant(TimeZone.UTC),
                     moonriseTime = LocalDate(2021, 1, 1).atTime(20, 1).toInstant(TimeZone.UTC),
@@ -71,7 +71,6 @@ class UpcomingTimesRepositoryTest {
         upcomingTimesRepository.getUpcomingTimes().test {
             assertEquals(
                 UpcomingTimes(
-                    locationName = "Home",
                     sunriseTime = LocalDate(2021, 1, 2).atTime(6, 2).toInstant(TimeZone.UTC),
                     sunsetTime = LocalDate(2021, 1, 1).atTime(18, 1).toInstant(TimeZone.UTC),
                     moonriseTime = LocalDate(2021, 1, 1).atTime(20, 1).toInstant(TimeZone.UTC),
@@ -90,7 +89,6 @@ class UpcomingTimesRepositoryTest {
         upcomingTimesRepository.getUpcomingTimes().test {
             assertEquals(
                 UpcomingTimes(
-                    locationName = "Home",
                     sunriseTime = LocalDate(2021, 1, 2).atTime(6, 2).toInstant(TimeZone.UTC),
                     sunsetTime = LocalDate(2021, 1, 2).atTime(18, 2).toInstant(TimeZone.UTC),
                     moonriseTime = LocalDate(2021, 1, 2).atTime(20, 2).toInstant(TimeZone.UTC),
@@ -99,6 +97,11 @@ class UpcomingTimesRepositoryTest {
                 expectItem()
             )
         }
+    }
+
+    @AfterTest
+    fun tearDown() {
+        driver.close()
     }
 
     private suspend fun initializeSelectedLocation() {
