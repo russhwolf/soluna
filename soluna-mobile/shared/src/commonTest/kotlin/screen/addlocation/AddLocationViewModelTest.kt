@@ -15,6 +15,8 @@ import com.russhwolf.soluna.mobile.screen.expectViewModelEvent
 import com.russhwolf.soluna.mobile.screen.expectViewModelState
 import com.russhwolf.soluna.mobile.screen.stateAndEvents
 import com.russhwolf.soluna.mobile.suspendTest
+import io.ktor.client.features.logging.EMPTY
+import io.ktor.client.features.logging.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.Clock
@@ -37,7 +39,8 @@ class AddLocationViewModelTest {
         GoogleApiClient.Impl(
             createGeocodeMockClientEngine(
                 geocodeMap = mapOf("Home" to GeocodeData(27.18, 62.83, "UTC"))
-            )
+            ),
+            Logger.EMPTY
         ),
         clock
     )

@@ -4,6 +4,8 @@ import com.russhwolf.soluna.mobile.BuildKonfig
 import com.russhwolf.soluna.mobile.suspendTest
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
+import io.ktor.client.features.logging.EMPTY
+import io.ktor.client.features.logging.Logger
 import io.ktor.client.request.HttpRequestData
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
@@ -32,7 +34,7 @@ class GoogleApiClientTest {
                 actual = it.url.toString()
             )
         }
-        val googleApiClient = GoogleApiClient.Impl(createMockEngine(requestValidator))
+        val googleApiClient = GoogleApiClient.Impl(createMockEngine(requestValidator), Logger.EMPTY)
 
         val response = googleApiClient.getPlaceAutocomplete("Somerville, MA")
         val expected = PlaceAutocompleteResponse(
@@ -61,7 +63,7 @@ class GoogleApiClientTest {
                 actual = it.url.toString()
             )
         }
-        val googleApiClient = GoogleApiClient.Impl(createMockEngine(requestValidator))
+        val googleApiClient = GoogleApiClient.Impl(createMockEngine(requestValidator), Logger.EMPTY)
 
         val response = googleApiClient.getGeocode("ChIJZeH1eyl344kRA3v52Jl3kHo")
         val expected = GeocodeResponse(
@@ -96,7 +98,7 @@ class GoogleApiClientTest {
                 actual = it.url.toString()
             )
         }
-        val googleApiClient = GoogleApiClient.Impl(createMockEngine(requestValidator))
+        val googleApiClient = GoogleApiClient.Impl(createMockEngine(requestValidator), Logger.EMPTY)
 
         val response =
             googleApiClient.getTimeZone(latitude = 42.3875968, longitude = -71.0994968, timestamp = 1565055420)

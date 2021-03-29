@@ -1,6 +1,7 @@
 package com.russhwolf.soluna.mobile
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import com.russhwolf.settings.coroutines.FlowSettings
 import com.russhwolf.settings.datastore.DataStoreSettings
@@ -8,6 +9,9 @@ import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import io.ktor.client.engine.android.Android
+import io.ktor.client.features.logging.Logger
+import io.ktor.client.features.logging.MessageLengthLimitingLogger
+import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +19,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import java.io.File
 
+@OptIn(KtorExperimentalAPI::class)
 actual val platformModule: Module = module {
     single<SqlDriver> { AndroidSqliteDriver(SolunaDb.Schema, get()) }
     single { Android.create() }
@@ -25,6 +30,15 @@ actual val platformModule: Module = module {
             File(context.filesDir, "soluna_settings.preferences_pb")
         }
         DataStoreSettings(dataStore)
+    }
+    single<Logger> {
+        val tag = "HttpClient"
+        val logger = object : Logger {
+            override fun log(message: String) {
+                Log.i(tag, message)
+            }
+        }
+        MessageLengthLimitingLogger(delegate = logger)
     }
     single<CoroutineDispatcher>(mainDispatcherQualifier) { Dispatchers.Main }
     single(ioDispatcherQualifier) { Dispatchers.IO }

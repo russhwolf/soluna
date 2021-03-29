@@ -29,7 +29,7 @@ internal val ioDispatcherQualifier = named("IoDispatcher")
 
 internal val commonModule = module {
     single { createDatabase(get()) }
-    single<GoogleApiClient> { GoogleApiClient.Impl(get()) }
+    single<GoogleApiClient> { GoogleApiClient.Impl(get(), get()) }
     single<Clock> { Clock.System }
     single<TimeZoneProvider> { TimeZoneProvider.Impl() }
 

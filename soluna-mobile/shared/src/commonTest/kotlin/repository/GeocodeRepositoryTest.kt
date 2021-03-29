@@ -2,6 +2,8 @@ package com.russhwolf.soluna.mobile.repository
 
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.suspendTest
+import io.ktor.client.features.logging.EMPTY
+import io.ktor.client.features.logging.Logger
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -21,7 +23,8 @@ class GeocodeRepositoryTest {
                     timeZone = "America/New_York"
                 )
             )
-        )
+        ),
+        Logger.EMPTY
     )
     private val clock = object : Clock {
         override fun now(): Instant = LocalDateTime(2021, 1, 1, 11, 0).toInstant(TimeZone.UTC)

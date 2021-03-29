@@ -10,7 +10,6 @@ import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logger
 import io.ktor.client.features.logging.Logging
-import io.ktor.client.features.logging.SIMPLE
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -28,7 +27,7 @@ interface GoogleApiClient {
 
     suspend fun getTimeZone(latitude: Double, longitude: Double, timestamp: Long): TimeZoneResponse?
 
-    class Impl(httpClientEngine: HttpClientEngine) : GoogleApiClient {
+    class Impl(httpClientEngine: HttpClientEngine, logger: Logger) : GoogleApiClient {
         private val httpClient = HttpClient(httpClientEngine) {
             defaultRequest {
                 url.protocol = URLProtocol.HTTPS
@@ -45,7 +44,7 @@ interface GoogleApiClient {
                 )
             }
             install(Logging) {
-                logger = Logger.SIMPLE
+                this.logger = logger
                 level = LogLevel.ALL
             }
         }
