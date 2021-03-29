@@ -1,10 +1,5 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    id("org.jetbrains.kotlin.multiplatform")
-}
-repositories {
-    mavenCentral()
+    kotlin("multiplatform")
 }
 
 kotlin {
@@ -15,8 +10,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(":soluna-core"))
-
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.1.1")
+                api(Deps.KotlinX.dateTime)
             }
         }
         val commonTest by getting {
@@ -36,9 +30,5 @@ kotlin {
             }
         }
     }
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
 }
 

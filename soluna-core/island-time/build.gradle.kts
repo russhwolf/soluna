@@ -1,10 +1,5 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    id("org.jetbrains.kotlin.multiplatform")
-}
-repositories {
-    mavenCentral()
+    kotlin("multiplatform")
 }
 
 kotlin {
@@ -15,8 +10,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(":soluna-core"))
-
-                implementation("io.islandtime:core:0.4.0")
+                api(Deps.islandTime)
             }
         }
         val commonTest by getting {
@@ -38,7 +32,4 @@ kotlin {
     }
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-}
 

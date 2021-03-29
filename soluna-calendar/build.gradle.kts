@@ -1,12 +1,6 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     kotlin("jvm")
     application
-}
-
-repositories {
-    mavenCentral()
 }
 
 application {
@@ -19,11 +13,8 @@ tasks.withType(JavaExec::class) {
 
 dependencies {
     implementation(project(":soluna-core:island-time"))
-    implementation("io.islandtime:core:0.4.0")
-    testImplementation("junit:junit:4.13.1")
+    implementation(Deps.islandTime)
+    testImplementation(Deps.junit)
     testImplementation(kotlin("test-junit"))
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-}

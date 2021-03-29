@@ -1,14 +1,7 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    id("org.jetbrains.kotlin.multiplatform")
+    kotlin("multiplatform")
     id("maven-publish")
 }
-repositories {
-    mavenCentral()
-}
-group = "com.example"
-version = "0.0.1"
 
 kotlin {
     jvm()
@@ -43,8 +36,4 @@ kotlin {
             }
         }
     }
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
 }
