@@ -1,6 +1,5 @@
 package com.russhwolf.soluna.mobile.repository
 
-import com.russhwolf.soluna.mobile.db.Location
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
@@ -22,7 +21,7 @@ interface UpcomingTimesRepository {
         override fun getUpcomingTimes(): Flow<UpcomingTimes?> =
             locationRepository.getSelectedLocation().map(::getUpcomingTimesForLocation)
 
-        private fun getUpcomingTimesForLocation(location: Location?): UpcomingTimes? {
+        private fun getUpcomingTimesForLocation(location: SelectableLocation?): UpcomingTimes? {
             location ?: return null
 
             val zone = TimeZone.of(location.timeZone)

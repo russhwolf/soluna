@@ -5,11 +5,11 @@ import com.russhwolf.settings.MockSettings
 import com.russhwolf.settings.coroutines.toFlowSettings
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
-import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.repository.GeocodeData
 import com.russhwolf.soluna.mobile.repository.GeocodeRepository
 import com.russhwolf.soluna.mobile.repository.LocationRepository
+import com.russhwolf.soluna.mobile.repository.SelectableLocation
 import com.russhwolf.soluna.mobile.repository.createGeocodeMockClientEngine
 import com.russhwolf.soluna.mobile.screen.expectViewModelEvent
 import com.russhwolf.soluna.mobile.screen.expectViewModelState
@@ -31,7 +31,11 @@ import kotlin.test.assertEquals
 class AddLocationViewModelTest {
     private val driver = createInMemorySqlDriver()
     private val locationRepository =
-        LocationRepository.Impl(createDatabase(driver), MockSettings().toFlowSettings(), Dispatchers.Unconfined)
+        LocationRepository.Impl(
+            createDatabase(driver),
+            MockSettings().toFlowSettings(Dispatchers.Unconfined),
+            Dispatchers.Unconfined
+        )
     private val clock = object : Clock {
         override fun now(): Instant = LocalDateTime(2021, 1, 1, 11, 0).toInstant(TimeZone.UTC)
     }
@@ -54,7 +58,10 @@ class AddLocationViewModelTest {
 
             viewModel.performAction(AddLocationViewModel.Action.CreateLocation("Home", "27.18", "62.83", "UTC"))
             assertEquals(AddLocationViewModel.Event.Exit, expectViewModelEvent())
-            assertEquals(Location(1, "Home", 27.18, 62.83, "UTC"), locationRepository.getLocation(1).first())
+            assertEquals(
+                SelectableLocation(1, "Home", 27.18, 62.83, "UTC", false),
+                locationRepository.getLocation(1).first()
+            )
         }
     }
 

@@ -4,10 +4,10 @@ import app.cash.turbine.test
 import com.russhwolf.settings.MockSettings
 import com.russhwolf.settings.coroutines.toFlowSettings
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
-import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.LocationSummary
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.db.createDatabase
+import com.russhwolf.soluna.mobile.repository.LocationRepository.Impl.Companion.KEY_SELECTED_LOCATION_ID
 import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -32,9 +32,10 @@ class LocationRepositoryTest {
             database.insertDummyLocation(1)
             assertEquals(
                 expected = listOf(
-                    LocationSummary(
+                    SelectableLocationSummary(
                         id = 1,
-                        label = "Test Location 1"
+                        label = "Test Location 1",
+                        selected = false
                     )
                 ),
                 actual = expectItem()
@@ -44,13 +45,33 @@ class LocationRepositoryTest {
             database.insertDummyLocation(2)
             assertEquals(
                 expected = listOf(
-                    LocationSummary(
+                    SelectableLocationSummary(
                         id = 1,
-                        label = "Test Location 1"
+                        label = "Test Location 1",
+                        selected = false
                     ),
-                    LocationSummary(
+                    SelectableLocationSummary(
                         id = 2,
-                        label = "Test Location 2"
+                        label = "Test Location 2",
+                        selected = false
+                    )
+                ),
+                actual = expectItem()
+            )
+            expectNoEvents()
+
+            settings.putLong(KEY_SELECTED_LOCATION_ID, 2)
+            assertEquals(
+                expected = listOf(
+                    SelectableLocationSummary(
+                        id = 1,
+                        label = "Test Location 1",
+                        selected = false
+                    ),
+                    SelectableLocationSummary(
+                        id = 2,
+                        label = "Test Location 2",
+                        selected = true
                     )
                 ),
                 actual = expectItem()
@@ -74,6 +95,13 @@ class LocationRepositoryTest {
             database.insertDummyLocation(2)
             expectNoEvents()
 
+            settings.putLong(KEY_SELECTED_LOCATION_ID, 2)
+            expectNoEvents()
+
+            settings.putLong(KEY_SELECTED_LOCATION_ID, 1)
+            assertEquals(dummyLocation.copy(label = "Updated location", selected = true), expectItem())
+            expectNoEvents()
+
             database.locationQueries.deleteLocationById(1)
             assertNull(expectItem())
             expectNoEvents()
@@ -93,7 +121,7 @@ class LocationRepositoryTest {
 
         assertEquals(
             expected = dummyLocation,
-            actual = dbLocation
+            actual = dbLocation.toSelectableLocation(false)
         )
     }
 
@@ -134,8 +162,8 @@ class LocationRepositoryTest {
             database.insertDummyLocation()
             expectNoEvents()
 
-            settings.putLong("selected_location_id", dummyLocation.id)
-            assertEquals(dummyLocation, expectItem())
+            settings.putLong(KEY_SELECTED_LOCATION_ID, dummyLocation.id)
+            assertEquals(dummyLocation.copy(selected = true), expectItem())
             expectNoEvents()
 
             database.locationQueries.deleteLocationById(dummyLocation.id)
@@ -148,9 +176,9 @@ class LocationRepositoryTest {
     fun setSelectedItem() = suspendTest {
         database.insertDummyLocation()
 
-        repository.setSelectedLocation(dummyLocation)
+        repository.setSelectedLocationId(dummyLocation.id)
 
-        assertEquals(dummyLocation, repository.getSelectedLocation().first())
+        assertEquals(dummyLocation.copy(selected = true), repository.getSelectedLocation().first())
     }
 
     @AfterTest
@@ -159,12 +187,13 @@ class LocationRepositoryTest {
     }
 }
 
-private val dummyLocation = Location(
+private val dummyLocation = SelectableLocation(
     id = 1,
     label = "Test Location 1",
     latitude = 42.3956001,
     longitude = -71.1387674,
-    timeZone = "America/New_York"
+    timeZone = "America/New_York",
+    selected = false
 )
 
 // TODO this is causing a weird compile error if there's a default value

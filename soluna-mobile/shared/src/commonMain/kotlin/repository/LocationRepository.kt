@@ -9,16 +9,18 @@ import com.squareup.sqldelight.runtime.coroutines.mapToList
 import com.squareup.sqldelight.runtime.coroutines.mapToOneOrNull
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
 interface LocationRepository {
 
-    fun getLocations(): Flow<List<LocationSummary>>
+    fun getLocations(): Flow<List<SelectableLocationSummary>>
 
-    fun getLocation(id: Long): Flow<Location?>
+    fun getLocation(id: Long): Flow<SelectableLocation?>
 
     suspend fun addLocation(label: String, latitude: Double, longitude: Double, timeZone: String)
 
@@ -26,9 +28,9 @@ interface LocationRepository {
 
     suspend fun updateLocationLabel(id: Long, label: String)
 
-    fun getSelectedLocation(): Flow<Location?>
+    fun getSelectedLocation(): Flow<SelectableLocation?>
 
-    suspend fun setSelectedLocation(location: Location?)
+    suspend fun setSelectedLocationId(locationId: Long?)
 
     class Impl(
         private val database: SolunaDb,
@@ -37,22 +39,30 @@ interface LocationRepository {
     ) : LocationRepository {
 
         companion object {
-            private const val KEY_SELECTED_LOCATION_ID = "selected_location_id"
+            internal const val KEY_SELECTED_LOCATION_ID = "selected_location_id"
         }
 
-        override fun getLocations(): Flow<List<LocationSummary>> =
+        override fun getLocations(): Flow<List<SelectableLocationSummary>> =
             database.locationQueries
                 .selectAllLocations()
                 .asFlow()
                 .mapToList(backgroundDispatcher)
+                .combine(settings.getLongOrNullFlow(KEY_SELECTED_LOCATION_ID)) { locations, selectedLocationId ->
+                    locations.map { it.toSelectableLocationSummary(it.id == selectedLocationId) }
+                }
                 .distinctUntilChanged()
+                .flowOn(backgroundDispatcher)
 
-        override fun getLocation(id: Long): Flow<Location?> =
+        override fun getLocation(id: Long): Flow<SelectableLocation?> =
             database.locationQueries
                 .selectLocationById(id)
                 .asFlow()
                 .mapToOneOrNull(backgroundDispatcher)
+                .combine(settings.getLongOrNullFlow(KEY_SELECTED_LOCATION_ID)) { location, selectedLocationId ->
+                    location?.toSelectableLocation(location.id == selectedLocationId)
+                }
                 .distinctUntilChanged()
+                .flowOn(backgroundDispatcher)
 
         override suspend fun addLocation(label: String, latitude: Double, longitude: Double, timeZone: String) =
             database.addLocation(label, latitude, longitude, timeZone)
@@ -78,7 +88,7 @@ interface LocationRepository {
                 .updateLocationLabelById(label, id)
         }
 
-        override fun getSelectedLocation(): Flow<Location?> =
+        override fun getSelectedLocation(): Flow<SelectableLocation?> =
             settings.getLongOrNullFlow(KEY_SELECTED_LOCATION_ID)
                 .flatMapLatest {
                     if (it != null) {
@@ -88,12 +98,44 @@ interface LocationRepository {
                     }
                 }
 
-        override suspend fun setSelectedLocation(location: Location?) {
-            if (location != null) {
-                settings.putLong(KEY_SELECTED_LOCATION_ID, location.id)
+        override suspend fun setSelectedLocationId(locationId: Long?) {
+            if (locationId != null) {
+                settings.putLong(KEY_SELECTED_LOCATION_ID, locationId)
             } else {
                 settings.remove(KEY_SELECTED_LOCATION_ID)
             }
         }
     }
 }
+
+data class SelectableLocation(
+    val id: Long,
+    val label: String,
+    val latitude: Double,
+    val longitude: Double,
+    val timeZone: String,
+    val selected: Boolean
+)
+
+fun Location.toSelectableLocation(selected: Boolean) =
+    SelectableLocation(
+        id = id,
+        label = label,
+        latitude = latitude,
+        longitude = longitude,
+        timeZone = timeZone,
+        selected = selected
+    )
+
+data class SelectableLocationSummary(
+    val id: Long,
+    val label: String,
+    val selected: Boolean
+)
+
+fun LocationSummary.toSelectableLocationSummary(selected: Boolean) =
+    SelectableLocationSummary(
+        id = id,
+        label = label,
+        selected = selected
+    )

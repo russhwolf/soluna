@@ -1,7 +1,7 @@
 package com.russhwolf.soluna.mobile.screen.locationlist
 
-import com.russhwolf.soluna.mobile.db.LocationSummary
 import com.russhwolf.soluna.mobile.repository.LocationRepository
+import com.russhwolf.soluna.mobile.repository.SelectableLocationSummary
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.launchIn
@@ -23,20 +23,19 @@ class LocationListViewModel(
     }
 
     override suspend fun performAction(action: Action) = when (action) {
-        is Action.LocationDetails -> navigateToLocationDetails(action.locationSummary)
-        is Action.RemoveLocation -> removeLocation(action.id)
+        is Action.LocationDetails -> navigateToLocationDetails(action.locationId)
+        is Action.RemoveLocation -> removeLocation(action.locationId)
         Action.AddLocation -> navigateToAddLocation()
     }
 
-    private suspend fun navigateToLocationDetails(locationSummary: LocationSummary) =
-        emitEvent(Event.LocationDetails(locationSummary.id))
+    private suspend fun navigateToLocationDetails(locationId: Long) = emitEvent(Event.LocationDetails(locationId))
 
     private suspend fun removeLocation(id: Long) = locationRepository.deleteLocation(id)
 
     private suspend fun navigateToAddLocation() = emitEvent(Event.AddLocation)
 
     data class State(
-        val locations: List<LocationSummary>
+        val locations: List<SelectableLocationSummary>
     )
 
     sealed class Event {
@@ -45,8 +44,8 @@ class LocationListViewModel(
     }
 
     sealed class Action {
-        data class LocationDetails(val locationSummary: LocationSummary) : Action()
-        data class RemoveLocation(val id: Long) : Action()
+        data class LocationDetails(val locationId: Long) : Action()
+        data class RemoveLocation(val locationId: Long) : Action()
         object AddLocation : Action()
     }
 }

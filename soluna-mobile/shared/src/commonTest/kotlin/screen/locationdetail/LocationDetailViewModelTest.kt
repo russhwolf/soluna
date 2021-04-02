@@ -7,7 +7,9 @@ import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.repository.LocationRepository
+import com.russhwolf.soluna.mobile.repository.LocationRepository.Impl.Companion.KEY_SELECTED_LOCATION_ID
 import com.russhwolf.soluna.mobile.repository.configureMockLocationData
+import com.russhwolf.soluna.mobile.repository.toSelectableLocation
 import com.russhwolf.soluna.mobile.screen.expectViewModelEvent
 import com.russhwolf.soluna.mobile.screen.expectViewModelState
 import com.russhwolf.soluna.mobile.screen.stateAndEvents
@@ -20,10 +22,10 @@ import kotlin.test.assertEquals
 class LocationDetailViewModelTest {
     private var locations: Array<Location> = emptyArray()
     private val driver = createInMemorySqlDriver()
+    private val settings = MockSettings().toFlowSettings(Dispatchers.Unconfined)
     private val locationRepository by lazy {
         val database = createDatabase(driver)
         database.configureMockLocationData(*locations)
-        val settings = MockSettings().toFlowSettings()
         LocationRepository.Impl(database, settings, Dispatchers.Unconfined)
     }
 
@@ -42,9 +44,10 @@ class LocationDetailViewModelTest {
     fun initialState_populated() = suspendTest {
         val location = Location(1, "Home", 27.18, 62.83, "UTC")
         locations = arrayOf(location)
+        settings.putLong(KEY_SELECTED_LOCATION_ID, 1)
 
         viewModel.stateAndEvents.test {
-            assertEquals(LocationDetailViewModel.State(location), expectViewModelState())
+            assertEquals(LocationDetailViewModel.State(location.toSelectableLocation(true)), expectViewModelState())
         }
     }
 
@@ -54,11 +57,14 @@ class LocationDetailViewModelTest {
         locations = arrayOf(location)
 
         viewModel.stateAndEvents.test {
-            assertEquals(LocationDetailViewModel.State(location), expectViewModelState())
+            assertEquals(LocationDetailViewModel.State(location.toSelectableLocation(false)), expectViewModelState())
             expectNoEvents()
 
             viewModel.performAction(LocationDetailViewModel.Action.SetLabel("Updated"))
-            assertEquals(LocationDetailViewModel.State(location.copy(label = "Updated")), expectViewModelState())
+            assertEquals(
+                LocationDetailViewModel.State(location.copy(label = "Updated").toSelectableLocation(false)),
+                expectViewModelState()
+            )
         }
     }
 
@@ -68,7 +74,7 @@ class LocationDetailViewModelTest {
         locations = arrayOf(location)
 
         viewModel.stateAndEvents.test {
-            assertEquals(LocationDetailViewModel.State(location), expectViewModelState())
+            assertEquals(LocationDetailViewModel.State(location.toSelectableLocation(false)), expectViewModelState())
             expectNoEvents()
 
             viewModel.performAction(LocationDetailViewModel.Action.Delete)

@@ -17,6 +17,7 @@ import com.russhwolf.soluna.mobile.screen.expectViewModelState
 import com.russhwolf.soluna.mobile.screen.stateAndEvents
 import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.Flow
@@ -62,6 +63,7 @@ class HomeViewModelTest {
         UpcomingTimesRepository.Impl(locationRepository, astronomicalDataRepository, clock)
     }
     private val clockRepository = object : ClockRepository {
+        @OptIn(FlowPreview::class)
         override fun getCurrentTimeFlow(period: Duration): Flow<Instant> = ticker.asFlow().map { clock.now() }
     }
 
@@ -83,7 +85,7 @@ class HomeViewModelTest {
     @Test
     fun initialState_populated() = suspendTest {
         locations = arrayOf(Location(1, "Home", 27.18, 62.83, "UTC"))
-        locationRepository.setSelectedLocation(locations[0])
+        locationRepository.setSelectedLocationId(locations[0].id)
 
         viewModel.stateAndEvents.test {
             assertEquals(HomeViewModel.State.Loading, expectViewModelState())

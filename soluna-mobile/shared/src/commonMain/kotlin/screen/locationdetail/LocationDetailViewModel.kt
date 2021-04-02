@@ -1,7 +1,7 @@
 package com.russhwolf.soluna.mobile.screen.locationdetail
 
-import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.repository.LocationRepository
+import com.russhwolf.soluna.mobile.repository.SelectableLocation
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.launchIn
@@ -38,7 +38,7 @@ class LocationDetailViewModel(
 
 
     data class State(
-        val location: Location?
+        val location: SelectableLocation?
     )
 
     sealed class Event {

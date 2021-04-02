@@ -4,7 +4,6 @@ import app.cash.turbine.test
 import com.russhwolf.settings.MockSettings
 import com.russhwolf.settings.coroutines.toFlowSettings
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
-import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
@@ -106,6 +105,6 @@ class UpcomingTimesRepositoryTest {
 
     private suspend fun initializeSelectedLocation() {
         locationRepository.addLocation("Home", 27.18, 62.83, "UTC")
-        locationRepository.setSelectedLocation(Location(1, "Home", 27.18, 62.83, "UTC"))
+        locationRepository.setSelectedLocationId(1)
     }
 }
