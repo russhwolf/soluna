@@ -1,8 +1,5 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
-import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
-import org.jetbrains.kotlin.gradle.plugin.mpp.Framework.BitcodeEmbeddingMode.BITCODE
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.Properties
 
@@ -22,8 +19,6 @@ kotlin {
         binaries {
             framework {
                 baseName = "Shared"
-                embedBitcode = BITCODE
-                transitiveExport = true
             }
         }
     }
@@ -168,32 +163,17 @@ android {
     }
 }
 
-// Adapted from Jetbrains xcode-compat plugin
-kotlin.targets.withType<KotlinNativeTarget>().configureEach {
-    binaries.withType<Framework>().configureEach {
-        val buildType = NativeBuildType.valueOf(
-            System.getenv("CONFIGURATION")?.toUpperCase()
-                ?: "DEBUG"
-        )
-        if (this.buildType == buildType) {
-            var dsymTask: Sync? = null
-
-            if (buildType == NativeBuildType.DEBUG) {
-                dsymTask = project.task<Sync>("buildForXcodeDSYM") {
-                    dependsOn(linkTask)
-                    val outputFile = linkTask.outputFile.get()
-                    val outputDSYM = File(outputFile.parent, outputFile.name + ".dSYM")
-                    from(outputDSYM)
-                    into(File(System.getenv("CONFIGURATION_BUILD_DIR"), outputDSYM.name))
-                }
-            }
-
-            val buildForXcodeTask = project.task<Sync>("buildForXcode") {
-                dependsOn(dsymTask ?: linkTask)
-                val outputFile = linkTask.outputFile.get()
-                from(outputFile)
-                into(File(System.getenv("CONFIGURATION_BUILD_DIR"), outputFile.name))
-            }
-        }
-    }
+val packForXcode by tasks.creating(Sync::class) {
+    group = "build"
+    val mode = System.getenv("CONFIGURATION") ?: "DEBUG"
+    val sdkName = System.getenv("SDK_NAME") ?: "iphonesimulator"
+    val targetName = "ios"// + if (sdkName.startsWith("iphoneos")) "Arm64" else "X64"
+    val framework = kotlin.targets.getByName<KotlinNativeTarget>(targetName).binaries.getFramework(mode)
+    inputs.property("mode", mode)
+    dependsOn(framework.linkTask)
+    val targetDir = File(buildDir, "xcode-frameworks")
+    from({ framework.outputDirectory })
+    into(targetDir)
 }
+
+tasks.getByName("build").dependsOn(packForXcode)

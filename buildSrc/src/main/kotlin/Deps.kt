@@ -6,7 +6,7 @@ object Versions {
     const val islandTime = "0.5.0"
     const val junit = "4.13.2"
     const val koin = "3.0.1-beta-2"
-    const val ktor = "1.5.2"
+    const val ktor = "1.5.3"
     const val robolectric = "4.5.1"
     const val settings = "0.7.4"
     const val sqlDelight = "1.4.4"

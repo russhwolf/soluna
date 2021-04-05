@@ -20,9 +20,9 @@ object SwiftKotlinBridge : KoinComponent {
         initKoin(appModule)
     }
 
-    fun getHomeViewModel(): HomeViewModel = get()
-    fun getLocationListViewModel(): LocationListViewModel = get()
-    fun getAddLocationViewModel(): AddLocationViewModel = get()
-    fun getLocationDetailViewModel(id: Long): LocationDetailViewModel = get { parametersOf(id) }
-    fun getReminderListViewModel(): ReminderListViewModel = get()
+    fun getHomeViewModel() = NativeViewModel(get<HomeViewModel>())
+    fun getLocationListViewModel() = NativeViewModel(get<LocationListViewModel>())
+    fun getAddLocationViewModel() = NativeViewModel(get<AddLocationViewModel>())
+    fun getLocationDetailViewModel(id: Long) = NativeViewModel(get<LocationDetailViewModel> { parametersOf(id) })
+    fun getReminderListViewModel() = NativeViewModel(get<ReminderListViewModel>())
 }

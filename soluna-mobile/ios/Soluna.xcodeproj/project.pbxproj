@@ -3,86 +3,98 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		46419F3E23553E1700B125F7 /* LocationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46419F3D23553E1700B125F7 /* LocationDetailViewController.swift */; };
-		4665D07A24710E0100A3BB7D /* KoinTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4665D06224710D9A00A3BB7D /* KoinTest.framework */; };
-		4665D07C24710EA600A3BB7D /* KoinModulesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4665D07B24710EA600A3BB7D /* KoinModulesTest.swift */; };
-		4675EA3122F534A800861EF1 /* AddLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4675EA3022F534A800861EF1 /* AddLocationViewController.swift */; };
-		467F62CD22F3D24100671C72 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F62CC22F3D24100671C72 /* AppDelegate.swift */; };
-		467F62CF22F3D24100671C72 /* LocationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F62CE22F3D24100671C72 /* LocationListViewController.swift */; };
-		467F62D222F3D24100671C72 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 467F62D022F3D24100671C72 /* Main.storyboard */; };
-		467F62D422F3D24200671C72 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 467F62D322F3D24200671C72 /* Assets.xcassets */; };
-		467F62D722F3D24200671C72 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 467F62D522F3D24200671C72 /* LaunchScreen.storyboard */; };
-		467F62E222F3D24200671C72 /* SolunaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F62E122F3D24200671C72 /* SolunaTests.swift */; };
-		467F62ED22F3D24200671C72 /* SolunaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F62EC22F3D24200671C72 /* SolunaUITests.swift */; };
-		467F62F922F3D2B800671C72 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 798ED4B15B0A538239CEC606 /* Shared.framework */; };
-		5CB7CF69F971163BF1B8D97E /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CB7C5484A0922369DE537C7 /* BaseViewController.swift */; };
+		463BA3EC2619571F008BB17B /* SolunaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463BA3EB2619571F008BB17B /* SolunaApp.swift */; };
+		463BA3F026195720008BB17B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 463BA3EF26195720008BB17B /* Assets.xcassets */; };
+		463BA3F326195720008BB17B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 463BA3F226195720008BB17B /* Preview Assets.xcassets */; };
+		463BA3FE26195720008BB17B /* SolunaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463BA3FD26195720008BB17B /* SolunaTests.swift */; };
+		463BA40926195720008BB17B /* SolunaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463BA40826195720008BB17B /* SolunaUITests.swift */; };
+		467F906A261E9EEE0029454A /* ObservableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F9069261E9EEE0029454A /* ObservableViewModel.swift */; };
+		467F906E261E9F4D0029454A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F906D261E9F4D0029454A /* HomeView.swift */; };
+		467F9072261E9F9D0029454A /* LocationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F9071261E9F9D0029454A /* LocationListView.swift */; };
+		467F9076261E9FE60029454A /* AddLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F9075261E9FE60029454A /* AddLocationView.swift */; };
+		469AF5C126195981005D00C8 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 469AF5C026195981005D00C8 /* Shared.framework */; };
+		469AF5C226195981005D00C8 /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 469AF5C026195981005D00C8 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		469AF5CF261A8F3F005D00C8 /* CombineAdapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469AF5CE261A8F3F005D00C8 /* CombineAdapters.swift */; };
+		46C759FA261FF379009FFEB5 /* ObservableHomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C759F9261FF379009FFEB5 /* ObservableHomeViewModel.swift */; };
+		46C75A00261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C759FF261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift */; };
+		46C75A04261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C75A03261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		467F62DE22F3D24200671C72 /* PBXContainerItemProxy */ = {
+		463BA3FA26195720008BB17B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F70BC0D8B3FB0122937C4246 /* Project object */;
+			containerPortal = 463BA3E02619571F008BB17B /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 467F62C922F3D24100671C72;
+			remoteGlobalIDString = 463BA3E72619571F008BB17B;
 			remoteInfo = Soluna;
 		};
-		467F62E922F3D24200671C72 /* PBXContainerItemProxy */ = {
+		463BA40526195720008BB17B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = F70BC0D8B3FB0122937C4246 /* Project object */;
+			containerPortal = 463BA3E02619571F008BB17B /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 467F62C922F3D24100671C72;
+			remoteGlobalIDString = 463BA3E72619571F008BB17B;
 			remoteInfo = Soluna;
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		469AF5C326195981005D00C8 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				469AF5C226195981005D00C8 /* Shared.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		46419F3D23553E1700B125F7 /* LocationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetailViewController.swift; sourceTree = "<group>"; };
-		4665D06224710D9A00A3BB7D /* KoinTest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KoinTest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4665D06424710D9A00A3BB7D /* KoinTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KoinTest.h; sourceTree = "<group>"; };
-		4665D06524710D9A00A3BB7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4665D06F24710D9A00A3BB7D /* KoinTestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoinTestTests.swift; sourceTree = "<group>"; };
-		4665D07124710D9A00A3BB7D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4665D07B24710EA600A3BB7D /* KoinModulesTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = KoinModulesTest.swift; path = "/Users/russell/IdeaProjects/Soluna/soluna-mobile/ios/SolunaTests/KoinModulesTest.swift"; sourceTree = "<absolute>"; };
-		4675EA3022F534A800861EF1 /* AddLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLocationViewController.swift; sourceTree = "<group>"; };
-		467F62CA22F3D24100671C72 /* Soluna.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Soluna.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		467F62CC22F3D24100671C72 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		467F62CE22F3D24100671C72 /* LocationListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListViewController.swift; sourceTree = "<group>"; };
-		467F62D122F3D24100671C72 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		467F62D322F3D24200671C72 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		467F62D622F3D24200671C72 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		467F62D822F3D24200671C72 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		467F62DD22F3D24200671C72 /* SolunaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SolunaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		467F62E122F3D24200671C72 /* SolunaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolunaTests.swift; sourceTree = "<group>"; };
-		467F62E322F3D24200671C72 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		467F62E822F3D24200671C72 /* SolunaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SolunaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		467F62EC22F3D24200671C72 /* SolunaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolunaUITests.swift; sourceTree = "<group>"; };
-		467F62EE22F3D24200671C72 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5CB7C5484A0922369DE537C7 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
-		798ED4B15B0A538239CEC606 /* Shared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		463BA3E82619571F008BB17B /* Soluna.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Soluna.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		463BA3EB2619571F008BB17B /* SolunaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolunaApp.swift; sourceTree = "<group>"; };
+		463BA3EF26195720008BB17B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		463BA3F226195720008BB17B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		463BA3F426195720008BB17B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		463BA3F926195720008BB17B /* SolunaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SolunaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		463BA3FD26195720008BB17B /* SolunaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolunaTests.swift; sourceTree = "<group>"; };
+		463BA3FF26195720008BB17B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		463BA40426195720008BB17B /* SolunaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SolunaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		463BA40826195720008BB17B /* SolunaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolunaUITests.swift; sourceTree = "<group>"; };
+		463BA40A26195720008BB17B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		467F9069261E9EEE0029454A /* ObservableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableViewModel.swift; sourceTree = "<group>"; };
+		467F906D261E9F4D0029454A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		467F9071261E9F9D0029454A /* LocationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListView.swift; sourceTree = "<group>"; };
+		467F9075261E9FE60029454A /* AddLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLocationView.swift; sourceTree = "<group>"; };
+		469AF5C026195981005D00C8 /* Shared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Shared.framework; path = "../shared/build/xcode-frameworks/Shared.framework"; sourceTree = "<group>"; };
+		469AF5CE261A8F3F005D00C8 /* CombineAdapters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CombineAdapters.swift; sourceTree = "<group>"; };
+		46C759F9261FF379009FFEB5 /* ObservableHomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableHomeViewModel.swift; sourceTree = "<group>"; };
+		46C759FF261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableLocationListViewModel.swift; sourceTree = "<group>"; };
+		46C75A03261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableAddLocationViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		467F62C722F3D24100671C72 /* Frameworks */ = {
+		463BA3E52619571F008BB17B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				467F62F922F3D2B800671C72 /* Shared.framework in Frameworks */,
+				469AF5C126195981005D00C8 /* Shared.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		467F62DA22F3D24200671C72 /* Frameworks */ = {
+		463BA3F626195720008BB17B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4665D07A24710E0100A3BB7D /* KoinTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		467F62E522F3D24200671C72 /* Frameworks */ = {
+		463BA40126195720008BB17B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -92,116 +104,124 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		12C3D4BAB246B5761102BA5D /* Products */ = {
+		463BA3DF2619571F008BB17B = {
 			isa = PBXGroup;
 			children = (
-				798ED4B15B0A538239CEC606 /* Shared.framework */,
-				467F62CA22F3D24100671C72 /* Soluna.app */,
-				467F62DD22F3D24200671C72 /* SolunaTests.xctest */,
-				467F62E822F3D24200671C72 /* SolunaUITests.xctest */,
-				4665D06224710D9A00A3BB7D /* KoinTest.framework */,
+				463BA3EA2619571F008BB17B /* Soluna */,
+				463BA3FC26195720008BB17B /* SolunaTests */,
+				463BA40726195720008BB17B /* SolunaUITests */,
+				463BA3E92619571F008BB17B /* Products */,
+				469AF5BF26195981005D00C8 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		463BA3E92619571F008BB17B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				463BA3E82619571F008BB17B /* Soluna.app */,
+				463BA3F926195720008BB17B /* SolunaTests.xctest */,
+				463BA40426195720008BB17B /* SolunaUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4665D06324710D9A00A3BB7D /* KoinTest */ = {
+		463BA3EA2619571F008BB17B /* Soluna */ = {
 			isa = PBXGroup;
 			children = (
-				4665D06424710D9A00A3BB7D /* KoinTest.h */,
-				4665D06524710D9A00A3BB7D /* Info.plist */,
-			);
-			path = KoinTest;
-			sourceTree = "<group>";
-		};
-		4665D06E24710D9A00A3BB7D /* KoinTestTests */ = {
-			isa = PBXGroup;
-			children = (
-				4665D06F24710D9A00A3BB7D /* KoinTestTests.swift */,
-				4665D07124710D9A00A3BB7D /* Info.plist */,
-			);
-			path = KoinTestTests;
-			sourceTree = "<group>";
-		};
-		467F62CB22F3D24100671C72 /* Soluna */ = {
-			isa = PBXGroup;
-			children = (
-				4675EA3022F534A800861EF1 /* AddLocationViewController.swift */,
-				467F62CC22F3D24100671C72 /* AppDelegate.swift */,
-				467F62D322F3D24200671C72 /* Assets.xcassets */,
-				5CB7C5484A0922369DE537C7 /* BaseViewController.swift */,
-				467F62D822F3D24200671C72 /* Info.plist */,
-				467F62D522F3D24200671C72 /* LaunchScreen.storyboard */,
-				46419F3D23553E1700B125F7 /* LocationDetailViewController.swift */,
-				467F62CE22F3D24100671C72 /* LocationListViewController.swift */,
-				467F62D022F3D24100671C72 /* Main.storyboard */,
+				463BA3EF26195720008BB17B /* Assets.xcassets */,
+				469AF5CE261A8F3F005D00C8 /* CombineAdapters.swift */,
+				463BA3F426195720008BB17B /* Info.plist */,
+				463BA3F126195720008BB17B /* Preview Content */,
+				46C75A07261FF91E009FFEB5 /* Screen */,
+				463BA3EB2619571F008BB17B /* SolunaApp.swift */,
 			);
 			path = Soluna;
 			sourceTree = "<group>";
 		};
-		467F62E022F3D24200671C72 /* SolunaTests */ = {
+		463BA3F126195720008BB17B /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				4665D07B24710EA600A3BB7D /* KoinModulesTest.swift */,
-				467F62E122F3D24200671C72 /* SolunaTests.swift */,
-				467F62E322F3D24200671C72 /* Info.plist */,
+				463BA3F226195720008BB17B /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		463BA3FC26195720008BB17B /* SolunaTests */ = {
+			isa = PBXGroup;
+			children = (
+				463BA3FD26195720008BB17B /* SolunaTests.swift */,
+				463BA3FF26195720008BB17B /* Info.plist */,
 			);
 			path = SolunaTests;
 			sourceTree = "<group>";
 		};
-		467F62EB22F3D24200671C72 /* SolunaUITests */ = {
+		463BA40726195720008BB17B /* SolunaUITests */ = {
 			isa = PBXGroup;
 			children = (
-				467F62EC22F3D24200671C72 /* SolunaUITests.swift */,
-				467F62EE22F3D24200671C72 /* Info.plist */,
+				463BA40826195720008BB17B /* SolunaUITests.swift */,
+				463BA40A26195720008BB17B /* Info.plist */,
 			);
 			path = SolunaUITests;
 			sourceTree = "<group>";
 		};
-		467F62F822F3D2B800671C72 /* Frameworks */ = {
+		469AF5BF26195981005D00C8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				469AF5C026195981005D00C8 /* Shared.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		FEEEBC52568AFCA6B85CEF13 = {
+		46C75A07261FF91E009FFEB5 /* Screen */ = {
 			isa = PBXGroup;
 			children = (
-				467F62CB22F3D24100671C72 /* Soluna */,
-				467F62E022F3D24200671C72 /* SolunaTests */,
-				467F62EB22F3D24200671C72 /* SolunaUITests */,
-				4665D06324710D9A00A3BB7D /* KoinTest */,
-				4665D06E24710D9A00A3BB7D /* KoinTestTests */,
-				12C3D4BAB246B5761102BA5D /* Products */,
-				467F62F822F3D2B800671C72 /* Frameworks */,
+				467F9069261E9EEE0029454A /* ObservableViewModel.swift */,
+				46C75A0A261FF93D009FFEB5 /* AddLocation */,
+				46C75A09261FF934009FFEB5 /* LocationList */,
+				46C75A08261FF92E009FFEB5 /* Home */,
 			);
+			path = Screen;
+			sourceTree = "<group>";
+		};
+		46C75A08261FF92E009FFEB5 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				46C759F9261FF379009FFEB5 /* ObservableHomeViewModel.swift */,
+				467F906D261E9F4D0029454A /* HomeView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		46C75A09261FF934009FFEB5 /* LocationList */ = {
+			isa = PBXGroup;
+			children = (
+				46C759FF261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift */,
+				467F9071261E9F9D0029454A /* LocationListView.swift */,
+			);
+			path = LocationList;
+			sourceTree = "<group>";
+		};
+		46C75A0A261FF93D009FFEB5 /* AddLocation */ = {
+			isa = PBXGroup;
+			children = (
+				46C75A03261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift */,
+				467F9075261E9FE60029454A /* AddLocationView.swift */,
+			);
+			path = AddLocation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4665D06124710D9A00A3BB7D /* KoinTest */ = {
+		463BA3E72619571F008BB17B /* Soluna */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4665D07324710D9A00A3BB7D /* Build configuration list for PBXNativeTarget "KoinTest" */;
+			buildConfigurationList = 463BA40D26195720008BB17B /* Build configuration list for PBXNativeTarget "Soluna" */;
 			buildPhases = (
-				4665D07924710DC200A3BB7D /* Compile Kotlin/Native */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = KoinTest;
-			productName = KoinTest;
-			productReference = 4665D06224710D9A00A3BB7D /* KoinTest.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		467F62C922F3D24100671C72 /* Soluna */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 467F62F522F3D24200671C72 /* Build configuration list for PBXNativeTarget "Soluna" */;
-			buildPhases = (
-				467F62C622F3D24100671C72 /* Sources */,
-				467F62C722F3D24100671C72 /* Frameworks */,
-				467F62C822F3D24100671C72 /* Resources */,
+				469AF5B526195861005D00C8 /* ShellScript */,
+				463BA3E42619571F008BB17B /* Sources */,
+				463BA3E52619571F008BB17B /* Frameworks */,
+				463BA3E62619571F008BB17B /* Resources */,
+				469AF5C326195981005D00C8 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -209,134 +229,105 @@
 			);
 			name = Soluna;
 			productName = Soluna;
-			productReference = 467F62CA22F3D24100671C72 /* Soluna.app */;
+			productReference = 463BA3E82619571F008BB17B /* Soluna.app */;
 			productType = "com.apple.product-type.application";
 		};
-		467F62DC22F3D24200671C72 /* SolunaTests */ = {
+		463BA3F826195720008BB17B /* SolunaTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 467F62F622F3D24200671C72 /* Build configuration list for PBXNativeTarget "SolunaTests" */;
+			buildConfigurationList = 463BA41026195720008BB17B /* Build configuration list for PBXNativeTarget "SolunaTests" */;
 			buildPhases = (
-				467F62D922F3D24200671C72 /* Sources */,
-				467F62DA22F3D24200671C72 /* Frameworks */,
-				467F62DB22F3D24200671C72 /* Resources */,
+				463BA3F526195720008BB17B /* Sources */,
+				463BA3F626195720008BB17B /* Frameworks */,
+				463BA3F726195720008BB17B /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				467F62DF22F3D24200671C72 /* PBXTargetDependency */,
+				463BA3FB26195720008BB17B /* PBXTargetDependency */,
 			);
 			name = SolunaTests;
 			productName = SolunaTests;
-			productReference = 467F62DD22F3D24200671C72 /* SolunaTests.xctest */;
+			productReference = 463BA3F926195720008BB17B /* SolunaTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		467F62E722F3D24200671C72 /* SolunaUITests */ = {
+		463BA40326195720008BB17B /* SolunaUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 467F62F722F3D24200671C72 /* Build configuration list for PBXNativeTarget "SolunaUITests" */;
+			buildConfigurationList = 463BA41326195720008BB17B /* Build configuration list for PBXNativeTarget "SolunaUITests" */;
 			buildPhases = (
-				467F62E422F3D24200671C72 /* Sources */,
-				467F62E522F3D24200671C72 /* Frameworks */,
-				467F62E622F3D24200671C72 /* Resources */,
+				463BA40026195720008BB17B /* Sources */,
+				463BA40126195720008BB17B /* Frameworks */,
+				463BA40226195720008BB17B /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				467F62EA22F3D24200671C72 /* PBXTargetDependency */,
+				463BA40626195720008BB17B /* PBXTargetDependency */,
 			);
 			name = SolunaUITests;
 			productName = SolunaUITests;
-			productReference = 467F62E822F3D24200671C72 /* SolunaUITests.xctest */;
+			productReference = 463BA40426195720008BB17B /* SolunaUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
-		};
-		B0FD4EFCCD2E032401F7255C /* Shared */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 7DD9E4F947F930F7F5849D70 /* Build configuration list for PBXNativeTarget "Shared" */;
-			buildPhases = (
-				F5640F62560E53EA920C2741 /* Compile Kotlin/Native */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = Shared;
-			productName = Shared;
-			productReference = 798ED4B15B0A538239CEC606 /* Shared.framework */;
-			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		F70BC0D8B3FB0122937C4246 /* Project object */ = {
+		463BA3E02619571F008BB17B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1130;
-				ORGANIZATIONNAME = Kotlin/Native;
+				LastSwiftUpdateCheck = 1240;
+				LastUpgradeCheck = 1240;
 				TargetAttributes = {
-					4665D06124710D9A00A3BB7D = {
-						CreatedOnToolsVersion = 11.3.1;
-						ProvisioningStyle = Manual;
+					463BA3E72619571F008BB17B = {
+						CreatedOnToolsVersion = 12.4;
 					};
-					467F62C922F3D24100671C72 = {
-						CreatedOnToolsVersion = 10.3;
-						DevelopmentTeam = QDQ7CWKQQ6;
-						ProvisioningStyle = Automatic;
+					463BA3F826195720008BB17B = {
+						CreatedOnToolsVersion = 12.4;
+						TestTargetID = 463BA3E72619571F008BB17B;
 					};
-					467F62DC22F3D24200671C72 = {
-						CreatedOnToolsVersion = 10.3;
-						DevelopmentTeam = QDQ7CWKQQ6;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 467F62C922F3D24100671C72;
-					};
-					467F62E722F3D24200671C72 = {
-						CreatedOnToolsVersion = 10.3;
-						DevelopmentTeam = QDQ7CWKQQ6;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 467F62C922F3D24100671C72;
+					463BA40326195720008BB17B = {
+						CreatedOnToolsVersion = 12.4;
+						TestTargetID = 463BA3E72619571F008BB17B;
 					};
 				};
 			};
-			buildConfigurationList = 57DDB727806B425312C0D7CB /* Build configuration list for PBXProject "Soluna" */;
-			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			buildConfigurationList = 463BA3E32619571F008BB17B /* Build configuration list for PBXProject "Soluna" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
-			mainGroup = FEEEBC52568AFCA6B85CEF13;
-			productRefGroup = 12C3D4BAB246B5761102BA5D /* Products */;
+			mainGroup = 463BA3DF2619571F008BB17B;
+			productRefGroup = 463BA3E92619571F008BB17B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				467F62C922F3D24100671C72 /* Soluna */,
-				467F62DC22F3D24200671C72 /* SolunaTests */,
-				467F62E722F3D24200671C72 /* SolunaUITests */,
-				B0FD4EFCCD2E032401F7255C /* Shared */,
-				4665D06124710D9A00A3BB7D /* KoinTest */,
+				463BA3E72619571F008BB17B /* Soluna */,
+				463BA3F826195720008BB17B /* SolunaTests */,
+				463BA40326195720008BB17B /* SolunaUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		467F62C822F3D24100671C72 /* Resources */ = {
+		463BA3E62619571F008BB17B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				467F62D722F3D24200671C72 /* LaunchScreen.storyboard in Resources */,
-				467F62D422F3D24200671C72 /* Assets.xcassets in Resources */,
-				467F62D222F3D24100671C72 /* Main.storyboard in Resources */,
+				463BA3F326195720008BB17B /* Preview Assets.xcassets in Resources */,
+				463BA3F026195720008BB17B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		467F62DB22F3D24200671C72 /* Resources */ = {
+		463BA3F726195720008BB17B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		467F62E622F3D24200671C72 /* Resources */ = {
+		463BA40226195720008BB17B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -346,7 +337,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4665D07924710DC200A3BB7D /* Compile Kotlin/Native */ = {
+		469AF5B526195861005D00C8 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -355,297 +346,66 @@
 			);
 			inputPaths = (
 			);
-			name = "Compile Kotlin/Native";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/..\" \":soluna-mobile:koinTest:buildForXcode\"\n";
-		};
-		F5640F62560E53EA920C2741 /* Compile Kotlin/Native */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Compile Kotlin/Native";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"$SRCROOT/../../gradlew\" -p \"$SRCROOT/..\" \":soluna-mobile:shared:buildForXcode\"\n";
+			shellScript = "cd \"$SRCROOT/../..\"\n./gradlew :soluna-mobile:shared:packForXcode -PXCODE_CONFIGURATION=${CONFIGURATION}\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		467F62C622F3D24100671C72 /* Sources */ = {
+		463BA3E42619571F008BB17B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				467F62CF22F3D24100671C72 /* LocationListViewController.swift in Sources */,
-				4675EA3122F534A800861EF1 /* AddLocationViewController.swift in Sources */,
-				467F62CD22F3D24100671C72 /* AppDelegate.swift in Sources */,
-				5CB7CF69F971163BF1B8D97E /* BaseViewController.swift in Sources */,
-				46419F3E23553E1700B125F7 /* LocationDetailViewController.swift in Sources */,
+				46C75A04261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift in Sources */,
+				469AF5CF261A8F3F005D00C8 /* CombineAdapters.swift in Sources */,
+				467F906A261E9EEE0029454A /* ObservableViewModel.swift in Sources */,
+				467F9072261E9F9D0029454A /* LocationListView.swift in Sources */,
+				467F9076261E9FE60029454A /* AddLocationView.swift in Sources */,
+				467F906E261E9F4D0029454A /* HomeView.swift in Sources */,
+				463BA3EC2619571F008BB17B /* SolunaApp.swift in Sources */,
+				46C75A00261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift in Sources */,
+				46C759FA261FF379009FFEB5 /* ObservableHomeViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		467F62D922F3D24200671C72 /* Sources */ = {
+		463BA3F526195720008BB17B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4665D07C24710EA600A3BB7D /* KoinModulesTest.swift in Sources */,
-				467F62E222F3D24200671C72 /* SolunaTests.swift in Sources */,
+				463BA3FE26195720008BB17B /* SolunaTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		467F62E422F3D24200671C72 /* Sources */ = {
+		463BA40026195720008BB17B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				467F62ED22F3D24200671C72 /* SolunaUITests.swift in Sources */,
+				463BA40926195720008BB17B /* SolunaUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		467F62DF22F3D24200671C72 /* PBXTargetDependency */ = {
+		463BA3FB26195720008BB17B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 467F62C922F3D24100671C72 /* Soluna */;
-			targetProxy = 467F62DE22F3D24200671C72 /* PBXContainerItemProxy */;
+			target = 463BA3E72619571F008BB17B /* Soluna */;
+			targetProxy = 463BA3FA26195720008BB17B /* PBXContainerItemProxy */;
 		};
-		467F62EA22F3D24200671C72 /* PBXTargetDependency */ = {
+		463BA40626195720008BB17B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 467F62C922F3D24100671C72 /* Soluna */;
-			targetProxy = 467F62E922F3D24200671C72 /* PBXContainerItemProxy */;
+			target = 463BA3E72619571F008BB17B /* Soluna */;
+			targetProxy = 463BA40526195720008BB17B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
-/* Begin PBXVariantGroup section */
-		467F62D022F3D24100671C72 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				467F62D122F3D24100671C72 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		467F62D522F3D24200671C72 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				467F62D622F3D24200671C72 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
-		2C6EA3D5B8E178C90C55175C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Soluna.soluna-mobile.Shared";
-				PRODUCT_MODULE_NAME = "_$(PRODUCT_NAME:c99extidentifier)";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = arm64;
-			};
-			name = Release;
-		};
-		326C798B6B0B907E8A329D1E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Soluna.soluna-mobile.Shared";
-				PRODUCT_MODULE_NAME = "_$(PRODUCT_NAME:c99extidentifier)";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = arm64;
-			};
-			name = Debug;
-		};
-		4665D07424710D9A00A3BB7D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = KoinTest/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Soluna.soluna-mobile.KoinTest";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		4665D07524710D9A00A3BB7D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = KoinTest/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Soluna.soluna-mobile.KoinTest";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
-				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		467F62EF22F3D24200671C72 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
-				ENABLE_BITCODE = YES;
-				INFOPLIST_FILE = Soluna/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.russhwolf.soluna.mobile.Soluna;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		467F62F022F3D24200671C72 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
-				ENABLE_BITCODE = YES;
-				INFOPLIST_FILE = Soluna/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.russhwolf.soluna.mobile.Soluna;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		467F62F122F3D24200671C72 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
-				INFOPLIST_FILE = SolunaTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.russhwolf.soluna.mobile.SolunaTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Soluna.app/Soluna";
-			};
-			name = Debug;
-		};
-		467F62F222F3D24200671C72 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
-				INFOPLIST_FILE = SolunaTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.russhwolf.soluna.mobile.SolunaTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Soluna.app/Soluna";
-			};
-			name = Release;
-		};
-		467F62F322F3D24200671C72 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
-				INFOPLIST_FILE = SolunaUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.russhwolf.soluna.mobile.SolunaUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Soluna;
-			};
-			name = Debug;
-		};
-		467F62F422F3D24200671C72 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
-				INFOPLIST_FILE = SolunaUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.russhwolf.soluna.mobile.SolunaUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Soluna;
-			};
-			name = Release;
-		};
-		F7DB3C97A2519F168D383C29 /* Release */ = {
+		463BA40B26195720008BB17B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -671,66 +431,13 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				SDKROOT = iphoneos;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		FCB0D00EFDD62A334273D425 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -749,72 +456,241 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
+		};
+		463BA40C26195720008BB17B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		463BA40E26195720008BB17B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"Soluna/Preview Content\"";
+				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
+				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks";
+				INFOPLIST_FILE = Soluna/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.russhwolf.Soluna;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		463BA40F26195720008BB17B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"Soluna/Preview Content\"";
+				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
+				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks";
+				INFOPLIST_FILE = Soluna/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.russhwolf.Soluna;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		463BA41126195720008BB17B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
+				INFOPLIST_FILE = SolunaTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.russhwolf.SolunaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Soluna.app/Soluna";
+			};
+			name = Debug;
+		};
+		463BA41226195720008BB17B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
+				INFOPLIST_FILE = SolunaTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.russhwolf.SolunaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Soluna.app/Soluna";
+			};
+			name = Release;
+		};
+		463BA41426195720008BB17B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
+				INFOPLIST_FILE = SolunaUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.russhwolf.SolunaUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Soluna;
+			};
+			name = Debug;
+		};
+		463BA41526195720008BB17B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
+				INFOPLIST_FILE = SolunaUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.russhwolf.SolunaUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Soluna;
+			};
+			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4665D07324710D9A00A3BB7D /* Build configuration list for PBXNativeTarget "KoinTest" */ = {
+		463BA3E32619571F008BB17B /* Build configuration list for PBXProject "Soluna" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4665D07424710D9A00A3BB7D /* Debug */,
-				4665D07524710D9A00A3BB7D /* Release */,
+				463BA40B26195720008BB17B /* Debug */,
+				463BA40C26195720008BB17B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		467F62F522F3D24200671C72 /* Build configuration list for PBXNativeTarget "Soluna" */ = {
+		463BA40D26195720008BB17B /* Build configuration list for PBXNativeTarget "Soluna" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				467F62EF22F3D24200671C72 /* Debug */,
-				467F62F022F3D24200671C72 /* Release */,
+				463BA40E26195720008BB17B /* Debug */,
+				463BA40F26195720008BB17B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		467F62F622F3D24200671C72 /* Build configuration list for PBXNativeTarget "SolunaTests" */ = {
+		463BA41026195720008BB17B /* Build configuration list for PBXNativeTarget "SolunaTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				467F62F122F3D24200671C72 /* Debug */,
-				467F62F222F3D24200671C72 /* Release */,
+				463BA41126195720008BB17B /* Debug */,
+				463BA41226195720008BB17B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		467F62F722F3D24200671C72 /* Build configuration list for PBXNativeTarget "SolunaUITests" */ = {
+		463BA41326195720008BB17B /* Build configuration list for PBXNativeTarget "SolunaUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				467F62F322F3D24200671C72 /* Debug */,
-				467F62F422F3D24200671C72 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		57DDB727806B425312C0D7CB /* Build configuration list for PBXProject "Soluna" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				FCB0D00EFDD62A334273D425 /* Debug */,
-				F7DB3C97A2519F168D383C29 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		7DD9E4F947F930F7F5849D70 /* Build configuration list for PBXNativeTarget "Shared" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				326C798B6B0B907E8A329D1E /* Debug */,
-				2C6EA3D5B8E178C90C55175C /* Release */,
+				463BA41426195720008BB17B /* Debug */,
+				463BA41526195720008BB17B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = F70BC0D8B3FB0122937C4246 /* Project object */;
+	rootObject = 463BA3E02619571F008BB17B /* Project object */;
 }

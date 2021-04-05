@@ -12,7 +12,7 @@ sealed class ViewModelStreamItem<out State, out Event> {
     class Event<out Event>(val event: Event) : ViewModelStreamItem<Nothing, Event>()
 }
 
-val <State, Event, Action> BaseViewModel<State, Event, Action>.stateAndEvents
+val <State : Any, Event : Any, Action : Any> BaseViewModel<State, Event, Action>.stateAndEvents
     get() = merge(
         state.map { ViewModelStreamItem.State(it) },
         events.map { ViewModelStreamItem.Event(it) }

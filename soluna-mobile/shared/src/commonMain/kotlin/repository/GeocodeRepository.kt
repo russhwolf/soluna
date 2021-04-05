@@ -20,7 +20,7 @@ interface GeocodeRepository {
             val timeZone = googleApiClient.getTimeZone(
                 coords.lat ?: return null,
                 coords.lng ?: return null,
-                clock.now().toEpochMilliseconds()
+                clock.now().toEpochMilliseconds() / 1000
             )?.timeZoneId
                 ?: return null
             return GeocodeData(

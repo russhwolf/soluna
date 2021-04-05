@@ -12,7 +12,10 @@ import kotlinx.coroutines.flow.StateFlow
  * @param Event The type which is emitted from this viewmodel's [events] flow
  * @param Action The type which is accepted by this viewmodel's [performAction] function
  */
-abstract class BaseViewModel<State, Event, Action>(initialState: State, dispatcher: CoroutineDispatcher) {
+abstract class BaseViewModel<State : Any, Event : Any, Action : Any>(
+    val initialState: State,
+    dispatcher: CoroutineDispatcher
+) {
     protected val coroutineScope = SupervisorScope(dispatcher)
 
     private val mutableState: MutableStateFlow<State> = MutableStateFlow(initialState)
@@ -27,7 +30,7 @@ abstract class BaseViewModel<State, Event, Action>(initialState: State, dispatch
 
     suspend fun emitEvent(event: Event) = mutableEvents.emit(event)
 
-    fun cancelChildren() {
+    fun dispose() {
         coroutineScope.clear()
     }
 }
