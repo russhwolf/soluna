@@ -13,7 +13,8 @@ struct LocationListView: View {
             LocationListContent(
                 state: observableModel.state,
                 onAddLocationClick: { observableModel.onAddLocationClick() },
-                onDeleteLocationClick: { locationId in observableModel.onRemoveLocationClick(locationId) }
+                onDeleteLocationClick: { locationId in observableModel.onRemoveLocationClick(locationId) },
+                onSelectLocationClick: { locationId in observableModel.onSelectLocationClick(locationId) }
             )
             NavigationLink(destination: AddLocationView(), isActive: $observableModel.navigateToAddLocation) { EmptyView() }
         }
@@ -33,12 +34,18 @@ struct LocationListContent : View {
     var onAddLocationClick: () -> Void
     
     var onDeleteLocationClick: (Int64) -> Void
+    
+    var onSelectLocationClick: (Int64) -> Void
 
     var body: some View {
         VStack {
             List {
                 ForEach(state.output.locations) { location in
-                    Text(location.label)
+                    HStack {
+                        Image(systemName: location.selected ? "star.fill" : "star")
+                            .onTapGesture { onSelectLocationClick(location.id) }
+                        Text(location.label)
+                    }
                 }.onDelete { indexSet in
                     indexSet.forEach { index in
                         onDeleteLocationClick(state.output.locations[index].id)

@@ -35,6 +35,10 @@ class ObservableLocationListViewModel : ObservableViewModel<LocationListViewMode
         performAction(action: LocationListViewModel.ActionRemoveLocation(locationId: locationId))
     }
     
+    func onSelectLocationClick(_ locationId: Int64) {
+        performAction(action: LocationListViewModel.ActionToggleLocationSelected(locationId: locationId))
+    }
+    
     func onLocationDetailClick(_ locationId: Int64) {
         performAction(action: LocationListViewModel.ActionLocationDetails(locationId: locationId))
     }
