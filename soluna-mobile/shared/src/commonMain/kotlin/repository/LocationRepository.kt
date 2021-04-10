@@ -30,7 +30,7 @@ interface LocationRepository {
 
     fun getSelectedLocation(): Flow<SelectableLocation?>
 
-    suspend fun setSelectedLocationId(locationId: Long?)
+    suspend fun toggleSelectedLocation(locationId: Long)
 
     class Impl(
         private val database: SolunaDb,
@@ -98,11 +98,12 @@ interface LocationRepository {
                     }
                 }
 
-        override suspend fun setSelectedLocationId(locationId: Long?) {
-            if (locationId != null) {
-                settings.putLong(KEY_SELECTED_LOCATION_ID, locationId)
-            } else {
+        override suspend fun toggleSelectedLocation(locationId: Long) {
+            val selectedLocationId = settings.getLongOrNull(KEY_SELECTED_LOCATION_ID)
+            if (locationId == selectedLocationId) {
                 settings.remove(KEY_SELECTED_LOCATION_ID)
+            } else {
+                settings.putLong(KEY_SELECTED_LOCATION_ID, locationId)
             }
         }
     }

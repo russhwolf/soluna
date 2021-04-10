@@ -24,11 +24,16 @@ class LocationDetailViewModel(
 
     override suspend fun performAction(action: Action) = when (action) {
         is Action.SetLabel -> setLabel(action.label)
+        is Action.ToggleSelected -> toggleSelected()
         is Action.Delete -> delete()
     }
 
     private suspend fun setLabel(label: String) {
         locationRepository.updateLocationLabel(locationId, label)
+    }
+
+    private suspend fun toggleSelected() {
+        locationRepository.toggleSelectedLocation(locationId)
     }
 
     private suspend fun delete() {
@@ -47,6 +52,7 @@ class LocationDetailViewModel(
 
     sealed class Action {
         data class SetLabel(val label: String) : Action()
+        object ToggleSelected : Action()
         object Delete : Action()
     }
 

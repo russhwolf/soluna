@@ -10,7 +10,8 @@ CREATE VIEW locationSummary AS
 SELECT id, label FROM location;
 
 selectAllLocations:
-SELECT * FROM locationSummary;
+SELECT * FROM locationSummary
+ORDER BY label ASC;
 
 selectLocationById:
 SELECT * FROM location

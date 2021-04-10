@@ -85,7 +85,7 @@ class HomeViewModelTest {
     @Test
     fun initialState_populated() = suspendTest {
         locations = arrayOf(Location(1, "Home", 27.18, 62.83, "UTC"))
-        locationRepository.setSelectedLocationId(locations[0].id)
+        locationRepository.toggleSelectedLocation(locations[0].id)
 
         viewModel.stateAndEvents.test {
             assertEquals(HomeViewModel.State.Loading, expectViewModelState())

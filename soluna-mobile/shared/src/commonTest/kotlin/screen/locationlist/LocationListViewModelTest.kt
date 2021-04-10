@@ -15,7 +15,6 @@ import com.russhwolf.soluna.mobile.screen.expectViewModelState
 import com.russhwolf.soluna.mobile.screen.stateAndEvents
 import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -44,12 +43,19 @@ class LocationListViewModelTest {
 
     @Test
     fun initialState_populated() = suspendTest {
-        locations = arrayOf(Location(1, "Home", 27.18, 62.83, "UTC"))
+        locations = arrayOf(
+            Location(1, "Home", 27.18, 62.83, "UTC"),
+            Location(2, "Away", 27.18, 62.83, "UTC")
+        )
         settings.putLong(KEY_SELECTED_LOCATION_ID, 1)
-        delay(10)
         viewModel.stateAndEvents.test {
             assertEquals(
-                LocationListViewModel.State(listOf(SelectableLocationSummary(1, "Home", true))),
+                LocationListViewModel.State(
+                    listOf(
+                        SelectableLocationSummary(2, "Away", false),
+                        SelectableLocationSummary(1, "Home", true)
+                    )
+                ),
                 expectViewModelState()
             )
         }
@@ -82,6 +88,49 @@ class LocationListViewModelTest {
 
             viewModel.performAction(LocationListViewModel.Action.RemoveLocation(1))
             assertEquals(LocationListViewModel.State(emptyList()), expectViewModelState())
+        }
+    }
+
+    @Test
+    fun toggleLocationSelected() = suspendTest {
+        locations = arrayOf(
+            Location(1, "Home", 27.18, 62.83, "UTC"),
+            Location(2, "Away", 27.18, 62.83, "UTC")
+        )
+        settings.putLong(KEY_SELECTED_LOCATION_ID, 1)
+        viewModel.stateAndEvents.test {
+            assertEquals(
+                LocationListViewModel.State(
+                    listOf(
+                        SelectableLocationSummary(2, "Away", false),
+                        SelectableLocationSummary(1, "Home", true)
+                    )
+                ),
+                expectViewModelState()
+            )
+
+            viewModel.performAction(LocationListViewModel.Action.ToggleLocationSelected(2))
+            assertEquals(
+                LocationListViewModel.State(
+                    listOf(
+                        SelectableLocationSummary(2, "Away", true),
+                        SelectableLocationSummary(1, "Home", false)
+                    )
+                ),
+                expectViewModelState()
+            )
+            expectNoEvents()
+
+            viewModel.performAction(LocationListViewModel.Action.ToggleLocationSelected(2))
+            assertEquals(
+                LocationListViewModel.State(
+                    listOf(
+                        SelectableLocationSummary(2, "Away", false),
+                        SelectableLocationSummary(1, "Home", false)
+                    )
+                ),
+                expectViewModelState()
+            )
         }
     }
 

@@ -69,6 +69,23 @@ class LocationDetailViewModelTest {
     }
 
     @Test
+    fun toggleSelected() = suspendTest {
+        val location = Location(1, "Home", 27.18, 62.83, "UTC")
+        locations = arrayOf(location)
+        settings.putLong(KEY_SELECTED_LOCATION_ID, 2)
+
+        viewModel.stateAndEvents.test {
+            assertEquals(LocationDetailViewModel.State(location.toSelectableLocation(false)), expectViewModelState())
+
+            viewModel.performAction(LocationDetailViewModel.Action.ToggleSelected)
+            assertEquals(LocationDetailViewModel.State(location.toSelectableLocation(true)), expectViewModelState())
+
+            viewModel.performAction(LocationDetailViewModel.Action.ToggleSelected)
+            assertEquals(LocationDetailViewModel.State(location.toSelectableLocation(false)), expectViewModelState())
+        }
+    }
+
+    @Test
     fun deleteLocation() = suspendTest {
         val location = Location(1, "Home", 27.18, 62.83, "UTC")
         locations = arrayOf(location)

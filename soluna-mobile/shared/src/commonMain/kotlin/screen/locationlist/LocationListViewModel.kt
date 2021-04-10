@@ -25,12 +25,17 @@ class LocationListViewModel(
     override suspend fun performAction(action: Action) = when (action) {
         is Action.LocationDetails -> navigateToLocationDetails(action.locationId)
         is Action.RemoveLocation -> removeLocation(action.locationId)
+        is Action.ToggleLocationSelected -> toggleLocationSelected(action.locationId)
         Action.AddLocation -> navigateToAddLocation()
     }
 
     private suspend fun navigateToLocationDetails(locationId: Long) = emitEvent(Event.LocationDetails(locationId))
 
-    private suspend fun removeLocation(id: Long) = locationRepository.deleteLocation(id)
+    private suspend fun removeLocation(locationId: Long) = locationRepository.deleteLocation(locationId)
+
+    private suspend fun toggleLocationSelected(locationId: Long) {
+        locationRepository.toggleSelectedLocation(locationId)
+    }
 
     private suspend fun navigateToAddLocation() = emitEvent(Event.AddLocation)
 
@@ -46,6 +51,7 @@ class LocationListViewModel(
     sealed class Action {
         data class LocationDetails(val locationId: Long) : Action()
         data class RemoveLocation(val locationId: Long) : Action()
+        data class ToggleLocationSelected(val locationId: Long) : Action()
         object AddLocation : Action()
     }
 }

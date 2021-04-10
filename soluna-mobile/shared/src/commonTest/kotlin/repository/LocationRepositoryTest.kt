@@ -10,7 +10,6 @@ import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.repository.LocationRepository.Impl.Companion.KEY_SELECTED_LOCATION_ID
 import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -173,13 +172,25 @@ class LocationRepositoryTest {
     }
 
     @Test
-    fun setSelectedItem() = suspendTest {
-        database.insertDummyLocation()
+    fun toggleSelectedLocation() = suspendTest {
+        database.insertDummyLocation(1)
+        database.insertDummyLocation(2)
 
-        repository.setSelectedLocationId(dummyLocation.id)
+        repository.getSelectedLocation().test {
+            assertNull(expectItem())
 
-        assertEquals(dummyLocation.copy(selected = true), repository.getSelectedLocation().first())
+
+            repository.toggleSelectedLocation(1)
+            assertEquals(dummyLocation.copy(id = 1, label = "Test Location 1", selected = true), expectItem())
+
+            repository.toggleSelectedLocation(2)
+            assertEquals(dummyLocation.copy(id = 2, label = "Test Location 2", selected = true), expectItem())
+
+            repository.toggleSelectedLocation(2)
+            assertNull(expectItem())
+        }
     }
+
 
     @AfterTest
     fun tearDown() {

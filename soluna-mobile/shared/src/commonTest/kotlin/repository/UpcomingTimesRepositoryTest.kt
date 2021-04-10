@@ -105,6 +105,6 @@ class UpcomingTimesRepositoryTest {
 
     private suspend fun initializeSelectedLocation() {
         locationRepository.addLocation("Home", 27.18, 62.83, "UTC")
-        locationRepository.setSelectedLocationId(1)
+        locationRepository.toggleSelectedLocation(1)
     }
 }
