@@ -12,9 +12,11 @@ struct LocationListView: View {
         VStack {
             LocationListContent(
                 state: observableModel.state,
+                selection: $observableModel.navigateToLocationDetails,
                 onAddLocationClick: { observableModel.onAddLocationClick() },
                 onDeleteLocationClick: { locationId in observableModel.onRemoveLocationClick(locationId) },
-                onSelectLocationClick: { locationId in observableModel.onSelectLocationClick(locationId) }
+                onSelectLocationClick: { locationId in observableModel.onSelectLocationClick(locationId) },
+                onLocationDetailClick: { locationId in observableModel.onLocationDetailClick(locationId) }
             )
             NavigationLink(destination: AddLocationView(), isActive: $observableModel.navigateToAddLocation) { EmptyView() }
         }
@@ -30,12 +32,14 @@ struct LocationListView: View {
 struct LocationListContent : View {
     @ObservedObject
     var state: PublishedFlow<LocationListViewModel.State>
+    
+    @Binding
+    var selection: Int64?
 
     var onAddLocationClick: () -> Void
-    
     var onDeleteLocationClick: (Int64) -> Void
-    
     var onSelectLocationClick: (Int64) -> Void
+    var onLocationDetailClick: (Int64) -> Void
 
     var body: some View {
         VStack {
@@ -45,6 +49,9 @@ struct LocationListContent : View {
                         Image(systemName: location.selected ? "star.fill" : "star")
                             .onTapGesture { onSelectLocationClick(location.id) }
                         Text(location.label)
+                        NavigationLink(destination: LocationDetailView(id: location.id), tag: location.id, selection: $selection) { EmptyView() }
+                    }.onTapGesture {
+                        onLocationDetailClick(location.id)
                     }
                 }.onDelete { indexSet in
                     indexSet.forEach { index in

@@ -39,6 +39,7 @@ struct HomeContent : View {
                 let populatedState = state.output as! HomeViewModel.StatePopulated
                 Text(populatedState.locationName)
                 Text(populatedState.currentTime.toDisplayTime())
+                Text(populatedState.timeZone.id)
                 Text("Sunrise: \(populatedState.sunriseTime?.toDisplayTime() ?? "None")")
                 Text("Sunset: \(populatedState.sunsetTime?.toDisplayTime() ?? "None")")
                 Text("Moonrise: \(populatedState.moonriseTime?.toDisplayTime() ?? "None")")
