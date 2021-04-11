@@ -2,24 +2,54 @@ package com.russhwolf.soluna.mobile.screen.locationdetail
 
 import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.repository.SelectableLocation
+import com.russhwolf.soluna.mobile.repository.UpcomingTimesRepository
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
 
 class LocationDetailViewModel(
     private val locationId: Long,
     private val locationRepository: LocationRepository,
+    private val upcomingTimesRepository: UpcomingTimesRepository,
     dispatcher: CoroutineDispatcher
 ) : BaseViewModel<LocationDetailViewModel.State, LocationDetailViewModel.Event, LocationDetailViewModel.Action>(
-    State(null),
+    State.Loading,
     dispatcher
 ) {
     init {
-        locationRepository
-            .getLocation(locationId)
-            .onEach { emitState(State(it)) }
-            .launchIn(coroutineScope)
+        locationRepository.getLocation(locationId).flatMapLatest { selectedLocation ->
+            if (selectedLocation != null) {
+                combine(
+                    flowOf(selectedLocation),
+                    upcomingTimesRepository.getUpcomingTimes(selectedLocation)
+                ) { location, upcomingTimes ->
+                    val timeZone = if (location.timeZone in TimeZone.availableZoneIds) {
+                        TimeZone.of(location.timeZone)
+                    } else {
+                        // TODO better error handling
+                        TimeZone.UTC
+                    }
+                    State.Populated(
+                        location = location,
+                        sunriseTime = upcomingTimes?.sunriseTime,
+                        sunsetTime = upcomingTimes?.sunsetTime,
+                        moonriseTime = upcomingTimes?.moonriseTime,
+                        moonsetTime = upcomingTimes?.moonsetTime,
+                        timeZone = timeZone
+                    )
+                }
+            } else {
+                flowOf(State.InvalidLocation)
+            }
+        }.onEach {
+            emitState(it)
+        }.launchIn(coroutineScope)
     }
 
     override suspend fun performAction(action: Action) = when (action) {
@@ -41,10 +71,18 @@ class LocationDetailViewModel(
         emitEvent(Event.Exit)
     }
 
-
-    data class State(
-        val location: SelectableLocation?
-    )
+    sealed class State {
+        object Loading : State()
+        object InvalidLocation : State()
+        data class Populated(
+            val location: SelectableLocation,
+            val sunriseTime: Instant?,
+            val sunsetTime: Instant?,
+            val moonriseTime: Instant?,
+            val moonsetTime: Instant?,
+            val timeZone: TimeZone
+        ) : State()
+    }
 
     sealed class Event {
         object Exit : Event()
