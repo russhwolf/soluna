@@ -1,7 +1,7 @@
 package com.russhwolf.soluna.mobile.repository
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -12,19 +12,14 @@ import kotlin.time.minutes
 
 interface UpcomingTimesRepository {
 
-    fun getUpcomingTimes(): Flow<UpcomingTimes?>
+    fun getUpcomingTimes(location: SelectableLocation): Flow<UpcomingTimes?>
 
     class Impl(
-        private val locationRepository: LocationRepository,
         private val astronomicalDataRepository: AstronomicalDataRepository,
         private val currentTimeRepository: CurrentTimeRepository
     ) : UpcomingTimesRepository {
-        override fun getUpcomingTimes(): Flow<UpcomingTimes?> =
-            combine(
-                locationRepository.getSelectedLocation(),
-                currentTimeRepository.getCurrentTimeFlow(1.minutes),
-                ::getUpcomingTimesForLocation
-            )
+        override fun getUpcomingTimes(location: SelectableLocation): Flow<UpcomingTimes?> =
+            currentTimeRepository.getCurrentTimeFlow(1.minutes).map { getUpcomingTimesForLocation(location, it) }
 
         private fun getUpcomingTimesForLocation(
             location: SelectableLocation?,

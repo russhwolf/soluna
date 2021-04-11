@@ -1,28 +1,20 @@
 package com.russhwolf.soluna.mobile.repository
 
 import app.cash.turbine.test
-import com.russhwolf.settings.MockSettings
-import com.russhwolf.settings.coroutines.toFlowSettings
-import com.russhwolf.soluna.mobile.createInMemorySqlDriver
-import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.suspendTest
-import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atTime
 import kotlinx.datetime.toInstant
-import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class UpcomingTimesRepositoryTest {
     private lateinit var now: Instant
 
-    private val driver = createInMemorySqlDriver()
-    private val database = createDatabase(driver)
-    private val settings = MockSettings().toFlowSettings(Dispatchers.Unconfined)
-    private val locationRepository = LocationRepository.Impl(database, settings, Dispatchers.Unconfined)
+    private val location = SelectableLocation(1, "Home", 27.18, 62.83, "UTC", false)
+
     private val astronomicalDataRepository = object : AstronomicalDataRepository {
         override fun getTimes(date: LocalDate, zone: TimeZone, latitude: Double, longitude: Double) =
             AstronomicalData(
@@ -33,19 +25,14 @@ class UpcomingTimesRepositoryTest {
             )
     }
     private val upcomingTimesRepository: UpcomingTimesRepository by lazy {
-        UpcomingTimesRepository.Impl(locationRepository, astronomicalDataRepository, FakeCurrentTimeRepository(now))
+        UpcomingTimesRepository.Impl(astronomicalDataRepository, FakeCurrentTimeRepository(now))
     }
 
     @Test
-    fun getUpcomingTimes_whenLocationSelected() = suspendTest {
+    fun getUpcomingTimes_early() = suspendTest {
         now = LocalDate(2021, 1, 1).atTime(1, 0).toInstant(TimeZone.UTC)
 
-        upcomingTimesRepository.getUpcomingTimes().test {
-            assertEquals(null, expectItem())
-            expectNoEvents()
-
-            initializeSelectedLocation()
-
+        upcomingTimesRepository.getUpcomingTimes(location).test {
             assertEquals(
                 UpcomingTimes(
                     sunriseTime = LocalDate(2021, 1, 1).atTime(6, 1).toInstant(TimeZone.UTC),
@@ -61,9 +48,8 @@ class UpcomingTimesRepositoryTest {
     @Test
     fun getUpcomingTimes_midday() = suspendTest {
         now = LocalDate(2021, 1, 1).atTime(12, 0).toInstant(TimeZone.UTC)
-        initializeSelectedLocation()
 
-        upcomingTimesRepository.getUpcomingTimes().test {
+        upcomingTimesRepository.getUpcomingTimes(location).test {
             assertEquals(
                 UpcomingTimes(
                     sunriseTime = LocalDate(2021, 1, 2).atTime(6, 2).toInstant(TimeZone.UTC),
@@ -79,9 +65,8 @@ class UpcomingTimesRepositoryTest {
     @Test
     fun getUpcomingTimes_tomorrowsTimes() = suspendTest {
         now = LocalDate(2021, 1, 1).atTime(23, 0).toInstant(TimeZone.UTC)
-        initializeSelectedLocation()
 
-        upcomingTimesRepository.getUpcomingTimes().test {
+        upcomingTimesRepository.getUpcomingTimes(location).test {
             assertEquals(
                 UpcomingTimes(
                     sunriseTime = LocalDate(2021, 1, 2).atTime(6, 2).toInstant(TimeZone.UTC),
@@ -92,15 +77,5 @@ class UpcomingTimesRepositoryTest {
                 expectItem()
             )
         }
-    }
-
-    @AfterTest
-    fun tearDown() {
-        driver.close()
-    }
-
-    private suspend fun initializeSelectedLocation() {
-        locationRepository.addLocation("Home", 27.18, 62.83, "UTC")
-        locationRepository.toggleSelectedLocation(1)
     }
 }

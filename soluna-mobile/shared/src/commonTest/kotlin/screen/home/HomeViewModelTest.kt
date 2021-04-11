@@ -52,7 +52,7 @@ class HomeViewModelTest {
 
     private val clockRepository = FakeCurrentTimeRepository(initialTime, emitImmediately = false)
     private val upcomingTimesRepository: UpcomingTimesRepository by lazy {
-        UpcomingTimesRepository.Impl(locationRepository, astronomicalDataRepository, clockRepository)
+        UpcomingTimesRepository.Impl(astronomicalDataRepository, clockRepository)
     }
 
     private val viewModel by lazy {
@@ -62,10 +62,6 @@ class HomeViewModelTest {
     @Test
     fun initialState_empty() = suspendTest {
         viewModel.stateAndEvents.test {
-            assertEquals(HomeViewModel.State.Loading, expectViewModelState())
-            expectNoEvents()
-
-            clockRepository.tick()
             assertEquals(HomeViewModel.State.NoLocationSelected, expectViewModelState())
         }
     }
@@ -92,6 +88,7 @@ class HomeViewModelTest {
                 ),
                 expectViewModelState()
             )
+            expectNoEvents()
 
             clockRepository.tick(1.minutes)
             assertEquals(
@@ -106,6 +103,7 @@ class HomeViewModelTest {
                 ),
                 expectViewModelState()
             )
+            expectNoEvents()
 
             clockRepository.tick(1.minutes)
             assertEquals(
@@ -126,7 +124,7 @@ class HomeViewModelTest {
     @Test
     fun navigate_locationList() = suspendTest {
         viewModel.stateAndEvents.test {
-            assertEquals(HomeViewModel.State.Loading, expectViewModelState())
+            assertEquals(HomeViewModel.State.NoLocationSelected, expectViewModelState())
             expectNoEvents()
 
             viewModel.performAction(HomeViewModel.Action.Locations)
@@ -137,7 +135,7 @@ class HomeViewModelTest {
     @Test
     fun navigate_reminderList() = suspendTest {
         viewModel.stateAndEvents.test {
-            assertEquals(HomeViewModel.State.Loading, expectViewModelState())
+            assertEquals(HomeViewModel.State.NoLocationSelected, expectViewModelState())
             expectNoEvents()
 
             viewModel.performAction(HomeViewModel.Action.Reminders)

@@ -38,7 +38,7 @@ internal val commonModule = module {
     single<GeocodeRepository> { GeocodeRepository.Impl(get(), get()) }
     single<AstronomicalDataRepository> { AstronomicalDataRepository.Impl() }
     single<CurrentTimeRepository> { CurrentTimeRepository.Impl(get()) }
-    single<UpcomingTimesRepository> { UpcomingTimesRepository.Impl(get(), get(), get()) }
+    single<UpcomingTimesRepository> { UpcomingTimesRepository.Impl(get(), get()) }
 
     factory { HomeViewModel(get(), get(), get(), get(mainDispatcherQualifier)) }
     factory { LocationListViewModel(get(), get(mainDispatcherQualifier)) }

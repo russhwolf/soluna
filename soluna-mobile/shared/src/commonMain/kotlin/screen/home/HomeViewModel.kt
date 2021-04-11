@@ -6,6 +6,8 @@ import com.russhwolf.soluna.mobile.repository.UpcomingTimesRepository
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.datetime.Instant
@@ -22,29 +24,31 @@ class HomeViewModel(
     dispatcher
 ) {
     init {
-        combine(
-            locationRepository.getSelectedLocation(),
-            upcomingTimesRepository.getUpcomingTimes(),
-            currentTimeRepository.getCurrentTimeFlow(0.1.seconds)
-        ) { location, upcomingTimes, instant ->
-            if (location != null) {
-                val timeZone = if (location.timeZone in TimeZone.availableZoneIds) {
-                    TimeZone.of(location.timeZone)
-                } else {
-                    // TODO better error handling
-                    TimeZone.UTC
+        locationRepository.getSelectedLocation().flatMapLatest { selectedLocation ->
+            if (selectedLocation != null) {
+                combine(
+                    flowOf(selectedLocation),
+                    upcomingTimesRepository.getUpcomingTimes(selectedLocation),
+                    currentTimeRepository.getCurrentTimeFlow(1.seconds)
+                ) { location, upcomingTimes, instant ->
+                    val timeZone = if (location.timeZone in TimeZone.availableZoneIds) {
+                        TimeZone.of(location.timeZone)
+                    } else {
+                        // TODO better error handling
+                        TimeZone.UTC
+                    }
+                    State.Populated(
+                        locationName = location.label,
+                        currentTime = instant,
+                        sunriseTime = upcomingTimes?.sunriseTime,
+                        sunsetTime = upcomingTimes?.sunsetTime,
+                        moonriseTime = upcomingTimes?.moonriseTime,
+                        moonsetTime = upcomingTimes?.moonsetTime,
+                        timeZone = timeZone
+                    )
                 }
-                State.Populated(
-                    locationName = location.label,
-                    currentTime = instant,
-                    sunriseTime = upcomingTimes?.sunriseTime,
-                    sunsetTime = upcomingTimes?.sunsetTime,
-                    moonriseTime = upcomingTimes?.moonriseTime,
-                    moonsetTime = upcomingTimes?.moonsetTime,
-                    timeZone = timeZone
-                )
             } else {
-                State.NoLocationSelected
+                flowOf(State.NoLocationSelected)
             }
         }.onEach {
             emitState(it)
