@@ -6,6 +6,7 @@ import com.russhwolf.settings.coroutines.toFlowSettings
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.createDatabase
+import com.russhwolf.soluna.mobile.repository.FakeCurrentTimeRepository
 import com.russhwolf.soluna.mobile.repository.GeocodeData
 import com.russhwolf.soluna.mobile.repository.GeocodeRepository
 import com.russhwolf.soluna.mobile.repository.LocationRepository
@@ -19,11 +20,6 @@ import io.ktor.client.features.logging.EMPTY
 import io.ktor.client.features.logging.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -36,9 +32,6 @@ class AddLocationViewModelTest {
             MockSettings().toFlowSettings(Dispatchers.Unconfined),
             Dispatchers.Unconfined
         )
-    private val clock = object : Clock {
-        override fun now(): Instant = LocalDateTime(2021, 1, 1, 11, 0).toInstant(TimeZone.UTC)
-    }
     private val geocodeRepository = GeocodeRepository.Impl(
         GoogleApiClient.Impl(
             createGeocodeMockClientEngine(
@@ -46,7 +39,7 @@ class AddLocationViewModelTest {
             ),
             Logger.EMPTY
         ),
-        clock
+        FakeCurrentTimeRepository()
     )
 
     private val viewModel = AddLocationViewModel(locationRepository, geocodeRepository, Dispatchers.Unconfined)

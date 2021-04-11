@@ -7,7 +7,6 @@ import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -33,11 +32,8 @@ class UpcomingTimesRepositoryTest {
                 moonsetTime = date.atTime(8, date.dayOfMonth).toInstant(zone)
             )
     }
-    private val clock = object : Clock {
-        override fun now() = now
-    }
     private val upcomingTimesRepository: UpcomingTimesRepository by lazy {
-        UpcomingTimesRepository.Impl(locationRepository, astronomicalDataRepository, clock)
+        UpcomingTimesRepository.Impl(locationRepository, astronomicalDataRepository, FakeCurrentTimeRepository(now))
     }
 
     @Test

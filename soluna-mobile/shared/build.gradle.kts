@@ -35,6 +35,12 @@ kotlin {
             }
         }
 
+        matching { it.name.endsWith("Test") }.configureEach {
+            languageSettings.apply {
+                useExperimentalAnnotation("kotlinx.coroutines.FlowPreview")
+            }
+        }
+
         commonMain {
             dependencies {
                 implementation(project(":soluna-core:kotlinx-datetime"))

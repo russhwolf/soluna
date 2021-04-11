@@ -1,13 +1,14 @@
 package com.russhwolf.soluna.mobile.repository
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.datetime.Clock
+import kotlinx.coroutines.flow.combine
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.days
+import kotlin.time.minutes
 
 interface UpcomingTimesRepository {
 
@@ -16,16 +17,22 @@ interface UpcomingTimesRepository {
     class Impl(
         private val locationRepository: LocationRepository,
         private val astronomicalDataRepository: AstronomicalDataRepository,
-        private val clock: Clock
+        private val currentTimeRepository: CurrentTimeRepository
     ) : UpcomingTimesRepository {
         override fun getUpcomingTimes(): Flow<UpcomingTimes?> =
-            locationRepository.getSelectedLocation().map(::getUpcomingTimesForLocation)
+            combine(
+                locationRepository.getSelectedLocation(),
+                currentTimeRepository.getCurrentTimeFlow(1.minutes),
+                ::getUpcomingTimesForLocation
+            )
 
-        private fun getUpcomingTimesForLocation(location: SelectableLocation?): UpcomingTimes? {
+        private fun getUpcomingTimesForLocation(
+            location: SelectableLocation?,
+            currentInstant: Instant
+        ): UpcomingTimes? {
             location ?: return null
 
             val zone = TimeZone.of(location.timeZone)
-            val currentInstant = clock.now()
             val today = currentInstant.toLocalDateTime(zone).date
             val tomorrow = today.plus(DateTimeUnit.DateBased.DayBased(1))
             val times =
@@ -34,10 +41,14 @@ interface UpcomingTimesRepository {
                 astronomicalDataRepository.getTimes(tomorrow, zone, location.latitude, location.longitude)
 
             return UpcomingTimes(
-                sunriseTime = times.sunriseTime?.takeIf { it > currentInstant } ?: timesTomorrow.sunriseTime,
-                sunsetTime = times.sunsetTime?.takeIf { it > currentInstant } ?: timesTomorrow.sunsetTime,
-                moonriseTime = times.moonriseTime?.takeIf { it > currentInstant } ?: timesTomorrow.moonriseTime,
-                moonsetTime = times.moonsetTime?.takeIf { it > currentInstant } ?: timesTomorrow.moonsetTime
+                sunriseTime = times.sunriseTime?.takeIf { it > currentInstant }
+                    ?: timesTomorrow.sunriseTime?.takeIf { it < currentInstant.plus(1.days) },
+                sunsetTime = times.sunsetTime?.takeIf { it > currentInstant }
+                    ?: timesTomorrow.sunsetTime?.takeIf { it < currentInstant.plus(1.days) },
+                moonriseTime = times.moonriseTime?.takeIf { it > currentInstant }
+                    ?: timesTomorrow.moonriseTime?.takeIf { it < currentInstant.plus(1.days) },
+                moonsetTime = times.moonsetTime?.takeIf { it > currentInstant }
+                    ?: timesTomorrow.moonsetTime?.takeIf { it < currentInstant.plus(1.days) }
             )
         }
     }

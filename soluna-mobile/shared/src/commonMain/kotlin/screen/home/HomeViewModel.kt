@@ -1,6 +1,6 @@
 package com.russhwolf.soluna.mobile.screen.home
 
-import com.russhwolf.soluna.mobile.repository.ClockRepository
+import com.russhwolf.soluna.mobile.repository.CurrentTimeRepository
 import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.repository.UpcomingTimesRepository
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
@@ -15,7 +15,7 @@ import kotlin.time.seconds
 class HomeViewModel(
     private val locationRepository: LocationRepository,
     private val upcomingTimesRepository: UpcomingTimesRepository,
-    private val clockRepository: ClockRepository,
+    private val currentTimeRepository: CurrentTimeRepository,
     dispatcher: CoroutineDispatcher
 ) : BaseViewModel<HomeViewModel.State, HomeViewModel.Event, HomeViewModel.Action>(
     State.Loading,
@@ -25,7 +25,7 @@ class HomeViewModel(
         combine(
             locationRepository.getSelectedLocation(),
             upcomingTimesRepository.getUpcomingTimes(),
-            clockRepository.getCurrentTimeFlow(0.1.seconds)
+            currentTimeRepository.getCurrentTimeFlow(0.1.seconds)
         ) { location, upcomingTimes, instant ->
             if (location != null) {
                 val timeZone = if (location.timeZone in TimeZone.availableZoneIds) {

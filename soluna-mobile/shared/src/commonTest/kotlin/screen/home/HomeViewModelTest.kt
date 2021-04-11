@@ -8,7 +8,7 @@ import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.repository.AstronomicalData
 import com.russhwolf.soluna.mobile.repository.AstronomicalDataRepository
-import com.russhwolf.soluna.mobile.repository.ClockRepository
+import com.russhwolf.soluna.mobile.repository.FakeCurrentTimeRepository
 import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.repository.UpcomingTimesRepository
 import com.russhwolf.soluna.mobile.repository.configureMockLocationData
@@ -17,13 +17,6 @@ import com.russhwolf.soluna.mobile.screen.expectViewModelState
 import com.russhwolf.soluna.mobile.screen.stateAndEvents
 import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -33,12 +26,12 @@ import kotlinx.datetime.toInstant
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.time.Duration
+import kotlin.time.minutes
 
 class HomeViewModelTest {
     private var locations: Array<Location> = emptyArray()
-    private var now: Instant = LocalDateTime(2021, 1, 1, 11, 0).toInstant(TimeZone.UTC)
-    private val ticker = BroadcastChannel<Unit>(CONFLATED)
+
+    private val initialTime: Instant = LocalDateTime(2021, 1, 1, 11, 0).toInstant(TimeZone.UTC)
 
     private val driver = createInMemorySqlDriver()
     private val database = createDatabase(driver)
@@ -56,15 +49,10 @@ class HomeViewModelTest {
                 moonsetTime = date.atTime(8, date.dayOfMonth).toInstant(zone)
             )
     }
-    private val clock = object : Clock {
-        override fun now() = now
-    }
+
+    private val clockRepository = FakeCurrentTimeRepository(initialTime, emitImmediately = false)
     private val upcomingTimesRepository: UpcomingTimesRepository by lazy {
-        UpcomingTimesRepository.Impl(locationRepository, astronomicalDataRepository, clock)
-    }
-    private val clockRepository = object : ClockRepository {
-        @OptIn(FlowPreview::class)
-        override fun getCurrentTimeFlow(period: Duration): Flow<Instant> = ticker.asFlow().map { clock.now() }
+        UpcomingTimesRepository.Impl(locationRepository, astronomicalDataRepository, clockRepository)
     }
 
     private val viewModel by lazy {
@@ -77,7 +65,7 @@ class HomeViewModelTest {
             assertEquals(HomeViewModel.State.Loading, expectViewModelState())
             expectNoEvents()
 
-            ticker.send(Unit)
+            clockRepository.tick()
             assertEquals(HomeViewModel.State.NoLocationSelected, expectViewModelState())
         }
     }
@@ -91,11 +79,39 @@ class HomeViewModelTest {
             assertEquals(HomeViewModel.State.Loading, expectViewModelState())
             expectNoEvents()
 
-            ticker.send(Unit)
+            clockRepository.tick()
             assertEquals(
                 HomeViewModel.State.Populated(
                     locationName = "Home",
-                    currentTime = now,
+                    currentTime = initialTime,
+                    sunriseTime = LocalDate(2021, 1, 2).atTime(6, 2).toInstant(TimeZone.UTC),
+                    sunsetTime = LocalDate(2021, 1, 1).atTime(18, 1).toInstant(TimeZone.UTC),
+                    moonriseTime = LocalDate(2021, 1, 1).atTime(20, 1).toInstant(TimeZone.UTC),
+                    moonsetTime = LocalDate(2021, 1, 2).atTime(8, 2).toInstant(TimeZone.UTC),
+                    timeZone = TimeZone.of("UTC")
+                ),
+                expectViewModelState()
+            )
+
+            clockRepository.tick(1.minutes)
+            assertEquals(
+                HomeViewModel.State.Populated(
+                    locationName = "Home",
+                    currentTime = LocalDateTime(2021, 1, 1, 11, 1).toInstant(TimeZone.UTC),
+                    sunriseTime = LocalDate(2021, 1, 2).atTime(6, 2).toInstant(TimeZone.UTC),
+                    sunsetTime = LocalDate(2021, 1, 1).atTime(18, 1).toInstant(TimeZone.UTC),
+                    moonriseTime = LocalDate(2021, 1, 1).atTime(20, 1).toInstant(TimeZone.UTC),
+                    moonsetTime = LocalDate(2021, 1, 2).atTime(8, 2).toInstant(TimeZone.UTC),
+                    timeZone = TimeZone.of("UTC")
+                ),
+                expectViewModelState()
+            )
+
+            clockRepository.tick(1.minutes)
+            assertEquals(
+                HomeViewModel.State.Populated(
+                    locationName = "Home",
+                    currentTime = LocalDateTime(2021, 1, 1, 11, 2).toInstant(TimeZone.UTC),
                     sunriseTime = LocalDate(2021, 1, 2).atTime(6, 2).toInstant(TimeZone.UTC),
                     sunsetTime = LocalDate(2021, 1, 1).atTime(18, 1).toInstant(TimeZone.UTC),
                     moonriseTime = LocalDate(2021, 1, 1).atTime(20, 1).toInstant(TimeZone.UTC),

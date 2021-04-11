@@ -9,10 +9,14 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.time.Duration
 
-interface ClockRepository {
+interface CurrentTimeRepository {
+    fun getCurrentTime(): Instant
+
     fun getCurrentTimeFlow(period: Duration): Flow<Instant>
 
-    class Impl(val clock: Clock) : ClockRepository {
+    class Impl(private val clock: Clock) : CurrentTimeRepository {
+        override fun getCurrentTime(): Instant = clock.now()
+
         override fun getCurrentTimeFlow(period: Duration): Flow<Instant> = flow {
             while (currentCoroutineContext().isActive) {
                 emit(clock.now())

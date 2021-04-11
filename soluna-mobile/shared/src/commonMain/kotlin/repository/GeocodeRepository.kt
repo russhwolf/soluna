@@ -1,7 +1,6 @@
 package com.russhwolf.soluna.mobile.repository
 
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
-import kotlinx.datetime.Clock
 
 interface GeocodeRepository {
 
@@ -9,7 +8,7 @@ interface GeocodeRepository {
 
     class Impl(
         private val googleApiClient: GoogleApiClient,
-        private val clock: Clock
+        private val currentTimeRepository: CurrentTimeRepository
     ) : GeocodeRepository {
 
         override suspend fun geocodeLocation(location: String): GeocodeData? {
@@ -20,7 +19,7 @@ interface GeocodeRepository {
             val timeZone = googleApiClient.getTimeZone(
                 coords.lat ?: return null,
                 coords.lng ?: return null,
-                clock.now().toEpochMilliseconds() / 1000
+                currentTimeRepository.getCurrentTime().toEpochMilliseconds() / 1000
             )?.timeZoneId
                 ?: return null
             return GeocodeData(

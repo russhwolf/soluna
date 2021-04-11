@@ -4,7 +4,7 @@ import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.provider.TimeZoneProvider
 import com.russhwolf.soluna.mobile.repository.AstronomicalDataRepository
-import com.russhwolf.soluna.mobile.repository.ClockRepository
+import com.russhwolf.soluna.mobile.repository.CurrentTimeRepository
 import com.russhwolf.soluna.mobile.repository.GeocodeRepository
 import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.repository.ReminderRepository
@@ -37,7 +37,7 @@ internal val commonModule = module {
     single<ReminderRepository> { ReminderRepository.Impl(get(), get(ioDispatcherQualifier)) }
     single<GeocodeRepository> { GeocodeRepository.Impl(get(), get()) }
     single<AstronomicalDataRepository> { AstronomicalDataRepository.Impl() }
-    single<ClockRepository> { ClockRepository.Impl(get()) }
+    single<CurrentTimeRepository> { CurrentTimeRepository.Impl(get()) }
     single<UpcomingTimesRepository> { UpcomingTimesRepository.Impl(get(), get(), get()) }
 
     factory { HomeViewModel(get(), get(), get(), get(mainDispatcherQualifier)) }
