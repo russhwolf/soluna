@@ -2,9 +2,6 @@ import SwiftUI
 import Shared
 
 struct HomeView: View {
-    @Environment(\.scenePhase)
-    private var scenePhase
-    
     @ObservedObject
     private var observableModel = ObservableHomeViewModel()
         
@@ -15,11 +12,6 @@ struct HomeView: View {
         }
         .navigationTitle("Soluna")
         .bindModel(observableModel)
-        .onChange(of: scenePhase, perform: { phase in
-            if (phase != .active) {
-                observableModel.reset()
-            }
-        })
     }
 }
 

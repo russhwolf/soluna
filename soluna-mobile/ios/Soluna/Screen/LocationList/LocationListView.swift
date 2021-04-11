@@ -2,9 +2,6 @@ import SwiftUI
 import Shared
 
 struct LocationListView: View {
-    @Environment(\.scenePhase)
-    private var scenePhase
-    
     @ObservedObject
     private var observableModel = ObservableLocationListViewModel()
     
@@ -22,11 +19,6 @@ struct LocationListView: View {
         }
         .navigationTitle("Locations")
         .bindModel(observableModel)
-        .onChange(of: scenePhase, perform: { phase in
-            if (phase != .active) {
-                observableModel.reset()
-            }
-        })
     }
 }
 

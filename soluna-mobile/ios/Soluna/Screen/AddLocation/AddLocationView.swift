@@ -5,9 +5,6 @@ struct AddLocationView : View {
     @Environment(\.presentationMode)
     var presentationMode: Binding
 
-    @Environment(\.scenePhase)
-    private var scenePhase
-    
     @ObservedObject
     private var observableModel = ObservableAddLocationViewModel()
     
@@ -45,11 +42,6 @@ struct AddLocationView : View {
             )
         }
         .bindModel(observableModel)
-        .onChange(of: scenePhase, perform: { phase in
-            if (phase != .active) {
-                observableModel.reset()
-            }
-        })
         .onReceive(observableModel.$goBack, perform: { goBack in
             if goBack {
                 self.presentationMode.wrappedValue.dismiss()

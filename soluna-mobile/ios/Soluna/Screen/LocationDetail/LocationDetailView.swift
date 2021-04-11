@@ -7,9 +7,6 @@ struct LocationDetailView: View {
     @Environment(\.presentationMode)
     var presentationMode: Binding
     
-    @Environment(\.scenePhase)
-    private var scenePhase
-    
     @ObservedObject
     private var observableModel: ObservableLocationDetailViewModel
         
@@ -28,11 +25,6 @@ struct LocationDetailView: View {
         }
         .navigationTitle(observableModel.state is LocationDetailViewModel.StatePopulated ? (observableModel.state as! LocationDetailViewModel.StatePopulated).location.label : "")
         .bindModel(observableModel)
-        .onChange(of: scenePhase, perform: { phase in
-            if (phase != .active) {
-                observableModel.reset()
-            }
-        })
         .onReceive(observableModel.$goBack, perform: { goBack in
             if goBack {
                 self.presentationMode.wrappedValue.dismiss()

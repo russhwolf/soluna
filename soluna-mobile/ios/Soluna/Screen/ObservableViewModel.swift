@@ -46,6 +46,7 @@ open class ObservableViewModel<State: AnyObject, Event: AnyObject, Action: AnyOb
             cancellable.cancel()
         }
         viewModel.dispose()
+        reset()
     }
         
     open func onEvent(_ event: Event) {
