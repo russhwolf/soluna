@@ -58,11 +58,3 @@ struct LocationListContent : View {
         }
     }
 }
-
-extension SelectableLocation : Identifiable {
-    
-}
-
-extension SelectableLocationSummary : Identifiable {
-    
-}

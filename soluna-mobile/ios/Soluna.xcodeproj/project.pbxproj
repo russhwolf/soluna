@@ -22,6 +22,8 @@
 		46C759FA261FF379009FFEB5 /* ObservableHomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C759F9261FF379009FFEB5 /* ObservableHomeViewModel.swift */; };
 		46C75A00261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C759FF261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift */; };
 		46C75A04261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C75A03261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift */; };
+		46E71005262251C8004DC8FE /* SelectableLocationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E71004262251C8004DC8FE /* SelectableLocationExtensions.swift */; };
+		46E7100B262254B3004DC8FE /* DateTimeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E7100A262254B3004DC8FE /* DateTimeExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +78,8 @@
 		46C759F9261FF379009FFEB5 /* ObservableHomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableHomeViewModel.swift; sourceTree = "<group>"; };
 		46C759FF261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableLocationListViewModel.swift; sourceTree = "<group>"; };
 		46C75A03261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableAddLocationViewModel.swift; sourceTree = "<group>"; };
+		46E71004262251C8004DC8FE /* SelectableLocationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableLocationExtensions.swift; sourceTree = "<group>"; };
+		46E7100A262254B3004DC8FE /* DateTimeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTimeExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,10 +133,12 @@
 			isa = PBXGroup;
 			children = (
 				463BA3EF26195720008BB17B /* Assets.xcassets */,
-				469AF5CE261A8F3F005D00C8 /* CombineAdapters.swift */,
 				463BA3F426195720008BB17B /* Info.plist */,
 				463BA3F126195720008BB17B /* Preview Content */,
 				46C75A07261FF91E009FFEB5 /* Screen */,
+				469AF5CE261A8F3F005D00C8 /* CombineAdapters.swift */,
+				46E7100A262254B3004DC8FE /* DateTimeExtensions.swift */,
+				46E71004262251C8004DC8FE /* SelectableLocationExtensions.swift */,
 				463BA3EB2619571F008BB17B /* SolunaApp.swift */,
 			);
 			path = Soluna;
@@ -361,12 +367,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46E7100B262254B3004DC8FE /* DateTimeExtensions.swift in Sources */,
 				46C75A04261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift in Sources */,
 				469AF5CF261A8F3F005D00C8 /* CombineAdapters.swift in Sources */,
 				467F906A261E9EEE0029454A /* ObservableViewModel.swift in Sources */,
 				467F9072261E9F9D0029454A /* LocationListView.swift in Sources */,
 				467F9076261E9FE60029454A /* AddLocationView.swift in Sources */,
 				467F906E261E9F4D0029454A /* HomeView.swift in Sources */,
+				46E71005262251C8004DC8FE /* SelectableLocationExtensions.swift in Sources */,
 				463BA3EC2619571F008BB17B /* SolunaApp.swift in Sources */,
 				46C75A00261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift in Sources */,
 				46C759FA261FF379009FFEB5 /* ObservableHomeViewModel.swift in Sources */,

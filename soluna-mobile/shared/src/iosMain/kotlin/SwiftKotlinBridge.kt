@@ -7,6 +7,10 @@ import com.russhwolf.soluna.mobile.screen.home.HomeViewModel
 import com.russhwolf.soluna.mobile.screen.locationdetail.LocationDetailViewModel
 import com.russhwolf.soluna.mobile.screen.locationlist.LocationListViewModel
 import com.russhwolf.soluna.mobile.screen.reminderlist.ReminderListViewModel
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toNSDate
+import kotlinx.datetime.toNSTimeZone
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
@@ -25,4 +29,7 @@ object SwiftKotlinBridge : KoinComponent {
     fun getAddLocationViewModel() = NativeViewModel(get<AddLocationViewModel>())
     fun getLocationDetailViewModel(id: Long) = NativeViewModel(get<LocationDetailViewModel> { parametersOf(id) })
     fun getReminderListViewModel() = NativeViewModel(get<ReminderListViewModel>())
+
+    fun nsDate(instant: Instant) = instant.toNSDate()
+    fun nsTimeZone(timeZone: TimeZone) = timeZone.toNSTimeZone()
 }

@@ -38,6 +38,11 @@ struct HomeContent : View {
             case is HomeViewModel.StatePopulated:
                 let populatedState = state.output as! HomeViewModel.StatePopulated
                 Text(populatedState.locationName)
+                Text(populatedState.currentTime.toDisplayTime())
+                Text("Sunrise: \(populatedState.sunriseTime?.toDisplayTime() ?? "None")")
+                Text("Sunset: \(populatedState.sunsetTime?.toDisplayTime() ?? "None")")
+                Text("Moonrise: \(populatedState.moonriseTime?.toDisplayTime() ?? "None")")
+                Text("Moonset: \(populatedState.moonsetTime?.toDisplayTime() ?? "None")")
             default:
                 EmptyView()
             }
