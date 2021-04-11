@@ -15,7 +15,7 @@ class ReminderListViewModel(
     State(emptyList()),
     dispatcher
 ) {
-    init {
+    override fun activate() {
         reminderRepository
             .getRemindersFlow()
             .onEach { emitState(State(it)) }

@@ -32,21 +32,6 @@ func createPublisher<T>(_ suspendAdapter: SuspendAdapter<T>) -> AnyPublisher<T, 
     }.eraseToAnyPublisher()
 }
 
-class PublishedFlow<T> : ObservableObject {
-    @Published
-    var output: T
-    
-    init<E>(_ publisher: AnyPublisher<T, E>, defaultValue: T) {
-        output = defaultValue
-        
-        publisher
-            .replaceError(with: defaultValue)
-            .compactMap { $0 }
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$output)
-    }
-}
-
 class KotlinError: LocalizedError {
     let throwable: KotlinThrowable
     init(_ throwable: KotlinThrowable) {

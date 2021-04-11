@@ -3,8 +3,8 @@ import Combine
 import Shared
 
 open class ObservableViewModel<State: AnyObject, Event: AnyObject, Action: AnyObject> : ObservableObject {
-    @ObservedObject
-    final var state: PublishedFlow<State>
+    @Published
+    var state: State
     
     @Published
     private var event: Event? = nil
@@ -15,8 +15,18 @@ open class ObservableViewModel<State: AnyObject, Event: AnyObject, Action: AnyOb
     
     init(_ viewModel: NativeViewModel<State, Event, Action>) {
         self.viewModel = viewModel
-        state = PublishedFlow(createPublisher(viewModel.state), defaultValue: viewModel.initialState)
+        state = viewModel.initialState
+    }
+    
+    final func activate() {
+        viewModel.activate()
         
+        createPublisher(viewModel.state)
+            .replaceError(with: viewModel.initialState)
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$state)
+
         createPublisher(viewModel.events)
             .sink(receiveCompletion: { _ in }, receiveValue: { event in
                 self.event = event
@@ -31,6 +41,13 @@ open class ObservableViewModel<State: AnyObject, Event: AnyObject, Action: AnyOb
         }.store(in: &subscriptions)
     }
     
+    final func deactivate() {
+        subscriptions.forEach { cancellable in
+            cancellable.cancel()
+        }
+        viewModel.dispose()
+    }
+        
     open func onEvent(_ event: Event) {
         
     }
@@ -45,4 +62,13 @@ open class ObservableViewModel<State: AnyObject, Event: AnyObject, Action: AnyOb
             .store(in: &subscriptions)
     }
     
+}
+
+extension View {
+    func bindModel<State, Event, Action>(_ observableModel: ObservableViewModel<State, Event, Action>) -> some View {
+        
+        return self
+            .onAppear { observableModel.activate() }
+            .onDisappear { observableModel.deactivate() }
+    }
 }

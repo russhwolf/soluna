@@ -13,7 +13,7 @@ class AddLocationViewModel(
     State(),
     dispatcher
 ) {
-
+    override fun activate() {}
 
     override suspend fun performAction(action: Action) = when (action) {
         is Action.CreateLocation -> addLocation(action.label, action.latitude, action.longitude, action.timeZone)

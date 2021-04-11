@@ -30,6 +30,8 @@ abstract class BaseViewModel<State : Any, Event : Any, Action : Any>(
 
     suspend fun emitEvent(event: Event) = mutableEvents.emit(event)
 
+    abstract fun activate()
+
     fun dispose() {
         coroutineScope.clear()
     }

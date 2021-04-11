@@ -14,6 +14,10 @@ class NativeViewModel<State : Any, Event : Any, Action : Any>(private val delega
 
     fun performAction(action: Action) = SuspendAdapter(scope) { delegate.performAction(action) }
 
+    fun activate() {
+        delegate.activate()
+    }
+
     fun dispose() {
         scope.clear()
         delegate.dispose()

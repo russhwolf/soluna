@@ -11,7 +11,7 @@ struct LocationListView: View {
     var body: some View {
         VStack {
             LocationListContent(
-                state: observableModel.state,
+                state: $observableModel.state,
                 selection: $observableModel.navigateToLocationDetails,
                 onAddLocationClick: { observableModel.onAddLocationClick() },
                 onDeleteLocationClick: { locationId in observableModel.onRemoveLocationClick(locationId) },
@@ -21,6 +21,7 @@ struct LocationListView: View {
             NavigationLink(destination: AddLocationView(), isActive: $observableModel.navigateToAddLocation) { EmptyView() }
         }
         .navigationTitle("Locations")
+        .bindModel(observableModel)
         .onChange(of: scenePhase, perform: { phase in
             if (phase != .active) {
                 observableModel.reset()
@@ -30,8 +31,8 @@ struct LocationListView: View {
 }
 
 struct LocationListContent : View {
-    @ObservedObject
-    var state: PublishedFlow<LocationListViewModel.State>
+    @Binding
+    var state: LocationListViewModel.State
     
     @Binding
     var selection: Int64?
@@ -44,7 +45,7 @@ struct LocationListContent : View {
     var body: some View {
         VStack {
             List {
-                ForEach(state.output.locations) { location in
+                ForEach(state.locations) { location in
                     HStack {
                         Image(systemName: location.selected ? "star.fill" : "star")
                             .onTapGesture { onSelectLocationClick(location.id) }
@@ -55,7 +56,7 @@ struct LocationListContent : View {
                     }
                 }.onDelete { indexSet in
                     indexSet.forEach { index in
-                        onDeleteLocationClick(state.output.locations[index].id)
+                        onDeleteLocationClick(state.locations[index].id)
                     }
                 }
             }

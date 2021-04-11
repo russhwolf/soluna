@@ -32,6 +32,7 @@ class LocationListViewModelTest {
 
     private val viewModel by lazy {
         LocationListViewModel(locationRepository, Dispatchers.Unconfined)
+            .also { it.activate() }
     }
 
     @Test

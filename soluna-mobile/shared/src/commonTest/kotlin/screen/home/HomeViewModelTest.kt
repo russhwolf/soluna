@@ -57,6 +57,7 @@ class HomeViewModelTest {
 
     private val viewModel by lazy {
         HomeViewModel(locationRepository, upcomingTimesRepository, clockRepository, Dispatchers.Unconfined)
+            .also { it.activate() }
     }
 
     @Test

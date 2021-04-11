@@ -26,7 +26,7 @@ struct AddLocationView : View {
     var body: some View {
         VStack {
             AddLocationContent(
-                state: observableModel.state,
+                state: $observableModel.state,
                 onSubmitClick: { label, latitude, longitude, timeZone in
                     observableModel.createLocation(
                         label: label,
@@ -44,6 +44,12 @@ struct AddLocationView : View {
                 timeZone: $timeZone
             )
         }
+        .bindModel(observableModel)
+        .onChange(of: scenePhase, perform: { phase in
+            if (phase != .active) {
+                observableModel.reset()
+            }
+        })
         .onReceive(observableModel.$goBack, perform: { goBack in
             if goBack {
                 self.presentationMode.wrappedValue.dismiss()
@@ -53,11 +59,6 @@ struct AddLocationView : View {
             latitude = String(geocodeEvent.latitude)
             longitude = String(geocodeEvent.longitude)
             timeZone = geocodeEvent.timeZone
-        })
-        .onChange(of: scenePhase, perform: { phase in
-            if (phase != .active) {
-                observableModel.reset()
-            }
         })
     }
     
@@ -69,8 +70,8 @@ struct AddLocationView : View {
 }
 
 struct AddLocationContent : View {
-    @ObservedObject
-    var state: PublishedFlow<AddLocationViewModel.State>
+    @Binding
+    var state: AddLocationViewModel.State
     
     var onSubmitClick: (String, String, String, String) -> Void
     

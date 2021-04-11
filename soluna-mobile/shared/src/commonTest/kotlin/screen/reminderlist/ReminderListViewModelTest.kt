@@ -26,6 +26,7 @@ class ReminderListViewModelTest {
 
     private val viewModel by lazy {
         ReminderListViewModel(reminderRepository, Dispatchers.Unconfined)
+            .also { it.activate() }
     }
 
     @Test

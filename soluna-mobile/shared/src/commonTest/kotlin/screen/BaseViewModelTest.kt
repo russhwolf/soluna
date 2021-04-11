@@ -46,6 +46,8 @@ class BaseViewModelTest {
 }
 
 class TestViewModel(state: String) : BaseViewModel<String, String, String>(state, Dispatchers.Unconfined) {
+    override fun activate() {}
+
     override suspend fun performAction(action: String) {
         delay(10)
         when {

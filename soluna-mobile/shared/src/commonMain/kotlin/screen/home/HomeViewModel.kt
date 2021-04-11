@@ -23,7 +23,7 @@ class HomeViewModel(
     State.Loading,
     dispatcher
 ) {
-    init {
+    override fun activate() {
         locationRepository.getSelectedLocation().flatMapLatest { selectedLocation ->
             if (selectedLocation != null) {
                 combine(

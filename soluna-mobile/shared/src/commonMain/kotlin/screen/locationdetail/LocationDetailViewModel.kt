@@ -22,7 +22,7 @@ class LocationDetailViewModel(
     State.Loading,
     dispatcher
 ) {
-    init {
+    override fun activate() {
         locationRepository.getLocation(locationId).flatMapLatest { selectedLocation ->
             if (selectedLocation != null) {
                 combine(

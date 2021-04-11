@@ -55,6 +55,7 @@ class LocationDetailViewModelTest {
 
     val viewModel by lazy {
         LocationDetailViewModel(1, locationRepository, upcomingTimesRepository, Dispatchers.Unconfined)
+            .also { it.activate() }
     }
 
     @Test

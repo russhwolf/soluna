@@ -43,6 +43,7 @@ class AddLocationViewModelTest {
     )
 
     private val viewModel = AddLocationViewModel(locationRepository, geocodeRepository, Dispatchers.Unconfined)
+        .also { it.activate() }
 
     @Test
     fun addLocation_valid() = suspendTest {

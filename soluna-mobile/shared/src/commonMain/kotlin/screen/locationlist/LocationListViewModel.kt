@@ -15,7 +15,7 @@ class LocationListViewModel(
     dispatcher
 ) {
 
-    init {
+    override fun activate() {
         locationRepository
             .getLocations()
             .onEach { emitState(State(it)) }
