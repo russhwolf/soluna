@@ -26,7 +26,9 @@ import kotlinx.datetime.toInstant
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.milliseconds
 import kotlin.time.minutes
+import kotlin.time.nanoseconds
 
 class HomeViewModelTest {
     private var locations: Array<Location> = emptyArray()

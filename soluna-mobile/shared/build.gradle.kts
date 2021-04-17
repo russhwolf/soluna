@@ -11,6 +11,18 @@ plugins {
     id("com.codingfeline.buildkonfig") version Versions.buildKonfig
 }
 
+// workaround for https://youtrack.jetbrains.com/issue/KT-43944
+android {
+    configurations {
+        create("androidTestApi")
+        create("androidTestDebugApi")
+        create("androidTestReleaseApi")
+        create("testApi")
+        create("testDebugApi")
+        create("testReleaseApi")
+    }
+}
+
 kotlin {
     android()
     val isDevice = System.getenv("SDK_NAME")?.startsWith("iphoneos") == true
@@ -45,11 +57,7 @@ kotlin {
             dependencies {
                 implementation(project(":soluna-core:kotlinx-datetime"))
 
-                implementation(Deps.KotlinX.Coroutines.core) {
-                    version {
-                        strictly(Versions.KotlinX.coroutines)
-                    }
-                }
+                implementation(Deps.KotlinX.Coroutines.core)
 
                 implementation(Deps.SqlDelight.coroutines)
 
@@ -87,11 +95,7 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation(Deps.KotlinX.Coroutines.android) {
-                    version {
-                        strictly(Versions.KotlinX.coroutines)
-                    }
-                }
+                implementation(Deps.KotlinX.Coroutines.android)
 
                 implementation(Deps.SqlDelight.android)
 
@@ -115,6 +119,12 @@ kotlin {
         }
         val iosMain by getting {
             dependencies {
+                implementation(Deps.KotlinX.Coroutines.core) {
+                    version {
+                        strictly(Versions.KotlinX.coroutines)
+                    }
+                }
+
                 implementation(Deps.SqlDelight.native)
 
                 implementation(Deps.Ktor.ios)
@@ -156,9 +166,9 @@ sqldelight {
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdkVersion(Versions.Android.compileSdk)
     defaultConfig {
-        minSdkVersion(15)
+        minSdkVersion(Versions.Android.minSdk)
     }
 
     testOptions.unitTests.isIncludeAndroidResources = true

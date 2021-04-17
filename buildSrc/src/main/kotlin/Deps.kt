@@ -1,6 +1,12 @@
 object Versions {
     const val kotlin = "1.4.32"
-    const val android = "4.0.2"
+
+    object Android {
+        const val gradle = "7.0.0-alpha14"
+        const val minSdk = 21
+        const val compileSdk = 30
+        const val targetSdk = 30
+    }
 
     const val buildKonfig = "0.7.0"
     const val islandTime = "0.5.0"
@@ -20,7 +26,11 @@ object Versions {
     }
 
     object AndroidX {
+        const val activityCompose = "1.3.0-alpha06"
+        const val compose = "1.0.0-beta04"
+        const val coreKtx = "1.3.2"
         const val dataStore = "1.0.0-alpha08"
+        const val lifecycle = "2.3.1"
 
         object Test {
             const val core = "1.3.0"
@@ -36,7 +46,17 @@ object Deps {
     const val turbine = "app.cash.turbine:turbine:${Versions.turbine}"
 
     object AndroidX {
+        const val activityCompose = "androidx.activity:activity-compose:${Versions.AndroidX.activityCompose}"
+        const val coreKtx = "androidx.core:core-ktx:${Versions.AndroidX.coreKtx}"
         const val dataStore = "androidx.datastore:datastore-preferences:${Versions.AndroidX.dataStore}"
+        const val lifecycleRuntime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.AndroidX.lifecycle}"
+
+        object Compose {
+            const val material = "androidx.compose.material:material:${Versions.AndroidX.compose}"
+            const val test = "androidx.compose.ui:ui-test-junit4:${Versions.AndroidX.compose}"
+            const val tooling = "androidx.compose.ui:ui-tooling:${Versions.AndroidX.compose}"
+            const val ui = "androidx.compose.ui:ui:${Versions.AndroidX.compose}"
+        }
 
         object Test {
             const val core = "androidx.test:core:${Versions.AndroidX.Test.core}"
@@ -82,7 +102,7 @@ object Deps {
 
     object Settings {
         const val core = "com.russhwolf:multiplatform-settings:${Versions.settings}"
-        const val coroutines = "com.russhwolf:multiplatform-settings-coroutines-native-mt:${Versions.settings}"
+        const val coroutines = "com.russhwolf:multiplatform-settings-coroutines:${Versions.settings}"
         const val dataStore = "com.russhwolf:multiplatform-settings-datastore:${Versions.settings}"
         const val test = "com.russhwolf:multiplatform-settings-test:${Versions.settings}"
     }

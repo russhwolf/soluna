@@ -26,7 +26,6 @@ class FakeCurrentTimeRepository(
     private val currentInstant: SharedFlow<Instant> =
         ticker.asFlow()
             .scan(initialTime) { time, tick -> time + tick }
-            .drop(1)
             .run {
                 if (emitImmediately) {
                     stateIn(GlobalScope, SharingStarted.WhileSubscribed(), initialTime)

@@ -2,18 +2,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("multiplatform") version Versions.kotlin apply false
-    id("com.android.library") version Versions.android apply false
+    id("com.android.library") version Versions.Android.gradle apply false
 }
 
 subprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter {
-            content {
-                includeModule("org.jetbrains.trove4j", "trove4j")
-            }
-        }
     }
 
     tasks.withType<KotlinCompile> {
