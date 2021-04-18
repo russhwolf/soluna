@@ -23,7 +23,6 @@ import com.russhwolf.soluna.mobile.screen.locationlist.LocationListViewModel
 fun LocationListScreen(viewModel: LocationListViewModel, navController: NavController) =
     Screen(
         viewModel,
-        navController.currentDestination,
         onEvent = { event ->
             when (event) {
                 LocationListViewModel.Event.AddLocation ->

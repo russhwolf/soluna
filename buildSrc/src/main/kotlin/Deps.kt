@@ -31,7 +31,7 @@ object Versions {
         const val compose = "1.0.0-beta04"
         const val coreKtx = "1.3.2"
         const val dataStore = "1.0.0-alpha08"
-        const val lifecycle = "2.3.1"
+        const val lifecycle = "2.4.0-alpha01"
         const val navigationCompose = "1.0.0-alpha10"
 
         object Test {

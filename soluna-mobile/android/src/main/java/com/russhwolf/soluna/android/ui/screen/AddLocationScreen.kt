@@ -19,7 +19,6 @@ fun AddLocationScreen(viewModel: AddLocationViewModel, navController: NavControl
 
     Screen(
         viewModel,
-        navController.currentDestination,
         onEvent = { event ->
             when (event) {
                 AddLocationViewModel.Event.Exit -> navController.navigateUp()

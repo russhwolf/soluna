@@ -13,7 +13,6 @@ import com.russhwolf.soluna.mobile.screen.home.HomeViewModel
 fun HomeScreen(viewModel: HomeViewModel, navController: NavController) =
     Screen(
         viewModel,
-        navController.currentDestination,
         onEvent = { event ->
             when (event) {
                 HomeViewModel.Event.Locations -> navController.navigate(Destination.LocationList)

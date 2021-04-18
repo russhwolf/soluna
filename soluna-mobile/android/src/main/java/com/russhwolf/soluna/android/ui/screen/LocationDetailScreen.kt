@@ -17,7 +17,6 @@ import com.russhwolf.soluna.mobile.screen.locationdetail.LocationDetailViewModel
 fun LocationDetailScreen(viewModel: LocationDetailViewModel, navController: NavController) =
     Screen(
         viewModel,
-        navController.currentDestination,
         onEvent = { event ->
             when (event) {
                 LocationDetailViewModel.Event.Exit -> navController.navigateUp()
