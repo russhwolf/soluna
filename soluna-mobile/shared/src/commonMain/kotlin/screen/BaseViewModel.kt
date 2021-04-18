@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
  * @param Action The type which is accepted by this viewmodel's [performAction] function
  */
 abstract class BaseViewModel<State : Any, Event : Any, Action : Any>(
-    val initialState: State,
+    initialState: State,
     dispatcher: CoroutineDispatcher
 ) {
     protected val coroutineScope = SupervisorScope(dispatcher)

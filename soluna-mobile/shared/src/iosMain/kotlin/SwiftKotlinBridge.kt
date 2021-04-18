@@ -1,4 +1,4 @@
-@file:Suppress("unused")
+@file:Suppress("unused") // This object is called from Swift
 
 package com.russhwolf.soluna.mobile
 
