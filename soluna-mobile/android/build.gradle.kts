@@ -22,6 +22,7 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -43,12 +44,21 @@ dependencies {
     implementation(Deps.AndroidX.coreKtx)
     implementation(Deps.AndroidX.Compose.ui)
     implementation(Deps.AndroidX.Compose.material)
+    implementation(Deps.AndroidX.Compose.materialIcons)
+    implementation(Deps.AndroidX.Compose.materialIconsExtended)
     implementation(Deps.AndroidX.Compose.tooling)
     implementation(Deps.AndroidX.lifecycleRuntime)
     implementation(Deps.AndroidX.activityCompose)
+    implementation(Deps.AndroidX.navigationCompose)
 
     implementation(Deps.KotlinX.Coroutines.core)
     implementation(Deps.KotlinX.Coroutines.android)
+
+    implementation(Deps.KotlinX.dateTime)
+    coreLibraryDesugaring(Deps.desugar)
+
+    implementation(Deps.Koin.core)
+    implementation(Deps.Koin.compose)
 
     testImplementation(Deps.junit)
     androidTestImplementation(Deps.AndroidX.Test.junit)

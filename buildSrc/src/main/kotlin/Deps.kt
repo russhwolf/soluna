@@ -9,6 +9,7 @@ object Versions {
     }
 
     const val buildKonfig = "0.7.0"
+    const val desugar = "1.1.5"
     const val islandTime = "0.5.0"
     const val junit = "4.13.2"
     const val koin = "3.0.1-beta-2"
@@ -31,6 +32,7 @@ object Versions {
         const val coreKtx = "1.3.2"
         const val dataStore = "1.0.0-alpha08"
         const val lifecycle = "2.3.1"
+        const val navigationCompose = "1.0.0-alpha10"
 
         object Test {
             const val core = "1.3.0"
@@ -40,6 +42,7 @@ object Versions {
 }
 
 object Deps {
+    const val desugar = "com.android.tools:desugar_jdk_libs:${Versions.desugar}"
     const val islandTime = "io.islandtime:core:${Versions.islandTime}"
     const val junit = "junit:junit:${Versions.junit}"
     const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
@@ -50,9 +53,13 @@ object Deps {
         const val coreKtx = "androidx.core:core-ktx:${Versions.AndroidX.coreKtx}"
         const val dataStore = "androidx.datastore:datastore-preferences:${Versions.AndroidX.dataStore}"
         const val lifecycleRuntime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.AndroidX.lifecycle}"
+        const val navigationCompose = "androidx.navigation:navigation-compose:${Versions.AndroidX.navigationCompose}"
 
         object Compose {
             const val material = "androidx.compose.material:material:${Versions.AndroidX.compose}"
+            const val materialIcons = "androidx.compose.material:material-icons-core:${Versions.AndroidX.compose}"
+            const val materialIconsExtended =
+                "androidx.compose.material:material-icons-extended:${Versions.AndroidX.compose}"
             const val test = "androidx.compose.ui:ui-test-junit4:${Versions.AndroidX.compose}"
             const val tooling = "androidx.compose.ui:ui-tooling:${Versions.AndroidX.compose}"
             const val ui = "androidx.compose.ui:ui:${Versions.AndroidX.compose}"
@@ -81,6 +88,7 @@ object Deps {
     object Koin {
         const val core = "io.insert-koin:koin-core:${Versions.koin}"
         const val test = "io.insert-koin:koin-test:${Versions.koin}"
+        const val compose = "io.insert-koin:koin-androidx-compose:${Versions.koin}"
     }
 
     object Ktor {

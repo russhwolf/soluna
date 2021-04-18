@@ -21,7 +21,7 @@ import java.io.File
 
 @OptIn(KtorExperimentalAPI::class)
 actual val platformModule: Module = module {
-    single<SqlDriver> { AndroidSqliteDriver(SolunaDb.Schema, get()) }
+    single<SqlDriver> { AndroidSqliteDriver(SolunaDb.Schema, get(), "Soluna.db") }
     single { Android.create() }
     single<FlowSettings> {
         val context: Context = get()
