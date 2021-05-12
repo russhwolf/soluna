@@ -103,6 +103,10 @@ kotlin {
 
                 implementation(Deps.AndroidX.dataStore)
                 implementation(Deps.Settings.dataStore)
+
+                implementation(Deps.AndroidX.activityCompose)
+                implementation(Deps.playServicesLocation)
+                implementation(Deps.KotlinX.Coroutines.playServices)
             }
         }
         val androidTest by getting {

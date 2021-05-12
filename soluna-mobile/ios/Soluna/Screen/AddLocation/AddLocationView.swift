@@ -35,6 +35,9 @@ struct AddLocationView : View {
                 onGeocodeClick: { label in
                     observableModel.geocodeLocation(label)
                 },
+                onGpsClick: {
+                    observableModel.useGpsLocation()
+                },
                 label: $label,
                 latitude: $latitude,
                 longitude: $longitude,
@@ -69,6 +72,8 @@ struct AddLocationContent : View {
     
     var onGeocodeClick: (String) -> Void
     
+    var onGpsClick: () -> Void
+    
     @Binding
     var label: String
     
@@ -89,6 +94,7 @@ struct AddLocationContent : View {
             TextField("Time Zone", text: $timeZone)
             Button("Submit") { onSubmitClick(label, latitude, longitude, timeZone) }
             Button("Geocode") { onGeocodeClick(label) } // TODO convert to bottomsheet/dialog?
+            Button("Gps") { onGpsClick() }
         }
     }
 }

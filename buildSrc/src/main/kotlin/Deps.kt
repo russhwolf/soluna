@@ -2,7 +2,7 @@ object Versions {
     const val kotlin = "1.4.32"
 
     object Android {
-        const val gradle = "7.0.0-alpha14"
+        const val gradle = "7.0.0-alpha15"
         const val minSdk = 21
         const val compileSdk = 30
         const val targetSdk = 30
@@ -14,6 +14,7 @@ object Versions {
     const val junit = "4.13.2"
     const val koin = "3.0.1-beta-2"
     const val ktor = "1.5.3"
+    const val playServicesLocation = "18.0.0"
     const val robolectric = "4.5.1"
     const val settings = "0.7.4"
     const val sqlDelight = "1.4.4"
@@ -45,6 +46,7 @@ object Deps {
     const val desugar = "com.android.tools:desugar_jdk_libs:${Versions.desugar}"
     const val islandTime = "io.islandtime:core:${Versions.islandTime}"
     const val junit = "junit:junit:${Versions.junit}"
+    const val playServicesLocation = "com.google.android.gms:play-services-location:${Versions.playServicesLocation}"
     const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
     const val turbine = "app.cash.turbine:turbine:${Versions.turbine}"
 
@@ -77,6 +79,8 @@ object Deps {
         object Coroutines {
             const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.KotlinX.coroutines}"
             const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.KotlinX.coroutines}"
+            const val playServices =
+                "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:${Versions.KotlinX.coroutines}"
         }
 
         object Serialization {

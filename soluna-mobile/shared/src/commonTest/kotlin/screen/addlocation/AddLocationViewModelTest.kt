@@ -6,7 +6,9 @@ import com.russhwolf.settings.coroutines.toFlowSettings
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.createDatabase
+import com.russhwolf.soluna.mobile.repository.DeviceLocationResult
 import com.russhwolf.soluna.mobile.repository.FakeCurrentTimeRepository
+import com.russhwolf.soluna.mobile.repository.FakeDeviceLocationService
 import com.russhwolf.soluna.mobile.repository.GeocodeData
 import com.russhwolf.soluna.mobile.repository.GeocodeRepository
 import com.russhwolf.soluna.mobile.repository.LocationRepository
@@ -26,10 +28,11 @@ import kotlin.test.assertEquals
 
 class AddLocationViewModelTest {
     private val driver = createInMemorySqlDriver()
+    private val settings = MockSettings().toFlowSettings(Dispatchers.Unconfined)
     private val locationRepository =
         LocationRepository.Impl(
             createDatabase(driver),
-            MockSettings().toFlowSettings(Dispatchers.Unconfined),
+            settings,
             Dispatchers.Unconfined
         )
     private val geocodeRepository = GeocodeRepository.Impl(
@@ -42,7 +45,12 @@ class AddLocationViewModelTest {
         FakeCurrentTimeRepository()
     )
 
-    private val viewModel = AddLocationViewModel(locationRepository, geocodeRepository, Dispatchers.Unconfined)
+    private val viewModel = AddLocationViewModel(
+        locationRepository,
+        geocodeRepository,
+        FakeDeviceLocationService(true, DeviceLocationResult.RequestFailed),
+        Dispatchers.Unconfined
+    )
         .also { it.activate() }
 
     @Test

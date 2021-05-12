@@ -7,6 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		46100390263A50A90008DB27 /* platformModule.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100334263A50A80008DB27 /* platformModule.kt */; };
+		46100391263A50A90008DB27 /* IosDeviceLocationService.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100336263A50A80008DB27 /* IosDeviceLocationService.kt */; };
+		46100392263A50A90008DB27 /* SwiftKotlinBridge.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100337263A50A80008DB27 /* SwiftKotlinBridge.kt */; };
+		46100393263A50A90008DB27 /* NativeViewModel.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100338263A50A80008DB27 /* NativeViewModel.kt */; };
+		46100394263A50A90008DB27 /* CoroutineAdapters.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100339263A50A80008DB27 /* CoroutineAdapters.kt */; };
+		46100395263A50A90008DB27 /* GeocodeRepository.kt in Resources */ = {isa = PBXBuildFile; fileRef = 4610033D263A50A80008DB27 /* GeocodeRepository.kt */; };
+		46100396263A50A90008DB27 /* CurrentTimeRepository.kt in Resources */ = {isa = PBXBuildFile; fileRef = 4610033E263A50A80008DB27 /* CurrentTimeRepository.kt */; };
+		46100397263A50A90008DB27 /* LocationRepository.kt in Resources */ = {isa = PBXBuildFile; fileRef = 4610033F263A50A80008DB27 /* LocationRepository.kt */; };
+		46100398263A50A90008DB27 /* DeviceLocationService.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100340263A50A80008DB27 /* DeviceLocationService.kt */; };
+		46100399263A50A90008DB27 /* UpcomingTimesRepository.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100341263A50A80008DB27 /* UpcomingTimesRepository.kt */; };
+		4610039A263A50A90008DB27 /* ReminderRepository.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100342263A50A80008DB27 /* ReminderRepository.kt */; };
+		4610039B263A50A90008DB27 /* AstronomicalDataRepository.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100343263A50A80008DB27 /* AstronomicalDataRepository.kt */; };
+		4610039C263A50A90008DB27 /* SupervisorScope.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100345263A50A80008DB27 /* SupervisorScope.kt */; };
+		4610039D263A50A90008DB27 /* TimeZoneProvider.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100347263A50A80008DB27 /* TimeZoneProvider.kt */; };
+		4610039E263A50A90008DB27 /* KoinModules.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100348263A50A80008DB27 /* KoinModules.kt */; };
+		4610039F263A50A90008DB27 /* HomeViewModel.kt in Resources */ = {isa = PBXBuildFile; fileRef = 4610034B263A50A80008DB27 /* HomeViewModel.kt */; };
+		461003A0263A50A90008DB27 /* BaseViewModel.kt in Resources */ = {isa = PBXBuildFile; fileRef = 4610034C263A50A80008DB27 /* BaseViewModel.kt */; };
+		461003A1263A50A90008DB27 /* LocationListViewModel.kt in Resources */ = {isa = PBXBuildFile; fileRef = 4610034E263A50A80008DB27 /* LocationListViewModel.kt */; };
+		461003A2263A50A90008DB27 /* ReminderListViewModel.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100350263A50A80008DB27 /* ReminderListViewModel.kt */; };
+		461003A3263A50A90008DB27 /* AddLocationViewModel.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100352263A50A80008DB27 /* AddLocationViewModel.kt */; };
+		461003A4263A50A90008DB27 /* LocationDetailViewModel.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100354263A50A80008DB27 /* LocationDetailViewModel.kt */; };
+		461003A5263A50A90008DB27 /* ReminderParameters.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100356263A50A80008DB27 /* ReminderParameters.kt */; };
+		461003A6263A50A90008DB27 /* Database.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100357263A50A80008DB27 /* Database.kt */; };
+		461003A7263A50A90008DB27 /* GoogleApiClient.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100359263A50A80008DB27 /* GoogleApiClient.kt */; };
 		463BA3EC2619571F008BB17B /* SolunaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463BA3EB2619571F008BB17B /* SolunaApp.swift */; };
 		463BA3F026195720008BB17B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 463BA3EF26195720008BB17B /* Assets.xcassets */; };
 		463BA3F326195720008BB17B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 463BA3F226195720008BB17B /* Preview Assets.xcassets */; };
@@ -60,6 +84,30 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		46100334263A50A80008DB27 /* platformModule.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = platformModule.kt; sourceTree = "<group>"; };
+		46100336263A50A80008DB27 /* IosDeviceLocationService.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = IosDeviceLocationService.kt; sourceTree = "<group>"; };
+		46100337263A50A80008DB27 /* SwiftKotlinBridge.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SwiftKotlinBridge.kt; sourceTree = "<group>"; };
+		46100338263A50A80008DB27 /* NativeViewModel.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NativeViewModel.kt; sourceTree = "<group>"; };
+		46100339263A50A80008DB27 /* CoroutineAdapters.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CoroutineAdapters.kt; sourceTree = "<group>"; };
+		4610033D263A50A80008DB27 /* GeocodeRepository.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GeocodeRepository.kt; sourceTree = "<group>"; };
+		4610033E263A50A80008DB27 /* CurrentTimeRepository.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CurrentTimeRepository.kt; sourceTree = "<group>"; };
+		4610033F263A50A80008DB27 /* LocationRepository.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LocationRepository.kt; sourceTree = "<group>"; };
+		46100340263A50A80008DB27 /* DeviceLocationService.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DeviceLocationService.kt; sourceTree = "<group>"; };
+		46100341263A50A80008DB27 /* UpcomingTimesRepository.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UpcomingTimesRepository.kt; sourceTree = "<group>"; };
+		46100342263A50A80008DB27 /* ReminderRepository.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReminderRepository.kt; sourceTree = "<group>"; };
+		46100343263A50A80008DB27 /* AstronomicalDataRepository.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AstronomicalDataRepository.kt; sourceTree = "<group>"; };
+		46100345263A50A80008DB27 /* SupervisorScope.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SupervisorScope.kt; sourceTree = "<group>"; };
+		46100347263A50A80008DB27 /* TimeZoneProvider.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TimeZoneProvider.kt; sourceTree = "<group>"; };
+		46100348263A50A80008DB27 /* KoinModules.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = KoinModules.kt; sourceTree = "<group>"; };
+		4610034B263A50A80008DB27 /* HomeViewModel.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = HomeViewModel.kt; sourceTree = "<group>"; };
+		4610034C263A50A80008DB27 /* BaseViewModel.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BaseViewModel.kt; sourceTree = "<group>"; };
+		4610034E263A50A80008DB27 /* LocationListViewModel.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LocationListViewModel.kt; sourceTree = "<group>"; };
+		46100350263A50A80008DB27 /* ReminderListViewModel.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReminderListViewModel.kt; sourceTree = "<group>"; };
+		46100352263A50A80008DB27 /* AddLocationViewModel.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AddLocationViewModel.kt; sourceTree = "<group>"; };
+		46100354263A50A80008DB27 /* LocationDetailViewModel.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LocationDetailViewModel.kt; sourceTree = "<group>"; };
+		46100356263A50A80008DB27 /* ReminderParameters.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReminderParameters.kt; sourceTree = "<group>"; };
+		46100357263A50A80008DB27 /* Database.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Database.kt; sourceTree = "<group>"; };
+		46100359263A50A80008DB27 /* GoogleApiClient.kt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GoogleApiClient.kt; sourceTree = "<group>"; };
 		463BA3E82619571F008BB17B /* Soluna.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Soluna.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		463BA3EB2619571F008BB17B /* SolunaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolunaApp.swift; sourceTree = "<group>"; };
 		463BA3EF26195720008BB17B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -112,9 +160,170 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4610032D263A50A80008DB27 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				46100332263A50A80008DB27 /* iosMain */,
+				4610033A263A50A80008DB27 /* commonMain */,
+			);
+			name = src;
+			path = ../shared/src;
+			sourceTree = "<group>";
+		};
+		46100332263A50A80008DB27 /* iosMain */ = {
+			isa = PBXGroup;
+			children = (
+				46100333263A50A80008DB27 /* kotlin */,
+			);
+			path = iosMain;
+			sourceTree = "<group>";
+		};
+		46100333263A50A80008DB27 /* kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				46100334263A50A80008DB27 /* platformModule.kt */,
+				46100335263A50A80008DB27 /* repository */,
+				46100337263A50A80008DB27 /* SwiftKotlinBridge.kt */,
+				46100338263A50A80008DB27 /* NativeViewModel.kt */,
+				46100339263A50A80008DB27 /* CoroutineAdapters.kt */,
+			);
+			path = kotlin;
+			sourceTree = "<group>";
+		};
+		46100335263A50A80008DB27 /* repository */ = {
+			isa = PBXGroup;
+			children = (
+				46100336263A50A80008DB27 /* IosDeviceLocationService.kt */,
+			);
+			path = repository;
+			sourceTree = "<group>";
+		};
+		4610033A263A50A80008DB27 /* commonMain */ = {
+			isa = PBXGroup;
+			children = (
+				4610033B263A50A80008DB27 /* kotlin */,
+			);
+			path = commonMain;
+			sourceTree = "<group>";
+		};
+		4610033B263A50A80008DB27 /* kotlin */ = {
+			isa = PBXGroup;
+			children = (
+				4610033C263A50A80008DB27 /* repository */,
+				46100344263A50A80008DB27 /* util */,
+				46100346263A50A80008DB27 /* provider */,
+				46100348263A50A80008DB27 /* KoinModules.kt */,
+				46100349263A50A80008DB27 /* screen */,
+				46100355263A50A80008DB27 /* db */,
+				46100358263A50A80008DB27 /* api */,
+			);
+			path = kotlin;
+			sourceTree = "<group>";
+		};
+		4610033C263A50A80008DB27 /* repository */ = {
+			isa = PBXGroup;
+			children = (
+				4610033D263A50A80008DB27 /* GeocodeRepository.kt */,
+				4610033E263A50A80008DB27 /* CurrentTimeRepository.kt */,
+				4610033F263A50A80008DB27 /* LocationRepository.kt */,
+				46100340263A50A80008DB27 /* DeviceLocationService.kt */,
+				46100341263A50A80008DB27 /* UpcomingTimesRepository.kt */,
+				46100342263A50A80008DB27 /* ReminderRepository.kt */,
+				46100343263A50A80008DB27 /* AstronomicalDataRepository.kt */,
+			);
+			path = repository;
+			sourceTree = "<group>";
+		};
+		46100344263A50A80008DB27 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				46100345263A50A80008DB27 /* SupervisorScope.kt */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		46100346263A50A80008DB27 /* provider */ = {
+			isa = PBXGroup;
+			children = (
+				46100347263A50A80008DB27 /* TimeZoneProvider.kt */,
+			);
+			path = provider;
+			sourceTree = "<group>";
+		};
+		46100349263A50A80008DB27 /* screen */ = {
+			isa = PBXGroup;
+			children = (
+				4610034A263A50A80008DB27 /* home */,
+				4610034C263A50A80008DB27 /* BaseViewModel.kt */,
+				4610034D263A50A80008DB27 /* locationlist */,
+				4610034F263A50A80008DB27 /* reminderlist */,
+				46100351263A50A80008DB27 /* addlocation */,
+				46100353263A50A80008DB27 /* locationdetail */,
+			);
+			path = screen;
+			sourceTree = "<group>";
+		};
+		4610034A263A50A80008DB27 /* home */ = {
+			isa = PBXGroup;
+			children = (
+				4610034B263A50A80008DB27 /* HomeViewModel.kt */,
+			);
+			path = home;
+			sourceTree = "<group>";
+		};
+		4610034D263A50A80008DB27 /* locationlist */ = {
+			isa = PBXGroup;
+			children = (
+				4610034E263A50A80008DB27 /* LocationListViewModel.kt */,
+			);
+			path = locationlist;
+			sourceTree = "<group>";
+		};
+		4610034F263A50A80008DB27 /* reminderlist */ = {
+			isa = PBXGroup;
+			children = (
+				46100350263A50A80008DB27 /* ReminderListViewModel.kt */,
+			);
+			path = reminderlist;
+			sourceTree = "<group>";
+		};
+		46100351263A50A80008DB27 /* addlocation */ = {
+			isa = PBXGroup;
+			children = (
+				46100352263A50A80008DB27 /* AddLocationViewModel.kt */,
+			);
+			path = addlocation;
+			sourceTree = "<group>";
+		};
+		46100353263A50A80008DB27 /* locationdetail */ = {
+			isa = PBXGroup;
+			children = (
+				46100354263A50A80008DB27 /* LocationDetailViewModel.kt */,
+			);
+			path = locationdetail;
+			sourceTree = "<group>";
+		};
+		46100355263A50A80008DB27 /* db */ = {
+			isa = PBXGroup;
+			children = (
+				46100356263A50A80008DB27 /* ReminderParameters.kt */,
+				46100357263A50A80008DB27 /* Database.kt */,
+			);
+			path = db;
+			sourceTree = "<group>";
+		};
+		46100358263A50A80008DB27 /* api */ = {
+			isa = PBXGroup;
+			children = (
+				46100359263A50A80008DB27 /* GoogleApiClient.kt */,
+			);
+			path = api;
+			sourceTree = "<group>";
+		};
 		463BA3DF2619571F008BB17B = {
 			isa = PBXGroup;
 			children = (
+				4610032D263A50A80008DB27 /* src */,
 				463BA3EA2619571F008BB17B /* Soluna */,
 				463BA3FC26195720008BB17B /* SolunaTests */,
 				463BA40726195720008BB17B /* SolunaUITests */,
@@ -335,8 +544,32 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4610039D263A50A90008DB27 /* TimeZoneProvider.kt in Resources */,
+				4610039B263A50A90008DB27 /* AstronomicalDataRepository.kt in Resources */,
+				461003A6263A50A90008DB27 /* Database.kt in Resources */,
+				461003A3263A50A90008DB27 /* AddLocationViewModel.kt in Resources */,
+				461003A2263A50A90008DB27 /* ReminderListViewModel.kt in Resources */,
+				4610039A263A50A90008DB27 /* ReminderRepository.kt in Resources */,
 				463BA3F326195720008BB17B /* Preview Assets.xcassets in Resources */,
+				46100399263A50A90008DB27 /* UpcomingTimesRepository.kt in Resources */,
+				461003A4263A50A90008DB27 /* LocationDetailViewModel.kt in Resources */,
+				46100390263A50A90008DB27 /* platformModule.kt in Resources */,
+				4610039F263A50A90008DB27 /* HomeViewModel.kt in Resources */,
+				4610039C263A50A90008DB27 /* SupervisorScope.kt in Resources */,
+				461003A1263A50A90008DB27 /* LocationListViewModel.kt in Resources */,
+				461003A5263A50A90008DB27 /* ReminderParameters.kt in Resources */,
+				46100393263A50A90008DB27 /* NativeViewModel.kt in Resources */,
+				4610039E263A50A90008DB27 /* KoinModules.kt in Resources */,
+				46100396263A50A90008DB27 /* CurrentTimeRepository.kt in Resources */,
 				463BA3F026195720008BB17B /* Assets.xcassets in Resources */,
+				46100394263A50A90008DB27 /* CoroutineAdapters.kt in Resources */,
+				46100392263A50A90008DB27 /* SwiftKotlinBridge.kt in Resources */,
+				461003A7263A50A90008DB27 /* GoogleApiClient.kt in Resources */,
+				46100395263A50A90008DB27 /* GeocodeRepository.kt in Resources */,
+				46100391263A50A90008DB27 /* IosDeviceLocationService.kt in Resources */,
+				46100398263A50A90008DB27 /* DeviceLocationService.kt in Resources */,
+				461003A0263A50A90008DB27 /* BaseViewModel.kt in Resources */,
+				46100397263A50A90008DB27 /* LocationRepository.kt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

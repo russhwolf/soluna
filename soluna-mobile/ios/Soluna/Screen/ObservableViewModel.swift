@@ -19,6 +19,7 @@ open class ObservableViewModel<State: AnyObject, Event: AnyObject, Action: AnyOb
     }
     
     final func activate() {
+        reset()
         viewModel.activate()
         
         createPublisher(viewModel.state)
@@ -46,7 +47,6 @@ open class ObservableViewModel<State: AnyObject, Event: AnyObject, Action: AnyOb
             cancellable.cancel()
         }
         viewModel.dispose()
-        reset()
     }
         
     open func onEvent(_ event: Event) {

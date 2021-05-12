@@ -43,4 +43,8 @@ class ObservableAddLocationViewModel : ObservableViewModel<AddLocationViewModel.
     func geocodeLocation(_ label: String) {
         performAction(action: AddLocationViewModel.ActionGeocodeLocation(location: label))
     }
+    
+    func useGpsLocation() {
+        performAction(action: AddLocationViewModel.ActionDeviceLocation())
+    }
 }

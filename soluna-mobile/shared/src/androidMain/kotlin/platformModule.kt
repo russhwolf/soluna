@@ -6,6 +6,8 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import com.russhwolf.settings.coroutines.FlowSettings
 import com.russhwolf.settings.datastore.DataStoreSettings
 import com.russhwolf.soluna.mobile.db.SolunaDb
+import com.russhwolf.soluna.mobile.repository.AndroidDeviceLocationService
+import com.russhwolf.soluna.mobile.repository.DeviceLocationService
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
 import io.ktor.client.engine.android.Android
@@ -40,6 +42,7 @@ actual val platformModule: Module = module {
         }
         MessageLengthLimitingLogger(delegate = logger)
     }
+    single<DeviceLocationService> { AndroidDeviceLocationService(get()) }
     single<CoroutineDispatcher>(mainDispatcherQualifier) { Dispatchers.Main }
     single(ioDispatcherQualifier) { Dispatchers.IO }
 }

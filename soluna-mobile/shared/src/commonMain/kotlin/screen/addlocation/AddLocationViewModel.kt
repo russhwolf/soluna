@@ -1,13 +1,17 @@
 package com.russhwolf.soluna.mobile.screen.addlocation
 
+import com.russhwolf.soluna.mobile.repository.DeviceLocationResult
+import com.russhwolf.soluna.mobile.repository.DeviceLocationService
 import com.russhwolf.soluna.mobile.repository.GeocodeRepository
 import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.screen.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.datetime.TimeZone
 
 class AddLocationViewModel(
     private val locationRepository: LocationRepository,
     private val geocodeRepository: GeocodeRepository,
+    private val deviceLocationService: DeviceLocationService,
     dispatcher: CoroutineDispatcher
 ) : BaseViewModel<AddLocationViewModel.State, AddLocationViewModel.Event, AddLocationViewModel.Action>(
     State(),
@@ -18,6 +22,7 @@ class AddLocationViewModel(
     override suspend fun performAction(action: Action) = when (action) {
         is Action.CreateLocation -> addLocation(action.label, action.latitude, action.longitude, action.timeZone)
         is Action.GeocodeLocation -> geocodeLocation(action.location)
+        Action.DeviceLocation -> getDeviceLocation()
     }
 
     private suspend fun addLocation(label: String, latitude: String, longitude: String, timeZone: String) {
@@ -55,10 +60,36 @@ class AddLocationViewModel(
         }
     }
 
+    private suspend fun getDeviceLocation() {
+        println("get device location...")
+        when (val result = deviceLocationService.getCurrentDeviceLocation()) {
+            // TODO errors
+            DeviceLocationResult.Incapable,
+            DeviceLocationResult.PermissionDenied,
+            DeviceLocationResult.Unavailable,
+            DeviceLocationResult.RequestFailed -> {
+                println("error! $result")
+                emitState(state.value.copy(deviceLocationError = result))
+            }
+            is DeviceLocationResult.Success -> {
+                println("success!")
+                emitState(state.value.copy(deviceLocationError = null))
+                emitEvent(
+                    Event.ShowGeocodeData(
+                        latitude = result.latitude,
+                        longitude = result.longitude,
+                        timeZone = TimeZone.currentSystemDefault().id
+                    )
+                )
+            }
+        }
+    }
+
     data class State(
         val latitudeFormatError: Boolean = false,
         val longitudeFormatError: Boolean = false,
-        val geocodeError: Boolean = false
+        val geocodeError: Boolean = false,
+        val deviceLocationError: DeviceLocationResult? = null
     )
 
     sealed class Event {
@@ -82,6 +113,8 @@ class AddLocationViewModel(
         data class GeocodeLocation(
             val location: String
         ) : Action()
+
+        object DeviceLocation : Action()
     }
 }
 

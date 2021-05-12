@@ -1,1 +1,5 @@
-<manifest package="com.russhwolf.soluna.mobile.shared"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.russhwolf.soluna.mobile.shared">
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+</manifest>

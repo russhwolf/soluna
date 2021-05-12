@@ -60,6 +60,9 @@ dependencies {
     implementation(Deps.Koin.core)
     implementation(Deps.Koin.compose)
 
+    implementation(Deps.playServicesLocation)
+    implementation(Deps.KotlinX.Coroutines.playServices)
+
     testImplementation(Deps.junit)
     androidTestImplementation(Deps.AndroidX.Test.junit)
     androidTestImplementation(Deps.AndroidX.Compose.test)

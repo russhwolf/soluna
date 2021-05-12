@@ -52,6 +52,11 @@ fun AddLocationScreen(viewModel: AddLocationViewModel, navController: NavControl
             }) {
                 Text("Geocode")
             }
+            Button(onClick = {
+                performAction(AddLocationViewModel.Action.DeviceLocation)
+            }) {
+                Text("Gps")
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.russhwolf.soluna.mobile
 
 import android.content.Context
+import androidx.activity.ComponentActivity
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Test
@@ -11,6 +12,7 @@ import org.koin.dsl.module
 class AndroidKoinModulesTest {
     private val testAppModule = module {
         single<Context> { ApplicationProvider.getApplicationContext() }
+        single { ComponentActivity() }
     }
 
     @Test
