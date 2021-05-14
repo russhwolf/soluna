@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
@@ -28,9 +27,9 @@ class FakeCurrentTimeRepository(
             .scan(initialTime) { time, tick -> time + tick }
             .run {
                 if (emitImmediately) {
-                    stateIn(GlobalScope, SharingStarted.WhileSubscribed(), initialTime)
+                    stateIn(GlobalScope, SharingStarted.Eagerly, initialTime)
                 } else {
-                    shareIn(GlobalScope, SharingStarted.WhileSubscribed())
+                    shareIn(GlobalScope, SharingStarted.Eagerly)
                 }
             }
 
