@@ -11,6 +11,7 @@ class ObservableAddLocationViewModel : ObservableViewModel<AddLocationViewModel.
     
     init() {
         super.init(SwiftKotlinBridge().getAddLocationViewModel())
+        _ = self.objectWillChange.append(super.objectWillChange)
     }
     
     override func onEvent(_ event: AddLocationViewModel.Event) {

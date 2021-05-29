@@ -2,20 +2,17 @@ import SwiftUI
 import Combine
 import Shared
 
-open class ObservableViewModel<State: AnyObject, Event: AnyObject, Action: AnyObject> : ObservableObject {
+class ObservableViewModel<State: AnyObject, Event: AnyObject, Action: AnyObject> : ObservableObject {
     @Published
     var state: State
-    
-    @Published
-    private var event: Event? = nil
 
     private let viewModel: NativeViewModel<State, Event, Action>
     
     private var subscriptions: Set<AnyCancellable> = []
     
-    init(_ viewModel: NativeViewModel<State, Event, Action>) {
-        self.viewModel = viewModel
-        state = viewModel.initialState
+    init(_ viewModel: BaseViewModel<State, Event, Action>) {
+        self.viewModel = NativeViewModel(delegate: viewModel)
+        state = self.viewModel.initialState
     }
     
     final func activate() {
@@ -23,37 +20,34 @@ open class ObservableViewModel<State: AnyObject, Event: AnyObject, Action: AnyOb
         viewModel.activate()
         
         createPublisher(viewModel.state)
-            .replaceError(with: viewModel.initialState)
+            .assertNoFailure()
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
-            .assign(to: &$state)
-
-        createPublisher(viewModel.events)
-            .sink(receiveCompletion: { _ in }, receiveValue: { event in
-                self.event = event
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
+                self?.state = state
             })
             .store(in: &subscriptions)
-        
-        self.$event.sink { event in
-            if let event = event {
-                self.onEvent(event)
-                self.event = nil
-            }
-        }.store(in: &subscriptions)
+
+        createPublisher(viewModel.events)
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] event in
+                self?.onEvent(event)
+            })
+            .store(in: &subscriptions)
     }
     
     final func deactivate() {
         subscriptions.forEach { cancellable in
             cancellable.cancel()
         }
+        subscriptions.removeAll()
         viewModel.dispose()
     }
         
-    open func onEvent(_ event: Event) {
+    func onEvent(_ event: Event) {
         
     }
     
-    open func reset() {
+    func reset() {
         
     }
     

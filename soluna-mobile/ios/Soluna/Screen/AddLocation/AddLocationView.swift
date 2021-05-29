@@ -5,7 +5,7 @@ struct AddLocationView : View {
     @Environment(\.presentationMode)
     var presentationMode: Binding
 
-    @ObservedObject
+    @StateObject
     private var observableModel = ObservableAddLocationViewModel()
     
     @State
@@ -23,7 +23,7 @@ struct AddLocationView : View {
     var body: some View {
         VStack {
             AddLocationContent(
-                state: $observableModel.state,
+                state: observableModel.state,
                 onSubmitClick: { label, latitude, longitude, timeZone in
                     observableModel.createLocation(
                         label: label,
@@ -65,14 +65,11 @@ struct AddLocationView : View {
 }
 
 struct AddLocationContent : View {
-    @Binding
-    var state: AddLocationViewModel.State
+    let state: AddLocationViewModel.State
     
-    var onSubmitClick: (String, String, String, String) -> Void
-    
-    var onGeocodeClick: (String) -> Void
-    
-    var onGpsClick: () -> Void
+    let onSubmitClick: (String, String, String, String) -> Void
+    let onGeocodeClick: (String) -> Void
+    let onGpsClick: () -> Void
     
     @Binding
     var label: String

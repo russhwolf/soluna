@@ -46,7 +46,6 @@
 		46C759FA261FF379009FFEB5 /* ObservableHomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C759F9261FF379009FFEB5 /* ObservableHomeViewModel.swift */; };
 		46C75A00261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C759FF261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift */; };
 		46C75A04261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C75A03261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift */; };
-		46E71005262251C8004DC8FE /* SelectableLocationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E71004262251C8004DC8FE /* SelectableLocationExtensions.swift */; };
 		46E7100B262254B3004DC8FE /* DateTimeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E7100A262254B3004DC8FE /* DateTimeExtensions.swift */; };
 		46E7101C26229F77004DC8FE /* ObservableLocationDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E7101B26229F77004DC8FE /* ObservableLocationDetailViewModel.swift */; };
 		46E710222622A09C004DC8FE /* LocationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E710212622A09C004DC8FE /* LocationDetailView.swift */; };
@@ -128,7 +127,6 @@
 		46C759F9261FF379009FFEB5 /* ObservableHomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableHomeViewModel.swift; sourceTree = "<group>"; };
 		46C759FF261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableLocationListViewModel.swift; sourceTree = "<group>"; };
 		46C75A03261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableAddLocationViewModel.swift; sourceTree = "<group>"; };
-		46E71004262251C8004DC8FE /* SelectableLocationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableLocationExtensions.swift; sourceTree = "<group>"; };
 		46E7100A262254B3004DC8FE /* DateTimeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTimeExtensions.swift; sourceTree = "<group>"; };
 		46E7101B26229F77004DC8FE /* ObservableLocationDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableLocationDetailViewModel.swift; sourceTree = "<group>"; };
 		46E710212622A09C004DC8FE /* LocationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetailView.swift; sourceTree = "<group>"; };
@@ -351,7 +349,6 @@
 				46C75A07261FF91E009FFEB5 /* Screen */,
 				469AF5CE261A8F3F005D00C8 /* CombineAdapters.swift */,
 				46E7100A262254B3004DC8FE /* DateTimeExtensions.swift */,
-				46E71004262251C8004DC8FE /* SelectableLocationExtensions.swift */,
 				463BA3EB2619571F008BB17B /* SolunaApp.swift */,
 			);
 			path = Soluna;
@@ -622,7 +619,6 @@
 				467F9076261E9FE60029454A /* AddLocationView.swift in Sources */,
 				467F906E261E9F4D0029454A /* HomeView.swift in Sources */,
 				46E7101C26229F77004DC8FE /* ObservableLocationDetailViewModel.swift in Sources */,
-				46E71005262251C8004DC8FE /* SelectableLocationExtensions.swift in Sources */,
 				463BA3EC2619571F008BB17B /* SolunaApp.swift in Sources */,
 				46E710222622A09C004DC8FE /* LocationDetailView.swift in Sources */,
 				46C75A00261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift in Sources */,

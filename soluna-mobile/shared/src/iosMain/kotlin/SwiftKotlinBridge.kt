@@ -24,11 +24,11 @@ object SwiftKotlinBridge : KoinComponent {
         initKoin(appModule)
     }
 
-    fun getHomeViewModel() = NativeViewModel(get<HomeViewModel>())
-    fun getLocationListViewModel() = NativeViewModel(get<LocationListViewModel>())
-    fun getAddLocationViewModel() = NativeViewModel(get<AddLocationViewModel>())
-    fun getLocationDetailViewModel(id: Long) = NativeViewModel(get<LocationDetailViewModel> { parametersOf(id) })
-    fun getReminderListViewModel() = NativeViewModel(get<ReminderListViewModel>())
+    fun getHomeViewModel() = get<HomeViewModel>()
+    fun getLocationListViewModel() = get<LocationListViewModel>()
+    fun getAddLocationViewModel() = get<AddLocationViewModel>()
+    fun getLocationDetailViewModel(id: Long) = get<LocationDetailViewModel> { parametersOf(id) }
+    fun getReminderListViewModel() = get<ReminderListViewModel>()
 
     fun nsDate(instant: Instant) = instant.toNSDate()
     fun nsTimeZone(timeZone: TimeZone) = timeZone.toNSTimeZone()

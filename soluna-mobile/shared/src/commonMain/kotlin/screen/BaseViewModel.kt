@@ -16,7 +16,7 @@ abstract class BaseViewModel<State : Any, Event : Any, Action : Any>(
     initialState: State,
     dispatcher: CoroutineDispatcher
 ) {
-    protected val coroutineScope = SupervisorScope(dispatcher)
+    internal val coroutineScope = SupervisorScope(dispatcher)
 
     private val mutableState: MutableStateFlow<State> = MutableStateFlow(initialState)
     val state: StateFlow<State> get() = mutableState

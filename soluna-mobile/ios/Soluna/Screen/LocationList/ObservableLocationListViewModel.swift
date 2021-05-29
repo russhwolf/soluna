@@ -3,11 +3,15 @@ import Shared
 
 class ObservableLocationListViewModel : ObservableViewModel<LocationListViewModel.State, LocationListViewModel.Event, LocationListViewModel.Action> {
  
+    @Published
     var navigateToAddLocation: Bool = false
+    
+    @Published
     var navigateToLocationDetails: Int64? = nil
 
     init() {
         super.init(SwiftKotlinBridge().getLocationListViewModel())
+        _ = self.objectWillChange.append(super.objectWillChange)
     }
     
     override func onEvent(_ event: LocationListViewModel.Event) {

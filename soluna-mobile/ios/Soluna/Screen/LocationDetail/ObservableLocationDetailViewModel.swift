@@ -8,6 +8,7 @@ class ObservableLocationDetailViewModel: ObservableViewModel<LocationDetailViewM
 
     init(id: Int64) {
         super.init(SwiftKotlinBridge().getLocationDetailViewModel(id: id))
+        _ = self.objectWillChange.append(super.objectWillChange)
     }
     
     override func onEvent(_ event: LocationDetailViewModel.Event) {

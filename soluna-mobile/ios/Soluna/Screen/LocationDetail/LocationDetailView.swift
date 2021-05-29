@@ -2,28 +2,30 @@ import SwiftUI
 import Shared
 
 struct LocationDetailView: View {
-    var locationId: Int64
     
     @Environment(\.presentationMode)
     var presentationMode: Binding
     
-    @ObservedObject
+    @StateObject
     private var observableModel: ObservableLocationDetailViewModel
         
     init(id: Int64) {
-        self.locationId = id
-        self.observableModel = ObservableLocationDetailViewModel(id: id)
+        _observableModel = StateObject(wrappedValue: ObservableLocationDetailViewModel(id: id))
     }
     
     var body: some View {
         VStack {
             LocationDetailContent(
-                state: $observableModel.state,
+                state: observableModel.state,
                 onDeleteClick: { observableModel.deleteLocation() },
                 onSelectLocationClick: { observableModel.toggleSelected() }
             )
         }
-        .navigationTitle(observableModel.state is LocationDetailViewModel.StatePopulated ? (observableModel.state as! LocationDetailViewModel.StatePopulated).location.label : "")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar { ToolbarItem(placement: .principal) {
+            let title = observableModel.state is LocationDetailViewModel.StatePopulated ? (observableModel.state as! LocationDetailViewModel.StatePopulated).location.label : ""
+            Text(title)
+        } }
         .bindModel(observableModel)
         .onReceive(observableModel.$goBack, perform: { goBack in
             if goBack {
@@ -34,11 +36,10 @@ struct LocationDetailView: View {
 }
 
 struct LocationDetailContent : View {
-    @Binding
-    var state: LocationDetailViewModel.State
+    let state: LocationDetailViewModel.State
     
-    var onDeleteClick: () -> Void
-    var onSelectLocationClick: () -> Void
+    let onDeleteClick: () -> Void
+    let onSelectLocationClick: () -> Void
 
     var body: some View {
         VStack {

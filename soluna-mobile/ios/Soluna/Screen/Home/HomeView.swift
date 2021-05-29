@@ -2,24 +2,24 @@ import SwiftUI
 import Shared
 
 struct HomeView: View {
-    @ObservedObject
+    @StateObject
     private var observableModel = ObservableHomeViewModel()
         
     var body: some View {
         VStack {
-            HomeContent(state: $observableModel.state, onNavigateToLocationList: observableModel.onNavigateToLocationList)
+            HomeContent(state: observableModel.state, onNavigateToLocationList: observableModel.onNavigateToLocationList)
             NavigationLink(destination: LocationListView(), isActive: $observableModel.navigateToLocationList) { EmptyView() }
         }
-        .navigationTitle("Soluna")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar { ToolbarItem(placement: .principal) { Text("Soluna") } }
         .bindModel(observableModel)
     }
 }
 
 struct HomeContent : View {
-    @Binding
-    var state: HomeViewModel.State
+    let state: HomeViewModel.State
 
-    var onNavigateToLocationList: () -> Void
+    let onNavigateToLocationList: () -> Void
 
     var body: some View {
         VStack {
