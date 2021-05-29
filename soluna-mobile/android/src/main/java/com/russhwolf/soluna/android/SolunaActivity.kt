@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.russhwolf.soluna.android.ui.SolunaApp
 import com.russhwolf.soluna.mobile.initKoin
+import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 
 class SolunaActivity : ComponentActivity() {
@@ -21,5 +22,10 @@ class SolunaActivity : ComponentActivity() {
         setContent {
             SolunaApp()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopKoin()
     }
 }

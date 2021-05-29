@@ -2,7 +2,7 @@ object Versions {
     const val kotlin = "1.4.32"
 
     object Android {
-        const val gradle = "7.0.0-alpha15"
+        const val gradle = "7.0.0-beta03"
         const val minSdk = 21
         const val compileSdk = 30
         const val targetSdk = 30

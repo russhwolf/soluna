@@ -81,7 +81,6 @@ class LocationDelegate : NSObject(), CLLocationManagerDelegateProtocol {
     }
 
     override fun locationManager(manager: CLLocationManager, didChangeAuthorizationStatus: CLAuthorizationStatus) {
-        val prop = this::authorizationCompletion
         latestAuthorizationStatus = didChangeAuthorizationStatus
 
         authorizationCompletion?.complete(didChangeAuthorizationStatus)
