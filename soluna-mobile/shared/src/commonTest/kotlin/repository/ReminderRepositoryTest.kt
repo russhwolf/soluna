@@ -7,51 +7,26 @@ import com.russhwolf.soluna.mobile.db.ReminderType
 import com.russhwolf.soluna.mobile.db.SolunaDb
 import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.suspendTest
-import com.squareup.sqldelight.db.SqlDriver
 import kotlinx.coroutines.Dispatchers
 import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class ReminderRepositoryTest {
 
-    private lateinit var driver: SqlDriver
-    private lateinit var database: SolunaDb
-    private lateinit var repository: ReminderRepository
-
-    @BeforeTest
-    fun setup() {
-        driver = createInMemorySqlDriver()
-        database = createDatabase(driver)
-        repository = ReminderRepository.Impl(database, Dispatchers.Unconfined)
-    }
+    private val driver = createInMemorySqlDriver()
+    private val database = createDatabase(driver)
+    private val repository = ReminderRepository.Impl(database, Dispatchers.Unconfined)
 
     @Test
-    fun getReminders_empty() = suspendTest {
-        val reminders = repository.getReminders()
-        assertTrue(reminders.isEmpty())
-    }
+    fun getReminders() = suspendTest {
+        repository.getReminders().test {
+            assertEquals(emptyList(), expectItem())
+            expectNoEvents()
 
-    @Test
-    fun getReminders_populated() = suspendTest {
-        database.insertDummyReminder()
+            database.insertDummyReminder()
 
-        val reminders = repository.getReminders()
-
-        assertEquals(1, reminders.size)
-        assertEquals(
-            expected = dummyReminder,
-            actual = reminders[0]
-        )
-    }
-
-    @Test
-    fun getRemindersFlow() = suspendTest {
-        database.insertDummyReminder()
-
-        repository.getRemindersFlow().test {
             assertEquals(listOf(dummyReminder), expectItem())
             expectNoEvents()
 

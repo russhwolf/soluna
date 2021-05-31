@@ -12,11 +12,9 @@ import kotlinx.coroutines.withContext
 
 interface ReminderRepository {
 
-    suspend fun getReminders(): List<Reminder>
+    fun getReminders(): Flow<List<Reminder>>
 
-    fun getRemindersFlow(): Flow<List<Reminder>>
-
-    suspend fun addReminder(type: ReminderType, minutesBefore: Int, enabled: Boolean)
+    suspend fun addReminder(type: ReminderType, minutesBefore: Int, enabled: Boolean = true)
 
     suspend fun deleteReminder(id: Long)
 
@@ -27,14 +25,7 @@ interface ReminderRepository {
         private val backgroundDispatcher: CoroutineDispatcher
     ) : ReminderRepository {
 
-        override suspend fun getReminders(): List<Reminder> =
-            database.getReminders()
-
-        private suspend fun SolunaDb.getReminders(): List<Reminder> = withContext(backgroundDispatcher) {
-            reminderQueries.selectAllReminders().executeAsList()
-        }
-
-        override fun getRemindersFlow(): Flow<List<Reminder>> =
+        override fun getReminders(): Flow<List<Reminder>> =
             database.reminderQueries
                 .selectAllReminders()
                 .asFlow()

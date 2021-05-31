@@ -17,7 +17,7 @@ class ReminderListViewModel(
 ) {
     override fun activate() {
         reminderRepository
-            .getRemindersFlow()
+            .getReminders()
             .onEach { emitState(State(it)) }
             .launchIn(coroutineScope)
     }
@@ -31,7 +31,7 @@ class ReminderListViewModel(
     }
 
     private suspend fun addReminder(type: ReminderType, minutesBefore: Int) {
-        reminderRepository.addReminder(type, minutesBefore, enabled = true)
+        reminderRepository.addReminder(type, minutesBefore)
     }
 
     private suspend fun deleteReminder(reminderId: Long) {
@@ -47,7 +47,7 @@ class ReminderListViewModel(
     }
 
     data class State(
-        val locations: List<Reminder>
+        val reminders: List<Reminder>
     )
 
     sealed class Event {
