@@ -16,7 +16,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) =
         onEvent = { event ->
             when (event) {
                 HomeViewModel.Event.Locations -> navController.navigate(Destination.LocationList)
-                HomeViewModel.Event.Reminders -> TODO()
+                HomeViewModel.Event.Reminders -> navController.navigate(Destination.ReminderList)
             }
         }) { state, performAction ->
         Column {
@@ -34,5 +34,6 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) =
                 }
             }
             Button(onClick = { performAction(HomeViewModel.Action.Locations) }) { Text("Locations") }
+            Button(onClick = { performAction(HomeViewModel.Action.Reminders) }) { Text("Reminders") }
         }
     }

@@ -18,7 +18,12 @@ interface ReminderRepository {
 
     suspend fun deleteReminder(id: Long)
 
-    suspend fun updateReminder(id: Long, minutesBefore: Int? = null, enabled: Boolean? = null)
+    suspend fun updateReminder(
+        id: Long,
+        minutesBefore: Int? = null,
+        enabled: Boolean? = null,
+        type: ReminderType? = null
+    )
 
     class Impl(
         private val database: SolunaDb,
@@ -51,10 +56,15 @@ interface ReminderRepository {
                 .deleteReminderById(id)
         }
 
-        override suspend fun updateReminder(id: Long, minutesBefore: Int?, enabled: Boolean?) =
-            database.updateReminder(id, minutesBefore, enabled)
+        override suspend fun updateReminder(id: Long, minutesBefore: Int?, enabled: Boolean?, type: ReminderType?) =
+            database.updateReminder(id, minutesBefore, enabled, type)
 
-        private suspend fun SolunaDb.updateReminder(id: Long, minutesBefore: Int?, enabled: Boolean?) =
+        private suspend fun SolunaDb.updateReminder(
+            id: Long,
+            minutesBefore: Int?,
+            enabled: Boolean?,
+            type: ReminderType?
+        ) =
             withContext(backgroundDispatcher) {
                 transaction {
                     if (minutesBefore != null) {
@@ -62,6 +72,9 @@ interface ReminderRepository {
                     }
                     if (enabled != null) {
                         reminderQueries.updateReminderEnabledById(enabled, id)
+                    }
+                    if (type != null) {
+                        reminderQueries.updateReminderTypeById(type, id)
                     }
                 }
             }

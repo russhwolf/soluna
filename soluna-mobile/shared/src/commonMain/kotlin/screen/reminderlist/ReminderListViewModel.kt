@@ -27,6 +27,7 @@ class ReminderListViewModel(
         is Action.AddReminder -> addReminder(action.type, action.minutesBefore)
         is Action.SetReminderEnabled -> setReminderEnabled(action.id, action.enabled)
         is Action.SetReminderMinutesBefore -> setReminderMinutesBefore(action.id, action.minutesBefore)
+        is Action.SetReminderType -> setReminderType(action.id, action.type)
         Action.Exit -> emitEvent(Event.Exit)
     }
 
@@ -46,6 +47,10 @@ class ReminderListViewModel(
         reminderRepository.updateReminder(reminderId, minutesBefore = minutesBefore)
     }
 
+    private suspend fun setReminderType(reminderId: Long, type: ReminderType) {
+        reminderRepository.updateReminder(reminderId, type = type)
+    }
+
     data class State(
         val reminders: List<Reminder>
     )
@@ -59,6 +64,7 @@ class ReminderListViewModel(
         data class AddReminder(val type: ReminderType, val minutesBefore: Int) : Action()
         data class SetReminderEnabled(val id: Long, val enabled: Boolean) : Action()
         data class SetReminderMinutesBefore(val id: Long, val minutesBefore: Int) : Action()
+        data class SetReminderType(val id: Long, val type: ReminderType) : Action()
         object Exit : Action()
     }
 }

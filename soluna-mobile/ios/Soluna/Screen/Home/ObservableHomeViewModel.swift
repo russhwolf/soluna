@@ -5,7 +5,10 @@ class ObservableHomeViewModel: ObservableViewModel<HomeViewModel.State, HomeView
 
     @Published
     var navigateToLocationList: Bool = false
-    
+
+    @Published
+    var navigateToReminderList: Bool = false
+
     init() {
         super.init(SwiftKotlinBridge().getHomeViewModel())
         _ = self.objectWillChange.append(super.objectWillChange)
@@ -15,6 +18,8 @@ class ObservableHomeViewModel: ObservableViewModel<HomeViewModel.State, HomeView
         switch event {
         case is HomeViewModel.EventLocations:
             navigateToLocationList = true
+        case is HomeViewModel.EventReminders:
+            navigateToReminderList = true
         default:
             NSLog("Received unknown event \(event)")
         }
@@ -22,9 +27,14 @@ class ObservableHomeViewModel: ObservableViewModel<HomeViewModel.State, HomeView
     
     override func reset() {
         navigateToLocationList = false
+        navigateToReminderList = false
     }
     
     func onNavigateToLocationList() {
         performAction(action: HomeViewModel.ActionLocations())
+    }
+    
+    func onNavigateToReminderList() {
+        performAction(action: HomeViewModel.ActionReminders())
     }
 }

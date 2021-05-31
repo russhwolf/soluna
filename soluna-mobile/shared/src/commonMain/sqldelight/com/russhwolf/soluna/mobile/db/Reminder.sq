@@ -27,3 +27,8 @@ updateReminderEnabledById:
 UPDATE reminder
 SET enabled = ?
 WHERE id = ?;
+
+updateReminderTypeById:
+UPDATE reminder
+SET type = ?
+WHERE id = ?;

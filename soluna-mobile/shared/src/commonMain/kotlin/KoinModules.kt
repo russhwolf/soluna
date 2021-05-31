@@ -7,6 +7,7 @@ import com.russhwolf.soluna.mobile.repository.AstronomicalDataRepository
 import com.russhwolf.soluna.mobile.repository.CurrentTimeRepository
 import com.russhwolf.soluna.mobile.repository.GeocodeRepository
 import com.russhwolf.soluna.mobile.repository.LocationRepository
+import com.russhwolf.soluna.mobile.repository.ReminderNotificationRepository
 import com.russhwolf.soluna.mobile.repository.ReminderRepository
 import com.russhwolf.soluna.mobile.repository.UpcomingTimesRepository
 import com.russhwolf.soluna.mobile.screen.addlocation.AddLocationViewModel
@@ -39,6 +40,7 @@ internal val commonModule = module {
     single<AstronomicalDataRepository> { AstronomicalDataRepository.Impl() }
     single<CurrentTimeRepository> { CurrentTimeRepository.Impl(get()) }
     single<UpcomingTimesRepository> { UpcomingTimesRepository.Impl(get(), get()) }
+    single<ReminderNotificationRepository> { ReminderNotificationRepository.Impl(get(), get(), get(), get()) }
 
     factory { HomeViewModel(get(), get(), get(), get(mainDispatcherQualifier)) }
     factory { LocationListViewModel(get(), get(mainDispatcherQualifier)) }

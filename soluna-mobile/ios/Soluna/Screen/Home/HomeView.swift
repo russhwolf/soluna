@@ -7,8 +7,13 @@ struct HomeView: View {
         
     var body: some View {
         VStack {
-            HomeContent(state: observableModel.state, onNavigateToLocationList: observableModel.onNavigateToLocationList)
+            HomeContent(
+                state: observableModel.state,
+                onNavigateToLocationList: observableModel.onNavigateToLocationList,
+                onNavigateToReminderList: observableModel.onNavigateToReminderList
+            )
             NavigationLink(destination: LocationListView(), isActive: $observableModel.navigateToLocationList) { EmptyView() }
+            NavigationLink(destination: ReminderListView(), isActive: $observableModel.navigateToReminderList) { EmptyView() }
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { ToolbarItem(placement: .principal) { Text("Soluna") } }
@@ -20,6 +25,7 @@ struct HomeContent : View {
     let state: HomeViewModel.State
 
     let onNavigateToLocationList: () -> Void
+    let onNavigateToReminderList: () -> Void
 
     var body: some View {
         VStack {
@@ -42,6 +48,9 @@ struct HomeContent : View {
             }
             Button("Locations") {
                 onNavigateToLocationList()
+            }
+            Button("Reminders") {
+                onNavigateToReminderList()
             }
         }
     }

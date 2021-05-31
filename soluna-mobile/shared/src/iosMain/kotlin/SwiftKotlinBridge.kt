@@ -2,11 +2,13 @@
 
 package com.russhwolf.soluna.mobile
 
+import com.russhwolf.soluna.mobile.repository.ReminderNotificationRepository
 import com.russhwolf.soluna.mobile.screen.addlocation.AddLocationViewModel
 import com.russhwolf.soluna.mobile.screen.home.HomeViewModel
 import com.russhwolf.soluna.mobile.screen.locationdetail.LocationDetailViewModel
 import com.russhwolf.soluna.mobile.screen.locationlist.LocationListViewModel
 import com.russhwolf.soluna.mobile.screen.reminderlist.ReminderListViewModel
+import kotlinx.coroutines.GlobalScope
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toNSDate
@@ -29,6 +31,9 @@ object SwiftKotlinBridge : KoinComponent {
     fun getAddLocationViewModel() = get<AddLocationViewModel>()
     fun getLocationDetailViewModel(id: Long) = get<LocationDetailViewModel> { parametersOf(id) }
     fun getReminderListViewModel() = get<ReminderListViewModel>()
+
+    fun getReminderNotificationList() =
+        NullableFlowAdapter(GlobalScope, get<ReminderNotificationRepository>().getUpcomingNotifications())
 
     fun nsDate(instant: Instant) = instant.toNSDate()
     fun nsTimeZone(timeZone: TimeZone) = timeZone.toNSTimeZone()

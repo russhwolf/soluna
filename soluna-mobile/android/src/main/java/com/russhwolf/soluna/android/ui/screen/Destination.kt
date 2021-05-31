@@ -9,6 +9,7 @@ object Destination {
     const val Home = "home"
     const val LocationList = "locationList"
     const val AddLocation = "addLocation"
+    const val ReminderList = "reminderList"
 
     object LocationDetail {
         val template = "locationDetail/{locationId}"
