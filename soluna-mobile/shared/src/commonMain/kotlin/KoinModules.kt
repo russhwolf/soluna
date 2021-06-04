@@ -27,6 +27,7 @@ fun initKoin(appModule: Module) = startKoin {
 
 internal val mainDispatcherQualifier = named("MainDispatcher")
 internal val ioDispatcherQualifier = named("IoDispatcher")
+val koinUiScopeQualifier = named("uiScope")
 
 internal val commonModule = module {
     single { createDatabase(get()) }
@@ -42,11 +43,13 @@ internal val commonModule = module {
     single<UpcomingTimesRepository> { UpcomingTimesRepository.Impl(get(), get()) }
     single<ReminderNotificationRepository> { ReminderNotificationRepository.Impl(get(), get(), get(), get()) }
 
-    factory { HomeViewModel(get(), get(), get(), get(mainDispatcherQualifier)) }
-    factory { LocationListViewModel(get(), get(mainDispatcherQualifier)) }
-    factory { AddLocationViewModel(get(), get(), get(), get(mainDispatcherQualifier)) }
-    factory { (id: Long) -> LocationDetailViewModel(id, get(), get(), get(mainDispatcherQualifier)) }
-    factory { ReminderListViewModel(get(), get(mainDispatcherQualifier)) }
+    scope(koinUiScopeQualifier) {
+        factory { HomeViewModel(get(), get(), get(), get(mainDispatcherQualifier)) }
+        factory { LocationListViewModel(get(), get(mainDispatcherQualifier)) }
+        factory { AddLocationViewModel(get(), get(), get(), get(mainDispatcherQualifier)) }
+        factory { (id: Long) -> LocationDetailViewModel(id, get(), get(), get(mainDispatcherQualifier)) }
+        factory { ReminderListViewModel(get(), get(mainDispatcherQualifier)) }
+    }
 }
 
 internal expect val platformModule: Module

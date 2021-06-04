@@ -19,18 +19,23 @@ import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 
 object SwiftKotlinBridge : KoinComponent {
+    private const val scopeId = "swiftKotlinBridge"
+
     fun initKoin() {
         val appModule = module {
-
+            scope(koinUiScopeQualifier) {}
         }
-        initKoin(appModule)
+        val koinApplication = initKoin(appModule)
+        koinApplication.koin.createScope(scopeId, koinUiScopeQualifier)
     }
 
-    fun getHomeViewModel() = get<HomeViewModel>()
-    fun getLocationListViewModel() = get<LocationListViewModel>()
-    fun getAddLocationViewModel() = get<AddLocationViewModel>()
-    fun getLocationDetailViewModel(id: Long) = get<LocationDetailViewModel> { parametersOf(id) }
-    fun getReminderListViewModel() = get<ReminderListViewModel>()
+    fun getHomeViewModel() = getKoin().getScope(scopeId).get<HomeViewModel>()
+    fun getLocationListViewModel() = getKoin().getScope(scopeId).get<LocationListViewModel>()
+    fun getAddLocationViewModel() = getKoin().getScope(scopeId).get<AddLocationViewModel>()
+    fun getLocationDetailViewModel(id: Long) =
+        getKoin().getScope(scopeId).get<LocationDetailViewModel> { parametersOf(id) }
+
+    fun getReminderListViewModel() = getKoin().getScope(scopeId).get<ReminderListViewModel>()
 
     fun getReminderNotificationList() =
         NullableFlowAdapter(GlobalScope, get<ReminderNotificationRepository>().getUpcomingNotifications())
