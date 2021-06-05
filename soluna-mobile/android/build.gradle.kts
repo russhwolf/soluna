@@ -50,6 +50,8 @@ dependencies {
     implementation(Deps.AndroidX.lifecycleRuntime)
     implementation(Deps.AndroidX.activityCompose)
     implementation(Deps.AndroidX.navigationCompose)
+    implementation(Deps.AndroidX.dataStore)
+    implementation(Deps.AndroidX.workManager)
 
     implementation(Deps.KotlinX.Coroutines.core)
     implementation(Deps.KotlinX.Coroutines.android)
@@ -59,6 +61,7 @@ dependencies {
 
     implementation(Deps.Koin.core)
     implementation(Deps.Koin.compose)
+    implementation(Deps.Koin.workManager)
 
     implementation(Deps.playServicesLocation)
     implementation(Deps.KotlinX.Coroutines.playServices)

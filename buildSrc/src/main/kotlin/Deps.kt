@@ -3,7 +3,7 @@ object Versions {
 
     object Android {
         const val gradle = "7.0.0-beta03"
-        const val minSdk = 21
+        const val minSdk = 23
         const val compileSdk = 30
         const val targetSdk = 30
     }
@@ -34,6 +34,7 @@ object Versions {
         const val dataStore = "1.0.0-alpha08"
         const val lifecycle = "2.4.0-alpha01"
         const val navigationCompose = "1.0.0-alpha10"
+        const val workManager = "2.5.0"
 
         object Test {
             const val core = "1.3.0"
@@ -56,6 +57,7 @@ object Deps {
         const val dataStore = "androidx.datastore:datastore-preferences:${Versions.AndroidX.dataStore}"
         const val lifecycleRuntime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.AndroidX.lifecycle}"
         const val navigationCompose = "androidx.navigation:navigation-compose:${Versions.AndroidX.navigationCompose}"
+        const val workManager = "androidx.work:work-runtime-ktx:${Versions.AndroidX.workManager}"
 
         object Compose {
             const val material = "androidx.compose.material:material:${Versions.AndroidX.compose}"
@@ -93,6 +95,7 @@ object Deps {
         const val core = "io.insert-koin:koin-core:${Versions.koin}"
         const val test = "io.insert-koin:koin-test:${Versions.koin}"
         const val compose = "io.insert-koin:koin-androidx-compose:${Versions.koin}"
+        const val workManager = "io.insert-koin:koin-androidx-workmanager:${Versions.koin}"
     }
 
     object Ktor {

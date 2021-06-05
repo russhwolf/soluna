@@ -6,7 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.compose.navigate
-import com.russhwolf.soluna.android.toDisplayTime
+import com.russhwolf.soluna.android.extensions.toDisplayTime
 import com.russhwolf.soluna.mobile.screen.home.HomeViewModel
 
 @Composable

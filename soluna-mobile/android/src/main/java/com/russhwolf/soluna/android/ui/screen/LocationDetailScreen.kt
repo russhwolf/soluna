@@ -10,7 +10,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import com.russhwolf.soluna.android.toDisplayTime
+import com.russhwolf.soluna.android.extensions.toDisplayTime
 import com.russhwolf.soluna.mobile.screen.locationdetail.LocationDetailViewModel
 
 @Composable

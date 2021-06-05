@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.russhwolf.soluna.android.extensions.text
 import com.russhwolf.soluna.mobile.db.ReminderType
 import com.russhwolf.soluna.mobile.screen.reminderlist.ReminderListViewModel
 
@@ -123,10 +124,3 @@ fun ReminderListScreen(viewModel: ReminderListViewModel, navController: NavContr
     }
 
 
-private val ReminderType.text
-    get() = when (this) {
-        ReminderType.Sunrise -> "sunrise"
-        ReminderType.Sunset -> "sunset"
-        ReminderType.Moonrise -> "moonrise"
-        ReminderType.Moonset -> "moonset"
-    }

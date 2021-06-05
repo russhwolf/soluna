@@ -1,4 +1,4 @@
-package com.russhwolf.soluna.android
+package com.russhwolf.soluna.android.extensions
 
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone

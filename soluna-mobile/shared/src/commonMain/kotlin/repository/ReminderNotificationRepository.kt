@@ -52,14 +52,21 @@ interface ReminderNotificationRepository {
                     longitude = location.longitude
                 )
                 enabledReminders.mapNotNull { reminder ->
-                    val time = when (reminder.type) {
+                    val eventTime = when (reminder.type) {
                         ReminderType.Sunrise -> times.sunriseTime
                         ReminderType.Sunset -> times.sunsetTime
                         ReminderType.Moonrise -> times.moonriseTime
                         ReminderType.Moonset -> times.moonsetTime
                     }
-                    time?.takeIf { it > currentTime }
-                        ?.let { ReminderNotification(it.minus(reminder.minutesBefore.minutes), reminder.type) }
+                    eventTime?.takeIf { it > currentTime }?.let {
+                        ReminderNotification(
+                            notificationTime = eventTime.minus(reminder.minutesBefore.minutes),
+                            eventTime = eventTime,
+                            type = reminder.type,
+                            locationLabel = location.label,
+                            timeZone = location.timeZone
+                        )
+                    }
                 }
             }
         }
@@ -67,6 +74,9 @@ interface ReminderNotificationRepository {
 }
 
 data class ReminderNotification(
-    val instant: Instant,
-    val type: ReminderType
+    val notificationTime: Instant,
+    val eventTime: Instant,
+    val type: ReminderType,
+    val locationLabel: String,
+    val timeZone: String
 )

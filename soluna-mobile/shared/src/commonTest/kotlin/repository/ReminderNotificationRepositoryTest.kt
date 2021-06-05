@@ -77,8 +77,11 @@ class ReminderNotificationRepositoryTest {
             assertEquals(
                 expected = List(6) { i ->
                     ReminderNotification(
-                        instant = LocalDateTime(2021, 1, 2 + i, 5, 45 + 2 + i).toInstant(TimeZone.UTC),
-                        type = ReminderType.Sunrise
+                        notificationTime = LocalDateTime(2021, 1, 2 + i, 5, 45 + 2 + i).toInstant(TimeZone.UTC),
+                        eventTime = LocalDateTime(2021, 1, 2 + i, 6, 2 + i).toInstant(TimeZone.UTC),
+                        type = ReminderType.Sunrise,
+                        locationLabel = "Here",
+                        timeZone = "UTC"
                     )
                 },
                 actual = expectItem()

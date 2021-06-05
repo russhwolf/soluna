@@ -16,13 +16,15 @@ import com.russhwolf.soluna.mobile.screen.locationdetail.LocationDetailViewModel
 import com.russhwolf.soluna.mobile.screen.locationlist.LocationListViewModel
 import com.russhwolf.soluna.mobile.screen.reminderlist.ReminderListViewModel
 import kotlinx.datetime.Clock
+import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-fun initKoin(appModule: Module) = startKoin {
+fun initKoin(appModule: Module, additionalConfig: KoinApplication.() -> Unit = {}) = startKoin {
     modules(commonModule, platformModule, appModule)
+    additionalConfig()
 }
 
 internal val mainDispatcherQualifier = named("MainDispatcher")
