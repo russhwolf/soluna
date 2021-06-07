@@ -33,7 +33,6 @@
 		461003A7263A50A90008DB27 /* GoogleApiClient.kt in Resources */ = {isa = PBXBuildFile; fileRef = 46100359263A50A80008DB27 /* GoogleApiClient.kt */; };
 		463ADD0F26655CA30056C6AA /* ObservableReminderListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463ADD0E26655CA30056C6AA /* ObservableReminderListViewModel.swift */; };
 		463ADD1326655CB10056C6AA /* ReminderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463ADD1226655CB10056C6AA /* ReminderListView.swift */; };
-		463BA3EC2619571F008BB17B /* SolunaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463BA3EB2619571F008BB17B /* SolunaApp.swift */; };
 		463BA3F026195720008BB17B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 463BA3EF26195720008BB17B /* Assets.xcassets */; };
 		463BA3F326195720008BB17B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 463BA3F226195720008BB17B /* Preview Assets.xcassets */; };
 		463BA3FE26195720008BB17B /* SolunaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463BA3FD26195720008BB17B /* SolunaTests.swift */; };
@@ -42,9 +41,15 @@
 		467F906E261E9F4D0029454A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F906D261E9F4D0029454A /* HomeView.swift */; };
 		467F9072261E9F9D0029454A /* LocationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F9071261E9F9D0029454A /* LocationListView.swift */; };
 		467F9076261E9FE60029454A /* AddLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F9075261E9FE60029454A /* AddLocationView.swift */; };
+		4680CABE266C630B009F41FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4680CABD266C630B009F41FA /* LaunchScreen.storyboard */; };
+		4680CAC4266C69BA009F41FA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4680CAC3266C69BA009F41FA /* ContentView.swift */; };
 		469AF5C126195981005D00C8 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 469AF5C026195981005D00C8 /* Shared.framework */; };
 		469AF5C226195981005D00C8 /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 469AF5C026195981005D00C8 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		469AF5CF261A8F3F005D00C8 /* CombineAdapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469AF5CE261A8F3F005D00C8 /* CombineAdapters.swift */; };
+		46C63434266DA7B700D3647E /* ReminderNotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C63433266DA7B700D3647E /* ReminderNotificationScheduler.swift */; };
+		46C63438266DA9A800D3647E /* BackgroundNotificationsScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C63437266DA9A800D3647E /* BackgroundNotificationsScheduler.swift */; };
+		46C6343C266DAAD700D3647E /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C6343B266DAAD700D3647E /* NotificationManager.swift */; };
+		46C7091F266C5C2B00F4D5DF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C7091E266C5C2B00F4D5DF /* SceneDelegate.swift */; };
 		46C759FA261FF379009FFEB5 /* ObservableHomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C759F9261FF379009FFEB5 /* ObservableHomeViewModel.swift */; };
 		46C75A00261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C759FF261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift */; };
 		46C75A04261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C75A03261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift */; };
@@ -112,7 +117,6 @@
 		463ADD0E26655CA30056C6AA /* ObservableReminderListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableReminderListViewModel.swift; sourceTree = "<group>"; };
 		463ADD1226655CB10056C6AA /* ReminderListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderListView.swift; sourceTree = "<group>"; };
 		463BA3E82619571F008BB17B /* Soluna.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Soluna.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		463BA3EB2619571F008BB17B /* SolunaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolunaApp.swift; sourceTree = "<group>"; };
 		463BA3EF26195720008BB17B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		463BA3F226195720008BB17B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		463BA3F426195720008BB17B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -126,8 +130,14 @@
 		467F906D261E9F4D0029454A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		467F9071261E9F9D0029454A /* LocationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListView.swift; sourceTree = "<group>"; };
 		467F9075261E9FE60029454A /* AddLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLocationView.swift; sourceTree = "<group>"; };
+		4680CABD266C630B009F41FA /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		4680CAC3266C69BA009F41FA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		469AF5C026195981005D00C8 /* Shared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Shared.framework; path = "../shared/build/xcode-frameworks/Shared.framework"; sourceTree = "<group>"; };
 		469AF5CE261A8F3F005D00C8 /* CombineAdapters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CombineAdapters.swift; sourceTree = "<group>"; };
+		46C63433266DA7B700D3647E /* ReminderNotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderNotificationScheduler.swift; sourceTree = "<group>"; };
+		46C63437266DA9A800D3647E /* BackgroundNotificationsScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundNotificationsScheduler.swift; sourceTree = "<group>"; };
+		46C6343B266DAAD700D3647E /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		46C7091E266C5C2B00F4D5DF /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		46C759F9261FF379009FFEB5 /* ObservableHomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableHomeViewModel.swift; sourceTree = "<group>"; };
 		46C759FF261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableLocationListViewModel.swift; sourceTree = "<group>"; };
 		46C75A03261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableAddLocationViewModel.swift; sourceTree = "<group>"; };
@@ -358,11 +368,13 @@
 			children = (
 				463BA3EF26195720008BB17B /* Assets.xcassets */,
 				463BA3F426195720008BB17B /* Info.plist */,
+				4680CABD266C630B009F41FA /* LaunchScreen.storyboard */,
 				463BA3F126195720008BB17B /* Preview Content */,
+				46C7091D266C2E6100F4D5DF /* Notifications */,
 				46C75A07261FF91E009FFEB5 /* Screen */,
+				46C7091E266C5C2B00F4D5DF /* SceneDelegate.swift */,
 				469AF5CE261A8F3F005D00C8 /* CombineAdapters.swift */,
 				46E7100A262254B3004DC8FE /* DateTimeExtensions.swift */,
-				463BA3EB2619571F008BB17B /* SolunaApp.swift */,
 			);
 			path = Soluna;
 			sourceTree = "<group>";
@@ -401,9 +413,20 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		46C7091D266C2E6100F4D5DF /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				46C63433266DA7B700D3647E /* ReminderNotificationScheduler.swift */,
+				46C63437266DA9A800D3647E /* BackgroundNotificationsScheduler.swift */,
+				46C6343B266DAAD700D3647E /* NotificationManager.swift */,
+			);
+			path = Notifications;
+			sourceTree = "<group>";
+		};
 		46C75A07261FF91E009FFEB5 /* Screen */ = {
 			isa = PBXGroup;
 			children = (
+				4680CAC3266C69BA009F41FA /* ContentView.swift */,
 				467F9069261E9EEE0029454A /* ObservableViewModel.swift */,
 				46C75A0A261FF93D009FFEB5 /* AddLocation */,
 				46E7101A26229F4E004DC8FE /* LocationDetail */,
@@ -555,6 +578,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4680CABE266C630B009F41FA /* LaunchScreen.storyboard in Resources */,
 				4610039D263A50A90008DB27 /* TimeZoneProvider.kt in Resources */,
 				4610039B263A50A90008DB27 /* AstronomicalDataRepository.kt in Resources */,
 				461003A6263A50A90008DB27 /* Database.kt in Resources */,
@@ -628,16 +652,20 @@
 				46E7100B262254B3004DC8FE /* DateTimeExtensions.swift in Sources */,
 				46C75A04261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift in Sources */,
 				463ADD1326655CB10056C6AA /* ReminderListView.swift in Sources */,
+				46C7091F266C5C2B00F4D5DF /* SceneDelegate.swift in Sources */,
 				469AF5CF261A8F3F005D00C8 /* CombineAdapters.swift in Sources */,
 				467F906A261E9EEE0029454A /* ObservableViewModel.swift in Sources */,
 				467F9072261E9F9D0029454A /* LocationListView.swift in Sources */,
 				467F9076261E9FE60029454A /* AddLocationView.swift in Sources */,
 				467F906E261E9F4D0029454A /* HomeView.swift in Sources */,
 				46E7101C26229F77004DC8FE /* ObservableLocationDetailViewModel.swift in Sources */,
+				46C63434266DA7B700D3647E /* ReminderNotificationScheduler.swift in Sources */,
 				463ADD0F26655CA30056C6AA /* ObservableReminderListViewModel.swift in Sources */,
-				463BA3EC2619571F008BB17B /* SolunaApp.swift in Sources */,
+				46C6343C266DAAD700D3647E /* NotificationManager.swift in Sources */,
+				4680CAC4266C69BA009F41FA /* ContentView.swift in Sources */,
 				46E710222622A09C004DC8FE /* LocationDetailView.swift in Sources */,
 				46C75A00261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift in Sources */,
+				46C63438266DA9A800D3647E /* BackgroundNotificationsScheduler.swift in Sources */,
 				46C759FA261FF379009FFEB5 /* ObservableHomeViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

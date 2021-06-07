@@ -2,13 +2,12 @@ import Foundation
 import Shared
 
 extension Kotlinx_datetimeInstant {
-    func toDisplayTime() -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
-
-        let date = SwiftKotlinBridge().nsDate(instant: self)
+    func toDisplayTime(timeZone: TimeZone) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.weekday, .hour, .minute]
+        formatter.unitsStyle = .positional
+        let dateComponents = SwiftKotlinBridge().nsDateComponents(instant: self, timeZone: timeZone)
         
-        return formatter.string(from: date)
+        return formatter.string(from: dateComponents) ?? "???" // TODO error handling
     }
 }

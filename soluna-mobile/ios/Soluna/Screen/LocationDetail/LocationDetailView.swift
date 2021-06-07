@@ -50,14 +50,15 @@ struct LocationDetailContent : View {
                 Text("Location is invalid!")
             case is LocationDetailViewModel.StatePopulated:
                 let populatedState = state as! LocationDetailViewModel.StatePopulated
+                let timeZone = TimeZone.init(identifier: populatedState.timeZone.id) ?? TimeZone.current // TODO error handling here
                 Text(populatedState.location.label)
                 Text("Latitude: \(populatedState.location.latitude)")
                 Text("Longitude: \(populatedState.location.longitude)")
                 Text("Time Zone: \(populatedState.timeZone.id)")
-                Text("Sunrise: \(populatedState.sunriseTime?.toDisplayTime() ?? "None")")
-                Text("Sunset: \(populatedState.sunsetTime?.toDisplayTime() ?? "None")")
-                Text("Moonrise: \(populatedState.moonriseTime?.toDisplayTime() ?? "None")")
-                Text("Moonset: \(populatedState.moonsetTime?.toDisplayTime() ?? "None")")
+                Text("Sunrise: \(populatedState.sunriseTime?.toDisplayTime(timeZone: timeZone) ?? "None")")
+                Text("Sunset: \(populatedState.sunsetTime?.toDisplayTime(timeZone: timeZone) ?? "None")")
+                Text("Moonrise: \(populatedState.moonriseTime?.toDisplayTime(timeZone: timeZone) ?? "None")")
+                Text("Moonset: \(populatedState.moonsetTime?.toDisplayTime(timeZone: timeZone) ?? "None")")
                 Button("Delete") { onDeleteClick() }
                 Image(systemName: populatedState.location.selected ? "star.fill" : "star")
                     .onTapGesture { onSelectLocationClick() }

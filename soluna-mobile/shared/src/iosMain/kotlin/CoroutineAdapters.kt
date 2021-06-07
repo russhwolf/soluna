@@ -31,26 +31,6 @@ class FlowAdapter<T : Any>(
             .launchIn(scope)
 }
 
-class NullableFlowAdapter<T>(
-    private val scope: CoroutineScope,
-    private val flow: Flow<T>
-) {
-    init {
-        freeze()
-    }
-
-    fun subscribe(
-        onEvent: (T) -> Unit,
-        onError: (Throwable) -> Unit,
-        onComplete: () -> Unit
-    ): Job =
-        flow
-            .onEach { onEvent(it.freeze()) }
-            .catch { onError(it.freeze()) }
-            .onCompletion { onComplete() }
-            .launchIn(scope)
-}
-
 class SuspendAdapter<T : Any>(
     private val scope: CoroutineScope,
     private val suspender: suspend () -> T

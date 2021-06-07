@@ -36,13 +36,14 @@ struct HomeContent : View {
                 Text("No location is selected!")
             case is HomeViewModel.StatePopulated:
                 let populatedState = state as! HomeViewModel.StatePopulated
+                let timeZone = TimeZone.init(identifier: populatedState.timeZone.id) ?? TimeZone.current // TODO error handling here
                 Text(populatedState.locationName)
-                Text(populatedState.currentTime.toDisplayTime())
+                Text(populatedState.currentTime.toDisplayTime(timeZone: timeZone))
                 Text(populatedState.timeZone.id)
-                Text("Sunrise: \(populatedState.sunriseTime?.toDisplayTime() ?? "None")")
-                Text("Sunset: \(populatedState.sunsetTime?.toDisplayTime() ?? "None")")
-                Text("Moonrise: \(populatedState.moonriseTime?.toDisplayTime() ?? "None")")
-                Text("Moonset: \(populatedState.moonsetTime?.toDisplayTime() ?? "None")")
+                Text("Sunrise: \(populatedState.sunriseTime?.toDisplayTime(timeZone: timeZone) ?? "None")")
+                Text("Sunset: \(populatedState.sunsetTime?.toDisplayTime(timeZone: timeZone) ?? "None")")
+                Text("Moonrise: \(populatedState.moonriseTime?.toDisplayTime(timeZone: timeZone) ?? "None")")
+                Text("Moonset: \(populatedState.moonsetTime?.toDisplayTime(timeZone: timeZone) ?? "None")")
             default:
                 EmptyView()
             }

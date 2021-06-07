@@ -10,6 +10,7 @@ import androidx.core.content.getSystemService
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.russhwolf.soluna.android.extensions.text
 import com.russhwolf.soluna.android.extensions.toDisplayTime
 import com.russhwolf.soluna.mobile.repository.ReminderNotification
 import kotlinx.coroutines.flow.first
@@ -59,7 +60,7 @@ class ReminderNotificationScheduler(context: Context) {
     }
 
     private suspend fun scheduleNotification(reminderNotification: ReminderNotification) {
-        val eventType = reminderNotification.type
+        val eventType = reminderNotification.type.text
         val locationLabel = reminderNotification.locationLabel
         val eventTime = reminderNotification.eventTime.toDisplayTime(TimeZone.of(reminderNotification.timeZone))
 
