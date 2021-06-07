@@ -15,7 +15,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             Intent(context, NotificationBroadcastReceiver::class.java)
                 .putExtra("show", true)
                 .putExtra("id", notificationId)
-                .putExtra("title", message)
+                .putExtra("message", message)
                 .putExtra("channel", channel)
 
         fun getHideNotificationIntent(context: Context, notificationId: Int) =
@@ -31,7 +31,8 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
                 context.applicationContext,
                 intent.getStringExtra("channel") ?: NotificationChannelCompat.DEFAULT_CHANNEL_ID
             )
-                .setContentTitle(intent.getStringExtra("title"))
+                .setContentText(intent.getStringExtra("message"))
+                .setStyle(NotificationCompat.BigTextStyle().bigText(intent.getStringExtra("message")))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .build()
 
