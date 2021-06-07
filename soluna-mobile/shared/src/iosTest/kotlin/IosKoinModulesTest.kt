@@ -23,7 +23,7 @@ class IosKoinModulesTest {
         SwiftKotlinBridge.getLocationDetailViewModel(1L)
         SwiftKotlinBridge.getReminderListViewModel()
 
-        SwiftKotlinBridge.getReminderNotificationList()
+        SwiftKotlinBridge.getReminderNotificationList {}
 
         stopKoin()
     }
