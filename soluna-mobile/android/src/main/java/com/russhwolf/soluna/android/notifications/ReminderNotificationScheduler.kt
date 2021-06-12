@@ -89,8 +89,7 @@ class ReminderNotificationScheduler(context: Context) {
         )
 
         dataStore.edit {
-            it[existingAlarmsKey] =
-                it[existingAlarmsKey].orEmpty() + setOf(showRequestCode.toString(), hideRequestCode.toString())
+            it[existingAlarmsKey] = it[existingAlarmsKey].orEmpty() + showRequestCode.toString()
         }
 
         alarmManager.setExactAndAllowWhileIdle(
