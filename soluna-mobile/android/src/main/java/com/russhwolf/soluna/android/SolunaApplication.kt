@@ -9,7 +9,7 @@ import com.russhwolf.soluna.mobile.koinUiScopeQualifier
 import com.russhwolf.soluna.mobile.repository.AndroidDeviceLocationService
 import com.russhwolf.soluna.mobile.repository.DeviceLocationService
 import com.russhwolf.soluna.mobile.repository.ReminderNotificationRepository
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.workmanager.dsl.worker
@@ -18,6 +18,8 @@ import org.koin.core.KoinExperimentalAPI
 import org.koin.dsl.module
 
 class SolunaApplication : Application() {
+    private val coroutineScope = MainScope()
+
     override fun onCreate() {
         super.onCreate()
 
@@ -43,6 +45,6 @@ class SolunaApplication : Application() {
             .onEach { reminderNotifications ->
                 ScheduleReminderNotificationsWorker.scheduleReminders(this, reminderNotifications)
             }
-            .launchIn(GlobalScope)
+            .launchIn(coroutineScope)
     }
 }

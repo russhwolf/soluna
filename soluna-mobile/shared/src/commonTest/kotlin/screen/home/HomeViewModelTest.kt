@@ -26,9 +26,7 @@ import kotlinx.datetime.toInstant
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.time.milliseconds
-import kotlin.time.minutes
-import kotlin.time.nanoseconds
+import kotlin.time.Duration
 
 class HomeViewModelTest {
     private var locations: Array<Location> = emptyArray()
@@ -93,7 +91,7 @@ class HomeViewModelTest {
             )
             expectNoEvents()
 
-            clockRepository.tick(1.minutes)
+            clockRepository.tick(Duration.minutes(1))
             assertEquals(
                 HomeViewModel.State.Populated(
                     locationName = "Home",
@@ -108,7 +106,7 @@ class HomeViewModelTest {
             )
             expectNoEvents()
 
-            clockRepository.tick(1.minutes)
+            clockRepository.tick(Duration.minutes(1))
             assertEquals(
                 HomeViewModel.State.Populated(
                     locationName = "Home",

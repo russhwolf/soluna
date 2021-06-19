@@ -170,9 +170,9 @@ sqldelight {
 }
 
 android {
-    compileSdkVersion(Versions.Android.compileSdk)
+    compileSdk = Versions.Android.compileSdk
     defaultConfig {
-        minSdkVersion(Versions.Android.minSdk)
+        minSdk = Versions.Android.minSdk
     }
 
     testOptions.unitTests.isIncludeAndroidResources = true

@@ -14,9 +14,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.time.Duration
+import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
-import kotlin.time.minutes
-import kotlin.time.seconds
 
 private val year = 2019
 private val month = Month.OCTOBER
@@ -81,7 +80,7 @@ class TimesTest {
                 assertNearEquals(
                     expected,
                     actual ?: Instant.fromEpochMilliseconds(0),
-                    60.seconds
+                    Duration.seconds(60)
                 )
             }
         }
@@ -145,7 +144,7 @@ class TimesTest {
                 assertNearEquals(
                     expected ?: Instant.fromEpochMilliseconds(0),
                     actual ?: Instant.fromEpochMilliseconds(0),
-                    5.minutes + 30.seconds
+                    Duration.minutes(5) + Duration.seconds(30)
                 )
             }
         }
@@ -164,6 +163,6 @@ fun assertNearEquals(
     tolerance: Duration,
     message: String = "expected:<$expected±$tolerance> but was:<$actual>"
 ) {
-    val difference = (actual - expected).inNanoseconds
-    assertTrue(abs(difference) <= tolerance.inNanoseconds, message)
+    val difference = (actual - expected).toDouble(DurationUnit.NANOSECONDS)
+    assertTrue(abs(difference) <= tolerance.toDouble(DurationUnit.NANOSECONDS), message)
 }

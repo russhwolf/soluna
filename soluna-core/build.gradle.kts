@@ -10,7 +10,6 @@ kotlin {
     sourceSets {
         all {
             languageSettings.apply {
-                enableLanguageFeature("InlineClasses")
                 progressiveMode = true
             }
         }

@@ -9,7 +9,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
-import kotlin.time.minutes
+import kotlin.time.Duration
 
 interface ReminderNotificationRepository {
     fun getUpcomingNotifications(): Flow<List<ReminderNotification>?>
@@ -60,7 +60,7 @@ interface ReminderNotificationRepository {
                     }
                     eventTime?.takeIf { it > currentTime }?.let {
                         ReminderNotification(
-                            notificationTime = eventTime.minus(reminder.minutesBefore.minutes),
+                            notificationTime = eventTime.minus(Duration.minutes(reminder.minutesBefore)),
                             eventTime = eventTime,
                             type = reminder.type,
                             locationLabel = location.label,

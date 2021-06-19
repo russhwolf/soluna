@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Versions.Android.compileSdk)
+    compileSdk = Versions.Android.compileSdk
 
     defaultConfig {
         applicationId = "com.russhwolf.soluna.android"
-        minSdkVersion(Versions.Android.minSdk)
-        targetSdkVersion(Versions.Android.targetSdk)
+        minSdk = Versions.Android.minSdk
+        targetSdk = Versions.Android.targetSdk
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -28,7 +28,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        useIR = true
+        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
     }
     buildFeatures {
         compose = true
@@ -60,6 +60,7 @@ dependencies {
     coreLibraryDesugaring(Deps.desugar)
 
     implementation(Deps.Koin.core)
+    implementation(Deps.Koin.android)
     implementation(Deps.Koin.compose)
     implementation(Deps.Koin.workManager)
 
@@ -69,7 +70,4 @@ dependencies {
     testImplementation(Deps.junit)
     androidTestImplementation(Deps.AndroidX.Test.junit)
     androidTestImplementation(Deps.AndroidX.Compose.test)
-
-    // TODO remove this once compose transitively pulls this version (o/w transitive pull from jcenter)
-    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable-jvm:0.3.4")
 }

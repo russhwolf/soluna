@@ -14,7 +14,7 @@ import platform.CoreLocation.kCLAuthorizationStatusAuthorizedAlways
 import platform.CoreLocation.kCLAuthorizationStatusAuthorizedWhenInUse
 import platform.Foundation.NSError
 import platform.darwin.NSObject
-import kotlin.time.seconds
+import kotlin.time.Duration
 
 class IosDeviceLocationService : DeviceLocationService {
     private val locationDelegate = LocationDelegate()
@@ -43,13 +43,13 @@ class IosDeviceLocationService : DeviceLocationService {
     private suspend fun requestLocationPermission(): Boolean {
         val deferred = locationDelegate.getAuthorizationAsync()
         locationManager.requestWhenInUseAuthorization()
-        return withTimeoutOrNull(10.seconds) { deferred.await().hasLocationPermission } ?: false
+        return withTimeoutOrNull(Duration.seconds(10)) { deferred.await().hasLocationPermission } ?: false
     }
 
     private suspend fun getCurrentDeviceLocationUnsafe(): DeviceLocationResult {
         val deferred = locationDelegate.getLocationAsync()
         locationManager.requestLocation()
-        return withTimeoutOrNull(10.seconds) {
+        return withTimeoutOrNull(Duration.seconds(10)) {
             deferred.await().coordinate.useContents {
                 DeviceLocationResult.Success(
                     latitude = latitude,

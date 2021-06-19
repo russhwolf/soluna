@@ -7,8 +7,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
-import kotlin.time.days
-import kotlin.time.minutes
+import kotlin.time.Duration
 
 interface UpcomingTimesRepository {
 
@@ -19,7 +18,8 @@ interface UpcomingTimesRepository {
         private val currentTimeRepository: CurrentTimeRepository
     ) : UpcomingTimesRepository {
         override fun getUpcomingTimes(location: SelectableLocation): Flow<UpcomingTimes?> =
-            currentTimeRepository.getCurrentTimeFlow(1.minutes).map { getUpcomingTimesForLocation(location, it) }
+            currentTimeRepository.getCurrentTimeFlow(Duration.minutes(1))
+                .map { getUpcomingTimesForLocation(location, it) }
 
         private fun getUpcomingTimesForLocation(
             location: SelectableLocation?,
@@ -37,13 +37,13 @@ interface UpcomingTimesRepository {
 
             return UpcomingTimes(
                 sunriseTime = times.sunriseTime?.takeIf { it > currentInstant }
-                    ?: timesTomorrow.sunriseTime?.takeIf { it < currentInstant.plus(1.days) },
+                    ?: timesTomorrow.sunriseTime?.takeIf { it < currentInstant.plus(Duration.days(1)) },
                 sunsetTime = times.sunsetTime?.takeIf { it > currentInstant }
-                    ?: timesTomorrow.sunsetTime?.takeIf { it < currentInstant.plus(1.days) },
+                    ?: timesTomorrow.sunsetTime?.takeIf { it < currentInstant.plus(Duration.days(1)) },
                 moonriseTime = times.moonriseTime?.takeIf { it > currentInstant }
-                    ?: timesTomorrow.moonriseTime?.takeIf { it < currentInstant.plus(1.days) },
+                    ?: timesTomorrow.moonriseTime?.takeIf { it < currentInstant.plus(Duration.days(1)) },
                 moonsetTime = times.moonsetTime?.takeIf { it > currentInstant }
-                    ?: timesTomorrow.moonsetTime?.takeIf { it < currentInstant.plus(1.days) }
+                    ?: timesTomorrow.moonsetTime?.takeIf { it < currentInstant.plus(Duration.days(1)) }
             )
         }
     }

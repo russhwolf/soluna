@@ -10,7 +10,7 @@ import com.russhwolf.soluna.mobile.screen.locationdetail.LocationDetailViewModel
 import com.russhwolf.soluna.mobile.screen.locationlist.LocationListViewModel
 import com.russhwolf.soluna.mobile.screen.reminderlist.ReminderListViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
@@ -27,6 +27,8 @@ import platform.Foundation.NSTimeZone
 
 object SwiftKotlinBridge : KoinComponent {
     private const val scopeId = "swiftKotlinBridge"
+
+    private val coroutineScope = MainScope()
 
     fun initKoin() {
         val appModule = module {
@@ -45,7 +47,7 @@ object SwiftKotlinBridge : KoinComponent {
     fun getReminderListViewModel() = getKoin().getScope(scopeId).get<ReminderListViewModel>()
 
     fun observeReminderNotificationList(onEach: (List<ReminderNotification>?) -> Unit) {
-        GlobalScope.launch(Dispatchers.Main) {
+        coroutineScope.launch(Dispatchers.Main) {
             get<ReminderNotificationRepository>().getUpcomingNotifications()
                 .onEach { onEach(it) }
                 .collect()
@@ -53,7 +55,7 @@ object SwiftKotlinBridge : KoinComponent {
     }
 
     fun getReminderNotificationList(onSuccess: (List<ReminderNotification>?) -> Unit) {
-        GlobalScope.launch(Dispatchers.Main) {
+        coroutineScope.launch(Dispatchers.Main) {
             val reminders = get<ReminderNotificationRepository>().getUpcomingNotifications().first()
             onSuccess(reminders)
         }

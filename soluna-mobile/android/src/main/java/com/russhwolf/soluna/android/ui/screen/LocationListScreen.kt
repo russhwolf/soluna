@@ -15,7 +15,6 @@ import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import androidx.navigation.compose.navigate
 import com.russhwolf.soluna.mobile.screen.locationlist.LocationListViewModel
 
 @OptIn(ExperimentalFoundationApi::class)

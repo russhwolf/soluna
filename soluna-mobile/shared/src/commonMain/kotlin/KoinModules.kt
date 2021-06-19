@@ -49,7 +49,7 @@ internal val commonModule = module {
         factory { HomeViewModel(get(), get(), get(), get(mainDispatcherQualifier)) }
         factory { LocationListViewModel(get(), get(mainDispatcherQualifier)) }
         factory { AddLocationViewModel(get(), get(), get(), get(mainDispatcherQualifier)) }
-        factory { (id: Long) -> LocationDetailViewModel(id, get(), get(), get(mainDispatcherQualifier)) }
+        factory { params -> LocationDetailViewModel(params.get(), get(), get(), get(mainDispatcherQualifier)) }
         factory { ReminderListViewModel(get(), get(mainDispatcherQualifier)) }
     }
 }

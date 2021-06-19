@@ -40,6 +40,7 @@ interface GoogleApiClient {
                         isLenient = true
                         ignoreUnknownKeys = true
                         allowSpecialFloatingPointValues = true
+                        useAlternativeNames = false
                     }
                 )
             }

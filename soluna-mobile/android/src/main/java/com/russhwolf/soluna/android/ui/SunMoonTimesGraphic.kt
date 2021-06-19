@@ -46,9 +46,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration
+import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
-import kotlin.time.days
-import kotlin.time.hours
 
 @Composable
 fun SunMoonTimesGraphic(
@@ -61,9 +60,9 @@ fun SunMoonTimesGraphic(
     modifier: Modifier = Modifier
 ) {
     val effectiveSunriseTime = sunriseTime ?: currentTime
-    val effectiveSunsetTime = sunsetTime ?: currentTime.plus(1.days)
+    val effectiveSunsetTime = sunsetTime ?: currentTime.plus(Duration.days(1))
     val effectiveMoonriseTime = moonriseTime ?: currentTime
-    val effectiveMoonsetTime = moonsetTime ?: currentTime.plus(1.days)
+    val effectiveMoonsetTime = moonsetTime ?: currentTime.plus(Duration.days(1))
 
     val backgroundColor = Color(0x80808080)
     val dayColor = SolunaTheme.colors.primary
@@ -250,13 +249,17 @@ private fun TimeIcon(angle: Float?, radius: Dp, tint: Color, icon: ImageVector) 
     }
 }
 
-private fun Duration.toAngle(): Float = let { if (it < 0.days) it + 1.days else it }.inDays.toFloat() * 360
+private fun Duration.toAngle(): Float = let {
+    if (it < Duration.days(0)) it + Duration.days(1) else it
+}.toDouble(DurationUnit.DAYS).toFloat() * 360
+
 private fun Instant.toAngle(timeZone: TimeZone): Float {
     val localDateTime = toLocalDateTime(timeZone)
     val localMidnightInstant = localDateTime.run { LocalDateTime(year, month, dayOfMonth, 0, 0) }.toInstant(timeZone)
     return (this - localMidnightInstant).toAngle()
 }
 
+@Suppress("unused")
 class Previews {
     private val defaultTimeZone = TimeZone.UTC
 
@@ -342,7 +345,7 @@ class Previews {
         SolunaTheme {
             Box(Modifier.aspectRatio(1f)) {
                 SunMoonTimesGraphic(
-                    currentTime = defaultCurrentTime.plus(11.hours),
+                    currentTime = defaultCurrentTime.plus(Duration.hours(11)),
                     sunriseTime = defaultSunriseTime,
                     sunsetTime = defaultSunsetTime,
                     moonriseTime = defaultMoonriseTime,

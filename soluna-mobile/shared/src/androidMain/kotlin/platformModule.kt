@@ -11,7 +11,6 @@ import com.squareup.sqldelight.db.SqlDriver
 import io.ktor.client.engine.android.Android
 import io.ktor.client.features.logging.Logger
 import io.ktor.client.features.logging.MessageLengthLimitingLogger
-import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +18,6 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import java.io.File
 
-@OptIn(KtorExperimentalAPI::class)
 actual val platformModule: Module = module {
     single<SqlDriver> { AndroidSqliteDriver(SolunaDb.Schema, get(), "Soluna.db") }
     single { Android.create() }

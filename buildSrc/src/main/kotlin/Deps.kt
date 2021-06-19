@@ -1,5 +1,5 @@
 object Versions {
-    const val kotlin = "1.4.32"
+    const val kotlin = "1.5.10"
 
     object Android {
         const val gradle = "7.0.0-beta03"
@@ -8,32 +8,32 @@ object Versions {
         const val targetSdk = 30
     }
 
-    const val buildKonfig = "0.7.0"
+    const val buildKonfig = "0.8.0"
     const val desugar = "1.1.5"
-    const val islandTime = "0.5.0"
+    const val islandTime = "0.6.0"
     const val junit = "4.13.2"
-    const val koin = "3.0.1-beta-2"
-    const val ktor = "1.5.3"
+    const val koin = "3.1.1"
+    const val ktor = "1.6.0"
     const val playServicesLocation = "18.0.0"
     const val robolectric = "4.5.1"
-    const val settings = "0.7.4"
-    const val sqlDelight = "1.4.4"
-    const val stately = "1.1.5"
-    const val turbine = "0.4.1"
+    const val settings = "0.7.7"
+    const val sqlDelight = "1.5.0"
+    const val stately = "1.1.7"
+    const val turbine = "0.5.2"
 
     object KotlinX {
-        const val coroutines = "1.4.3-native-mt"
-        const val dateTime = "0.1.1"
-        const val serialization = "1.1.0"
+        const val coroutines = "1.5.0-native-mt"
+        const val dateTime = "0.2.1"
+        const val serialization = "1.2.1"
     }
 
     object AndroidX {
-        const val activityCompose = "1.3.0-alpha06"
-        const val compose = "1.0.0-beta04"
-        const val coreKtx = "1.3.2"
-        const val dataStore = "1.0.0-alpha08"
+        const val activityCompose = "1.3.0-beta01"
+        const val compose = "1.0.0-beta08"
+        const val coreKtx = "1.5.0"
+        const val dataStore = "1.0.0-beta01"
         const val lifecycle = "2.4.0-alpha01"
-        const val navigationCompose = "1.0.0-alpha10"
+        const val navigationCompose = "2.4.0-alpha02"
         const val workManager = "2.5.0"
 
         object Test {
@@ -94,6 +94,7 @@ object Deps {
     object Koin {
         const val core = "io.insert-koin:koin-core:${Versions.koin}"
         const val test = "io.insert-koin:koin-test:${Versions.koin}"
+        const val android = "io.insert-koin:koin-android:${Versions.koin}"
         const val compose = "io.insert-koin:koin-androidx-compose:${Versions.koin}"
         const val workManager = "io.insert-koin:koin-androidx-workmanager:${Versions.koin}"
     }

@@ -1,9 +1,11 @@
 package com.russhwolf.soluna.mobile.repository
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.location.LocationManagerCompat
@@ -41,6 +43,7 @@ class AndroidDeviceLocationService(
             LocationSettingsRequest.Builder().setAlwaysShow(true).setNeedBle(false).build()
         ).await().locationSettingsStates?.isLocationPresent == true
 
+    @SuppressLint("MissingPermission") // We do permission check before calling unsafe method
     override suspend fun getCurrentDeviceLocation(): DeviceLocationResult {
         val hasLocationPermission = hasLocationPermission || locationPermissionRequester.requestLocationPermission()
         if (!hasLocationPermission) {
@@ -52,6 +55,7 @@ class AndroidDeviceLocationService(
         return getCurrentDeviceLocationUnsafe()
     }
 
+    @RequiresPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
     private suspend fun getCurrentDeviceLocationUnsafe(): DeviceLocationResult {
         val androidLocation = fusedLocationProviderClient.lastLocation.await()
             ?: fusedLocationProviderClient.getCurrentLocation(
