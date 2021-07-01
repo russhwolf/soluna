@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.times
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -37,7 +38,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.times
 import com.russhwolf.soluna.android.extensions.toDisplayTime
 import com.russhwolf.soluna.android.ui.theme.SolunaTheme
 import kotlinx.datetime.Instant
@@ -65,65 +66,98 @@ fun SunMoonTimesGraphic(
     val effectiveMoonsetTime = moonsetTime ?: currentTime.plus(Duration.days(1))
 
     val backgroundColor = Color(0x80808080)
-    val dayColor = SolunaTheme.colors.primary
+    val sunColor = SolunaTheme.colors.primary
     val moonColor = SolunaTheme.colors.secondary
     val currentTimeColor = SolunaTheme.colors.onBackground
     val midnightColor = Color(0x80808080)
     val textColor = SolunaTheme.colors.onBackground
+    val largeTextStyle = SolunaTheme.typography.body1
+    val smallTextStyle = SolunaTheme.typography.body2
 
     BoxWithConstraints(
         modifier = modifier.aspectRatio(1f),
         contentAlignment = Alignment.Center
     ) {
+        val minSize = minOf(maxHeight, maxWidth)
+        val outerPadding = 48.dp // TODO increase based on text size
+        val timesArcThickness = 32.dp
+        val timesArcMargin = 8.dp
+        val diskRadius = minSize / 2 - outerPadding
+        val moonTimesRadius = diskRadius - timesArcMargin - timesArcThickness / 2
+        val sunTimesRadius = diskRadius - 2 * timesArcMargin - 3 * timesArcThickness / 2
+        val moonTimesOffset = outerPadding + timesArcMargin + 1 / 2f * timesArcThickness
+        val sunTimesOffset = outerPadding + 2 * timesArcMargin + 3 / 2f * timesArcThickness
+        val currentTimeWidth = 4.dp
+        val midnightWidth = 4.dp
+
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(48.dp)
                 .aspectRatio(1f)
         ) {
-
-            val timesArcThickness = 24.dp.toPx()
-            val timesArcMargin = 8.dp.toPx()
-            val moonTimesOffset = 1 * timesArcThickness + 2 * timesArcMargin
-            val moonTimesRadius = size.minDimension - moonTimesOffset
-            val sunTimesOffset = 3 * timesArcThickness + 4 * timesArcMargin
-            val sunTimesRadius = size.minDimension - sunTimesOffset
-            val currentTimeWidth = 4.dp.toPx()
-            val midnightWidth = 4.dp.toPx()
-
             drawCircle(
-                color = backgroundColor
+                color = backgroundColor,
+                radius = diskRadius.toPx()
             )
             drawLine(
                 color = midnightColor,
-                start = Offset(size.width / 2, 0f),
+                start = Offset(size.width / 2, outerPadding.toPx()),
                 end = Offset(size.width / 2, size.height / 2),
-                strokeWidth = midnightWidth,
+                strokeWidth = midnightWidth.toPx(),
                 cap = StrokeCap.Round
             )
 
             rotate(-90f) {
                 if (sunriseTime != null || sunsetTime != null) {
                     drawArc(
-                        color = dayColor,
+                        color = sunColor,
                         startAngle = effectiveSunriseTime.toAngle(timeZone),
-                        sweepAngle = (effectiveSunsetTime - effectiveSunriseTime).toAngle(),
+                        sweepAngle = (effectiveSunsetTime - effectiveSunriseTime).toAngle() / 2,
                         useCenter = false,
-                        style = Stroke(timesArcThickness, cap = StrokeCap.Round),
-                        size = Size(sunTimesRadius, sunTimesRadius),
-                        topLeft = Offset(sunTimesOffset, sunTimesOffset) / 2f
+                        style = Stroke(
+                            timesArcThickness.toPx(),
+                            cap = if (sunriseTime != null) StrokeCap.Round else StrokeCap.Butt
+                        ),
+                        size = 2 * Size(sunTimesRadius.toPx(), sunTimesRadius.toPx()),
+                        topLeft = Offset(sunTimesOffset.toPx(), sunTimesOffset.toPx())
                     )
-
+                    drawArc(
+                        color = sunColor,
+                        startAngle = (effectiveSunriseTime.toAngle(timeZone) + effectiveSunsetTime.toAngle(timeZone)) / 2,
+                        sweepAngle = (effectiveSunsetTime - effectiveSunriseTime).toAngle() / 2,
+                        useCenter = false,
+                        style = Stroke(
+                            timesArcThickness.toPx(),
+                            cap = if (sunsetTime != null) StrokeCap.Round else StrokeCap.Butt
+                        ),
+                        size = 2 * Size(sunTimesRadius.toPx(), sunTimesRadius.toPx()),
+                        topLeft = Offset(sunTimesOffset.toPx(), sunTimesOffset.toPx())
+                    )
                 }
                 if (moonriseTime != null || moonsetTime != null) {
                     drawArc(
                         color = moonColor,
                         startAngle = effectiveMoonriseTime.toAngle(timeZone),
-                        sweepAngle = (effectiveMoonsetTime - effectiveMoonriseTime).toAngle(),
+                        sweepAngle = (effectiveMoonsetTime - effectiveMoonriseTime).toAngle() / 2,
                         useCenter = false,
-                        style = Stroke(timesArcThickness, cap = StrokeCap.Round),
-                        size = Size(moonTimesRadius, moonTimesRadius),
-                        topLeft = Offset(moonTimesOffset, moonTimesOffset) / 2f
+                        style = Stroke(
+                            timesArcThickness.toPx(),
+                            cap = if (moonriseTime != null) StrokeCap.Round else StrokeCap.Butt
+                        ),
+                        size = 2 * Size(moonTimesRadius.toPx(), moonTimesRadius.toPx()),
+                        topLeft = Offset(moonTimesOffset.toPx(), moonTimesOffset.toPx())
+                    )
+                    drawArc(
+                        color = moonColor,
+                        startAngle = (effectiveMoonriseTime.toAngle(timeZone) + effectiveMoonsetTime.toAngle(timeZone)) / 2,
+                        sweepAngle = (effectiveMoonsetTime - effectiveMoonriseTime).toAngle() / 2,
+                        useCenter = false,
+                        style = Stroke(
+                            timesArcThickness.toPx(),
+                            cap = if (moonsetTime != null) StrokeCap.Round else StrokeCap.Butt
+                        ),
+                        size = 2 * Size(moonTimesRadius.toPx(), moonTimesRadius.toPx()),
+                        topLeft = Offset(moonTimesOffset.toPx(), moonTimesOffset.toPx())
                     )
                 }
             }
@@ -131,8 +165,8 @@ fun SunMoonTimesGraphic(
                 drawLine(
                     color = currentTimeColor,
                     start = Offset(size.width / 2, size.height / 2),
-                    end = Offset(size.width / 2, 0f),
-                    strokeWidth = currentTimeWidth,
+                    end = Offset(size.width / 2, outerPadding.toPx()),
+                    strokeWidth = currentTimeWidth.toPx(),
                     cap = StrokeCap.Round,
                 )
             }
@@ -141,21 +175,23 @@ fun SunMoonTimesGraphic(
                 val canvas = it.nativeCanvas
                 val smallPaint = Paint().apply {
                     color = textColor.toArgb()
-                    textSize = 14.sp.toPx()
+                    textSize = smallTextStyle.fontSize.toPx()
                     textAlign = Paint.Align.CENTER
+                    isAntiAlias = true
                 }
                 val largePaint = Paint().apply {
                     color = textColor.toArgb()
-                    textSize = 32.sp.toPx()
+                    textSize = largeTextStyle.fontSize.toPx()
                     textAlign = Paint.Align.CENTER
+                    isAntiAlias = true
                 }
                 val midnightPath = Path().apply {
                     arcTo(
                         RectF(
-                            -smallPaint.fontMetrics.bottom,
-                            -smallPaint.fontMetrics.bottom,
-                            size.width + smallPaint.fontMetrics.bottom,
-                            size.height + smallPaint.fontMetrics.bottom
+                            0f,
+                            outerPadding.toPx() - smallPaint.fontMetrics.descent,
+                            size.width,
+                            size.height - outerPadding.toPx() + smallPaint.fontMetrics.descent
                         ), -180f, 180f, true
                     )
                 }
@@ -164,10 +200,10 @@ fun SunMoonTimesGraphic(
                 val noonPath = Path().apply {
                     arcTo(
                         RectF(
-                            smallPaint.fontMetrics.top,
-                            smallPaint.fontMetrics.top,
-                            size.width - smallPaint.fontMetrics.top,
-                            size.height - smallPaint.fontMetrics.top
+                            0f,
+                            outerPadding.toPx() + smallPaint.fontMetrics.ascent,
+                            size.width,
+                            size.height - outerPadding.toPx() - smallPaint.fontMetrics.ascent
                         ), 180f, -180f, true
                     )
                 }
@@ -176,12 +212,19 @@ fun SunMoonTimesGraphic(
                 val currentTimePath = Path().apply {
                     val angle = currentTime.toAngle(timeZone)
                     if (currentTime.toLocalDateTime(timeZone).hour in 6 until 18) {
-                        val offset = -largePaint.fontMetrics.top + smallPaint.fontMetrics.bottom + 8.dp.toPx()
-                        arcTo(RectF(-offset, -offset, size.width + offset, size.height + offset), angle, -180f, true)
-                    } else {
-                        val offset = largePaint.fontMetrics.bottom + smallPaint.fontMetrics.bottom + 8.dp.toPx()
+                        val offset =
+                            outerPadding.toPx() + largePaint.fontMetrics.ascent + smallPaint.fontMetrics.run { top - bottom }
                         arcTo(
-                            RectF(-offset, -offset, size.width + offset, size.height + offset),
+                            RectF(offset, offset, size.width - offset, size.height - offset),
+                            angle,
+                            -180f,
+                            true
+                        )
+                    } else {
+                        val offset =
+                            outerPadding.toPx() - largePaint.fontMetrics.descent + smallPaint.fontMetrics.run { top - bottom }
+                        arcTo(
+                            RectF(offset, offset, size.width - offset, size.height - offset),
                             angle - 180f,
                             180f,
                             true
@@ -189,62 +232,52 @@ fun SunMoonTimesGraphic(
                     }
                 }
                 canvas.drawTextOnPath(currentTime.toDisplayTime(timeZone), currentTimePath, 0f, 0f, largePaint)
-
-//                val radius = size.minDimension/2 + smallPaint.fontMetrics.run { (bottom - top) / 2f }
-//                val offset = size.minDimension/2
-//                for (i in (1..11) + (13..23)) {
-//                    val tau = 2 * PI
-//                    val angle = (i/24f * tau).toFloat()
-//                    canvas.drawText(
-//                        i.toString(),
-//                        offset + radius * sin(angle),
-//                        offset + smallPaint.fontMetrics.bottom - radius * cos(angle),
-//                        smallPaint
-//                    )
-//                }
             }
         }
 
-        val size = minOf(maxHeight, maxWidth)
-
         TimeIcon(
             angle = sunriseTime?.toAngle(timeZone),
-            radius = size / 2 - 100.dp,
-            tint = textColor,
+            radius = sunTimesRadius,
+            size = timesArcThickness,
+            iconColor = SolunaTheme.colors.onPrimary,
             icon = Icons.Filled.LightMode
         )
         TimeIcon(
             angle = sunsetTime?.toAngle(timeZone),
-            radius = size / 2 - 100.dp,
-            tint = textColor,
+            radius = sunTimesRadius,
+            size = timesArcThickness,
+            iconColor = SolunaTheme.colors.onPrimary,
             icon = Icons.Outlined.LightMode
         )
         TimeIcon(
             angle = moonriseTime?.toAngle(timeZone),
-            radius = size / 2 - 68.dp,
-            tint = textColor,
+            radius = moonTimesRadius,
+            size = timesArcThickness,
+            iconColor = SolunaTheme.colors.onSecondary,
             icon = Icons.Filled.DarkMode
         )
         TimeIcon(
             angle = moonsetTime?.toAngle(timeZone),
-            radius = size / 2 - 68.dp,
-            tint = textColor,
+            radius = moonTimesRadius,
+            size = timesArcThickness,
+            iconColor = SolunaTheme.colors.onSecondary,
             icon = Icons.Outlined.DarkMode
         )
     }
 }
 
 @Composable
-private fun TimeIcon(angle: Float?, radius: Dp, tint: Color, icon: ImageVector) {
+private fun TimeIcon(angle: Float?, radius: Dp, size: Dp, iconColor: Color, icon: ImageVector) {
     if (angle != null) {
         Icon(
             imageVector = icon,
             contentDescription = null,
             modifier = Modifier
+                .size(size)
                 .rotate(180 + angle)
                 .offset(0.dp, radius)
                 .rotate(-(180 + angle)),
-            tint = tint
+            tint = iconColor
         )
     }
 }
@@ -261,7 +294,7 @@ private fun Instant.toAngle(timeZone: TimeZone): Float {
 
 @Suppress("unused")
 class Previews {
-    private val defaultTimeZone = TimeZone.UTC
+    private val defaultTimeZone = TimeZone.of("America/New_York")
 
     private val defaultCurrentTime = LocalDateTime(2021, 1, 1, 11, 0).toInstant(defaultTimeZone)
 
@@ -345,7 +378,7 @@ class Previews {
         SolunaTheme {
             Box(Modifier.aspectRatio(1f)) {
                 SunMoonTimesGraphic(
-                    currentTime = defaultCurrentTime.plus(Duration.hours(11)),
+                    currentTime = defaultCurrentTime.plus(Duration.hours(12)),
                     sunriseTime = defaultSunriseTime,
                     sunsetTime = defaultSunsetTime,
                     moonriseTime = defaultMoonriseTime,
