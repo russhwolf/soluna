@@ -93,7 +93,7 @@ fun SunMoonTimesGraphic(
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
-                .aspectRatio(1f)
+                .aspectRatio(1f, matchHeightConstraintsFirst = maxHeight < maxWidth)
         ) {
             drawCircle(
                 color = backgroundColor,
@@ -338,7 +338,7 @@ class Previews {
         }
     }
 
-    @Preview(fontScale = 1.75f)
+    @Preview(fontScale = 2f)
     @Composable
     fun LargeText() {
         SolunaTheme {
