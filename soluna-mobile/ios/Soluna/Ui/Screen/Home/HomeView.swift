@@ -44,6 +44,14 @@ struct HomeContent : View {
                 Text("Sunset: \(populatedState.sunsetTime?.toDisplayTime(timeZone: timeZone) ?? "None")")
                 Text("Moonrise: \(populatedState.moonriseTime?.toDisplayTime(timeZone: timeZone) ?? "None")")
                 Text("Moonset: \(populatedState.moonsetTime?.toDisplayTime(timeZone: timeZone) ?? "None")")
+                SunMoonTimesGraphic(
+                    currentTime: populatedState.currentTime,
+                    sunriseTime: populatedState.sunriseTime,
+                    sunsetTime: populatedState.sunsetTime,
+                    moonriseTime: populatedState.moonriseTime,
+                    moonsetTime: populatedState.moonsetTime,
+                    timeZone: populatedState.timeZone
+                )
             default:
                 EmptyView()
             }

@@ -37,6 +37,8 @@
 		463BA3F326195720008BB17B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 463BA3F226195720008BB17B /* Preview Assets.xcassets */; };
 		463BA3FE26195720008BB17B /* SolunaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463BA3FD26195720008BB17B /* SolunaTests.swift */; };
 		463BA40926195720008BB17B /* SolunaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463BA40826195720008BB17B /* SolunaUITests.swift */; };
+		464E3F24268EC6EF00BB2251 /* SunMoonTimesGraphic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464E3F23268EC6EF00BB2251 /* SunMoonTimesGraphic.swift */; };
+		464E3F292690C80400BB2251 /* SolunaTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464E3F282690C80400BB2251 /* SolunaTheme.swift */; };
 		467F906A261E9EEE0029454A /* ObservableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F9069261E9EEE0029454A /* ObservableViewModel.swift */; };
 		467F906E261E9F4D0029454A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F906D261E9F4D0029454A /* HomeView.swift */; };
 		467F9072261E9F9D0029454A /* LocationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F9071261E9F9D0029454A /* LocationListView.swift */; };
@@ -126,6 +128,8 @@
 		463BA40426195720008BB17B /* SolunaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SolunaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		463BA40826195720008BB17B /* SolunaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolunaUITests.swift; sourceTree = "<group>"; };
 		463BA40A26195720008BB17B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		464E3F23268EC6EF00BB2251 /* SunMoonTimesGraphic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SunMoonTimesGraphic.swift; sourceTree = "<group>"; };
+		464E3F282690C80400BB2251 /* SolunaTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolunaTheme.swift; sourceTree = "<group>"; };
 		467F9069261E9EEE0029454A /* ObservableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableViewModel.swift; sourceTree = "<group>"; };
 		467F906D261E9F4D0029454A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		467F9071261E9F9D0029454A /* LocationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListView.swift; sourceTree = "<group>"; };
@@ -371,7 +375,7 @@
 				4680CABD266C630B009F41FA /* LaunchScreen.storyboard */,
 				463BA3F126195720008BB17B /* Preview Content */,
 				46C7091D266C2E6100F4D5DF /* Notifications */,
-				46C75A07261FF91E009FFEB5 /* Screen */,
+				464E3F272690C7C800BB2251 /* Ui */,
 				46C7091E266C5C2B00F4D5DF /* SceneDelegate.swift */,
 				469AF5CE261A8F3F005D00C8 /* CombineAdapters.swift */,
 				46E7100A262254B3004DC8FE /* DateTimeExtensions.swift */,
@@ -403,6 +407,16 @@
 				463BA40A26195720008BB17B /* Info.plist */,
 			);
 			path = SolunaUITests;
+			sourceTree = "<group>";
+		};
+		464E3F272690C7C800BB2251 /* Ui */ = {
+			isa = PBXGroup;
+			children = (
+				46C75A07261FF91E009FFEB5 /* Screen */,
+				464E3F282690C80400BB2251 /* SolunaTheme.swift */,
+				464E3F23268EC6EF00BB2251 /* SunMoonTimesGraphic.swift */,
+			);
+			path = Ui;
 			sourceTree = "<group>";
 		};
 		469AF5BF26195981005D00C8 /* Frameworks */ = {
@@ -650,6 +664,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				46E7100B262254B3004DC8FE /* DateTimeExtensions.swift in Sources */,
+				464E3F24268EC6EF00BB2251 /* SunMoonTimesGraphic.swift in Sources */,
 				46C75A04261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift in Sources */,
 				463ADD1326655CB10056C6AA /* ReminderListView.swift in Sources */,
 				46C7091F266C5C2B00F4D5DF /* SceneDelegate.swift in Sources */,
@@ -665,6 +680,7 @@
 				4680CAC4266C69BA009F41FA /* ContentView.swift in Sources */,
 				46E710222622A09C004DC8FE /* LocationDetailView.swift in Sources */,
 				46C75A00261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift in Sources */,
+				464E3F292690C80400BB2251 /* SolunaTheme.swift in Sources */,
 				46C63438266DA9A800D3647E /* BackgroundNotificationsScheduler.swift in Sources */,
 				46C759FA261FF379009FFEB5 /* ObservableHomeViewModel.swift in Sources */,
 			);

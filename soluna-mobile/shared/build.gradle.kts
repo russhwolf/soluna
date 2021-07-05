@@ -31,6 +31,7 @@ kotlin {
         binaries {
             framework {
                 baseName = "Shared"
+                export(Deps.KotlinX.dateTime)
             }
         }
     }
@@ -69,7 +70,7 @@ kotlin {
                 implementation(Deps.Ktor.serialization)
                 implementation(Deps.Ktor.logging)
 
-                implementation(Deps.KotlinX.dateTime)
+                api(Deps.KotlinX.dateTime)
 
                 implementation(Deps.Stately.core)
 

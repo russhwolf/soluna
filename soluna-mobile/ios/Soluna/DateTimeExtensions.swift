@@ -1,8 +1,8 @@
 import Foundation
 import Shared
 
-extension Kotlinx_datetimeInstant {
-    func toDisplayTime(timeZone: TimeZone) -> String {
+extension Instant {
+    func toDisplayTime(timeZone: Foundation.TimeZone) -> String {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.weekday, .hour, .minute]
         formatter.unitsStyle = .positional
