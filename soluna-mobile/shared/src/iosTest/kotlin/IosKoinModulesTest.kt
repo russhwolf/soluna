@@ -1,7 +1,11 @@
 package com.russhwolf.soluna.mobile
 
+import com.russhwolf.soluna.mobile.screen.locationdetail.LocationDetailViewModel
 import org.koin.core.context.stopKoin
+import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
+import org.koin.test.check.checkModules
+import kotlin.test.AfterTest
 import kotlin.test.Test
 
 class IosKoinModulesTest {
@@ -10,7 +14,9 @@ class IosKoinModulesTest {
 
     @Test
     fun checkModules() {
-        koinModulesTest(testAppModule)
+        initKoin(testAppModule).checkModules {
+            create<LocationDetailViewModel> { parametersOf(1L) }
+        }
     }
 
     @Test
@@ -24,7 +30,10 @@ class IosKoinModulesTest {
         SwiftKotlinBridge.getReminderListViewModel()
 
         SwiftKotlinBridge.getReminderNotificationList {}
+    }
 
+    @AfterTest
+    fun tearDown() {
         stopKoin()
     }
 }

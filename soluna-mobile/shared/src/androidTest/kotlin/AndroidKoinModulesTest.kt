@@ -3,31 +3,55 @@ package com.russhwolf.soluna.mobile
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.russhwolf.soluna.mobile.repository.DeviceLocationResult
+import com.russhwolf.soluna.mobile.repository.AndroidDeviceLocationService
 import com.russhwolf.soluna.mobile.repository.DeviceLocationService
+import com.russhwolf.soluna.mobile.repository.LocationPermissionRequester
+import com.russhwolf.soluna.mobile.screen.locationdetail.LocationDetailViewModel
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.core.context.stopKoin
+import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
+import org.koin.test.check.checkModules
+import kotlin.test.AfterTest
 import kotlin.test.fail
 
 @RunWith(AndroidJUnit4::class)
 class AndroidKoinModulesTest {
-    private val testAppModule = module {
-        single<Context> { ApplicationProvider.getApplicationContext() }
+    private val applicationContext: Context = ApplicationProvider.getApplicationContext()
 
-        // TODO the app does loadModule() here. Should the test do the same?
+    private val testAppModule = module {
+        single { applicationContext }
+
         scope(koinUiScopeQualifier) {
             scoped<DeviceLocationService> {
-                object : DeviceLocationService {
-                    override suspend fun isDeviceLocationCapable(): Boolean = fail()
-                    override suspend fun getCurrentDeviceLocation(): DeviceLocationResult = fail()
-                }
+                AndroidDeviceLocationService(applicationContext, get())
             }
         }
     }
 
     @Test
     fun checkModules() {
-        koinModulesTest(testAppModule)
+        val koinApplication = initKoin(testAppModule)
+
+        koinApplication.koin.loadModules(listOf(module {
+            scope(koinUiScopeQualifier) {
+                scoped<LocationPermissionRequester> {
+                    // Fake permission requester to fulfill the dependency
+                    object : LocationPermissionRequester {
+                        override suspend fun requestLocationPermission(): Boolean = fail()
+                    }
+                }
+            }
+        }))
+
+        koinApplication.checkModules {
+            create<LocationDetailViewModel> { parametersOf(1L) }
+        }
+    }
+
+    @AfterTest
+    fun tearDown() {
+        stopKoin()
     }
 }

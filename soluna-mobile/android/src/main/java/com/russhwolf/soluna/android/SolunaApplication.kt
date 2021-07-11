@@ -26,10 +26,10 @@ class SolunaApplication : Application() {
         val reminderNotificationScheduler = ReminderNotificationScheduler(this)
         ReminderNotificationScheduler.createNotificationChannel(this)
 
-        @OptIn(KoinExperimentalAPI::class)
         val koinApplication = initKoin(module {
             single<Context> { applicationContext }
 
+            @OptIn(KoinExperimentalAPI::class)
             worker {
                 ScheduleReminderNotificationsWorker(get(), get(), get(), reminderNotificationScheduler)
             }
@@ -37,9 +37,10 @@ class SolunaApplication : Application() {
             scope(koinUiScopeQualifier) {
                 scoped<DeviceLocationService> { AndroidDeviceLocationService(applicationContext, get()) }
             }
-        }) {
-            workManagerFactory()
-        }
+        })
+
+        @OptIn(KoinExperimentalAPI::class)
+        koinApplication.workManagerFactory()
 
         koinApplication.koin.get<ReminderNotificationRepository>().getUpcomingNotifications()
             .onEach { reminderNotifications ->
