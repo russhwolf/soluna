@@ -2,7 +2,7 @@ object Versions {
     const val kotlin = "1.5.10"
 
     object Android {
-        const val gradle = "7.0.0-beta05"
+        const val gradle = "7.0.0"
         const val minSdk = 23
         const val compileSdk = 30
         const val targetSdk = 30
@@ -28,12 +28,12 @@ object Versions {
     }
 
     object AndroidX {
-        const val activityCompose = "1.3.0-beta01"
-        const val compose = "1.0.0-beta09"
+        const val activityCompose = "1.3.0"
+        const val compose = "1.0.0"
         const val coreKtx = "1.5.0"
-        const val dataStore = "1.0.0-beta01"
-        const val lifecycle = "2.4.0-alpha01"
-        const val navigationCompose = "2.4.0-alpha02"
+        const val dataStore = "1.0.0-rc02"
+        const val lifecycle = "2.4.0-alpha02"
+        const val navigationCompose = "2.4.0-alpha05"
         const val workManager = "2.5.0"
 
         object Test {
