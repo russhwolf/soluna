@@ -2,8 +2,6 @@ import SwiftUI
 import Shared
 
 struct SunMoonTimesGraphic : View {
-    @EnvironmentObject var theme: SolunaTheme
-    
     var currentTime: Instant
     var sunriseTime: Instant?
     var sunsetTime: Instant?
@@ -30,8 +28,6 @@ struct SunMoonTimesGraphic : View {
 }
 
 private struct SunMoonTimesGraphicWithGeometry : View {
-    @EnvironmentObject var theme: SolunaTheme
-    
     var currentTime: Instant
     var sunriseTime: Instant?
     var sunsetTime: Instant?
@@ -42,12 +38,13 @@ private struct SunMoonTimesGraphicWithGeometry : View {
     var geometry: GeometryProxy
     
     var body: some View {
-        let effectiveSunriseTime = sunriseTime ?? currentTime
-        let effectiveSunsetTime = sunsetTime ?? currentTime.plusOneDay()
-        let effectiveMoonriseTime = moonriseTime ?? currentTime
-        let effectiveMoonsetTime = moonsetTime ?? currentTime.plusOneDay()
+        let smallTextFont = Font.body
+        let largeTextFont = Font.title3
         
-        // TODO theme colors
+        // TODO lineHeight might not be correct here
+        let smallTextSize = UIFont.preferredFont(forTextStyle: .body).lineHeight
+        let largeTextSize = UIFont.preferredFont(forTextStyle: .title3).lineHeight
+
         let backgroundColor = Color(red: 0.5, green: 0.5, blue: 0.5, opacity: 0.5)
         let sunColor = SolunaTheme.Color.primary
         let moonColor = SolunaTheme.Color.secondary
@@ -67,45 +64,153 @@ private struct SunMoonTimesGraphicWithGeometry : View {
         let iconSize = timesArcThickness * (1 - 2 * outerPadding/minSize)
         
         return ZStack {
-            Circle()
-                .foregroundColor(backgroundColor)
-            
-            Line()
-                .stroke(style: StrokeStyle(lineWidth: midnightWidth, lineCap: CGLineCap.round))
-                .foregroundColor(backgroundColor)
-            
-            Arc(startAngle: effectiveSunsetTime.toAngle(timeZone: timeZone), endAngle: effectiveSunriseTime.toAngle(timeZone: timeZone)).stroke(style: StrokeStyle(lineWidth: timesArcThickness, lineCap: CGLineCap.round)).rotation(Angle(degrees: -90)).padding(CGFloat(sunTimesOffset)).foregroundColor(sunColor)
-            
-            Arc(startAngle: effectiveMoonsetTime.toAngle(timeZone: timeZone), endAngle: effectiveMoonriseTime.toAngle(timeZone: timeZone)).stroke(style: StrokeStyle(lineWidth: timesArcThickness, lineCap: CGLineCap.round)).rotation(Angle(degrees: -90)).padding(CGFloat(moonTimesOffset)).foregroundColor(moonColor)
-            
-            TimeIcon(angle: effectiveSunriseTime.toAngle(timeZone: timeZone), radius: sunTimesRadius, size: iconSize, icon: "sun.max.fill")
-            
-            TimeIcon(angle: effectiveSunsetTime.toAngle(timeZone: timeZone), radius: sunTimesRadius, size: iconSize, icon: "sun.max")
-            
-            TimeIcon(angle: effectiveMoonriseTime.toAngle(timeZone: timeZone), radius: moonTimesRadius, size: iconSize, icon: "moon.fill")
-            
-            TimeIcon(angle: effectiveMoonsetTime.toAngle(timeZone: timeZone), radius: moonTimesRadius, size: iconSize, icon: "moon")
-            
-            Line()
-                .stroke(style: StrokeStyle(lineWidth: currentTimeWidth, lineCap: CGLineCap.round))
-                .rotation(currentTime.toAngle(timeZone: timeZone))
+            ZStack {
+                Circle()
+                    .foregroundColor(backgroundColor)
+                
+                Line()
+                    .stroke(style: StrokeStyle(lineWidth: midnightWidth, lineCap: .round))
+                    .foregroundColor(backgroundColor)
+                
+                TimesArc(
+                    currentTime: currentTime,
+                    riseTime: sunriseTime,
+                    setTime: sunsetTime,
+                    timeZone: timeZone,
+                    color: sunColor,
+                    thickness: timesArcThickness,
+                    radius: sunTimesRadius,
+                    arcOffset: sunTimesOffset
+                )
 
-        }.padding(outerPadding)
+                TimesArc(
+                    currentTime: currentTime,
+                    riseTime: moonriseTime,
+                    setTime: moonsetTime,
+                    timeZone: timeZone,
+                    color: moonColor,
+                    thickness: timesArcThickness,
+                    radius: moonTimesRadius,
+                    arcOffset: moonTimesOffset
+                )
+                
+                TimeIcon(
+                    angle: sunriseTime?.toAngle(timeZone: timeZone),
+                    radius: sunTimesRadius,
+                    size: iconSize,
+                    icon: "sun.max.fill"
+                )
+                TimeIcon(
+                    angle: sunsetTime?.toAngle(timeZone: timeZone),
+                    radius: sunTimesRadius,
+                    size: iconSize,
+                    icon: "sun.max"
+                )
+                TimeIcon(
+                    angle: moonriseTime?.toAngle(timeZone: timeZone),
+                    radius: moonTimesRadius,
+                    size: iconSize,
+                    icon: "moon.fill"
+                )
+                TimeIcon(
+                    angle: moonsetTime?.toAngle(timeZone: timeZone),
+                    radius: moonTimesRadius,
+                    size: iconSize,
+                    icon: "moon"
+                )
+                Line()
+                    .stroke(style: StrokeStyle(lineWidth: currentTimeWidth, lineCap: CGLineCap.round))
+                    .rotation(currentTime.toAngle(timeZone: timeZone))
+
+            }.padding(outerPadding)
+            
+            ArcText(
+                text: "Midnight",
+                radius: diskRadius + smallTextSize,
+                direction: .down
+            ) { Text($0).font(smallTextFont) }
+
+            ArcText(
+                text: "Noon",
+                radius: diskRadius + smallTextSize,
+                direction: .up
+            ) { Text($0).font(smallTextFont) }
+                .rotationEffect(.degrees(180))
+            
+            ArcText(
+                text: currentTime.toDisplayTime(timeZone: timeZone.toNSTimeZone()),
+                radius: diskRadius + smallTextSize + largeTextSize,
+                direction: (6..<18).contains(currentTime.toLocalDateTime(timeZone: timeZone).hour) ? .up : .down
+            ) { Text($0).font(largeTextFont) }
+                .rotationEffect(currentTime.toAngle(timeZone: timeZone))
+        }
+    }
+}
+
+private struct TimesArc : View {
+    let currentTime: Instant
+    let riseTime: Instant?
+    let setTime: Instant?
+    let timeZone: Shared.TimeZone
+    let color: Color
+    let thickness: CGFloat
+    let radius: CGFloat
+    let arcOffset: CGFloat
+    
+    var body: some View {
+        if (riseTime != nil || setTime != nil) {
+            let effectiveRiseTime = riseTime ?? currentTime
+            let effectiveSetTime = setTime ?? currentTime.plusOneDay()
+            let effectiveRiseAngle = effectiveRiseTime.toAngle(timeZone: timeZone)
+            let effectiveSetAngle = effectiveSetTime.toAngle(timeZone: timeZone)
+
+            let flip: Bool = riseTime != nil && setTime != nil
+                && effectiveRiseAngle > effectiveSetAngle
+            let unflippedMidpoint = (effectiveRiseAngle + effectiveSetAngle) / 2
+            let midpoint = unflippedMidpoint + (flip ? .degrees(180.0) : .zero)
+
+            Arc(
+                startAngle: effectiveRiseAngle,
+                endAngle: midpoint
+            ).stroke(style: StrokeStyle(
+                lineWidth: thickness,
+                lineCap: riseTime != nil ? .round : .butt
+            ))
+            .rotation(Angle(degrees: -90))
+            .padding(CGFloat(arcOffset))
+            .foregroundColor(color)
+            
+            Arc(
+                startAngle: midpoint,
+                endAngle: effectiveSetAngle
+            ).stroke(style: StrokeStyle(
+                lineWidth: thickness,
+                lineCap: setTime != nil ? .round : .butt
+            ))
+            .rotation(Angle(degrees: -90))
+            .padding(CGFloat(arcOffset))
+            .foregroundColor(color)
+        }
     }
 }
 
 private struct TimeIcon : View {
-    var angle: Angle
-    var radius: CGFloat
-    var size: CGFloat
-    var icon: String
+    let angle: Angle?
+    let radius: CGFloat
+    let size: CGFloat
+    let icon: String
     
     var body: some View {
-        Image(systemName: icon)
-            .resizable()
-            .frame(width: size, height: size, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-            .position(x: radius * CGFloat(sin(angle.radians)), y: -radius * CGFloat(cos(angle.radians)))
-            .frame(width: 0, height: 0, alignment: .center)
+        if let angle = angle {
+            Image(systemName: icon)
+                .resizable()
+                .frame(width: size, height: size, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                .position(
+                    x: radius * CGFloat(sin(angle.radians)),
+                    y: -radius * CGFloat(cos(angle.radians))
+                )
+                .frame(width: 0.4, height: 0.4, alignment: .topLeading) // TODO why do these disappear if width/height are 0 and we're in an if statement?
+        }
     }
 }
 
@@ -120,17 +225,18 @@ private struct Line : Shape {
 
 private struct Arc : Shape {
     
-    @State
-    var startAngle: Angle?
-    
-    @State
-    var endAngle: Angle?
+    let startAngle: Angle
+    let endAngle: Angle
     
     func path(in rect: CGRect) -> Path {
         var path = Path()
-        if let startAngle = startAngle, let endAngle = endAngle {
-            path.addArc(center: CGPoint(x: rect.width / 2, y: rect.height / 2), radius: rect.width / 2, startAngle: startAngle, endAngle: endAngle, clockwise: true)
-        }
+        path.addArc(
+            center: CGPoint(x: rect.width / 2, y: rect.height / 2),
+            radius: rect.width / 2,
+            startAngle: startAngle,
+            endAngle: endAngle,
+            clockwise: false
+        )
         return path
     }
 }
@@ -172,17 +278,130 @@ struct SunMoonTimesGraphic_Previews : PreviewProvider {
     private static let defaultCurrentTime = LocalDateTime(year: 2021, monthNumber: 1, dayOfMonth: 1, hour: 11, minute: 0, second: 0, nanosecond: 0).toInstant(timeZone: defaultTimeZone)
 
     private static let defaultSunriseTime = LocalDateTime(year: 2021, monthNumber: 1, dayOfMonth: 2, hour: 7, minute: 30, second: 0, nanosecond: 0).toInstant(timeZone: defaultTimeZone)
+
     private static let defaultSunsetTime = LocalDateTime(year: 2021, monthNumber: 1, dayOfMonth: 1, hour: 18, minute: 0, second: 0, nanosecond: 0).toInstant(timeZone: defaultTimeZone)
 
     private static let defaultMoonriseTime = LocalDateTime(year: 2021, monthNumber: 1, dayOfMonth: 2, hour: 9, minute: 0, second: 0, nanosecond: 0).toInstant(timeZone: defaultTimeZone)
     
     private static let defaultMoonsetTime = LocalDateTime(year: 2021, monthNumber: 1, dayOfMonth: 1, hour: 20, minute: 0, second: 0, nanosecond: 0).toInstant(timeZone: defaultTimeZone)
     
+    private static let hourUnit = DateTimeUnit.TimeBased(nanoseconds: 1_000_000_000 * 60 * 60)
+    
     static var previews: some View {
-        ForEach(ColorScheme.allCases, id: \.self) {
-            SunMoonTimesGraphic(currentTime: defaultCurrentTime, sunriseTime: defaultSunriseTime, sunsetTime: defaultSunsetTime, moonriseTime: defaultMoonriseTime, moonsetTime: defaultMoonsetTime, timeZone: defaultTimeZone
+        ForEach(ColorScheme.allCases, id: \.self) { colorScheme in
+            SunMoonTimesGraphic(
+                currentTime: defaultCurrentTime,
+                sunriseTime: defaultSunriseTime,
+                sunsetTime: defaultSunsetTime,
+                moonriseTime: defaultMoonriseTime,
+                moonsetTime: defaultMoonsetTime,
+                timeZone: defaultTimeZone
             )
-            .preferredColorScheme($0)
+            .preferredColorScheme(colorScheme)
+            
+//            SunMoonTimesGraphic(
+//                currentTime: defaultCurrentTime,
+//                sunriseTime: defaultSunriseTime,
+//                sunsetTime: defaultSunsetTime,
+//                moonriseTime: defaultMoonriseTime,
+//                moonsetTime: defaultMoonsetTime,
+//                timeZone: defaultTimeZone
+//            )
+//            .preferredColorScheme(colorScheme)
+//            .environment(\.sizeCategory, .extraLarge)
+            
+            SunMoonTimesGraphic(
+                currentTime: defaultCurrentTime,
+                sunriseTime: defaultSunriseTime,
+                sunsetTime: defaultSunsetTime,
+                moonriseTime: defaultMoonriseTime,
+                moonsetTime: defaultMoonsetTime,
+                timeZone: defaultTimeZone
+            )
+            .preferredColorScheme(colorScheme)
+            .environment(\.sizeCategory, .extraSmall)
+            
+            SunMoonTimesGraphic(
+                currentTime: defaultCurrentTime.plus(value: 12, unit: hourUnit),
+                sunriseTime: defaultSunriseTime,
+                sunsetTime: defaultSunsetTime,
+                moonriseTime: defaultMoonriseTime,
+                moonsetTime: defaultMoonsetTime,
+                timeZone: defaultTimeZone
+            )
+            .preferredColorScheme(colorScheme)
+            
+            SunMoonTimesGraphic(
+                currentTime: defaultCurrentTime,
+                sunriseTime: defaultSunriseTime,
+                sunsetTime: defaultSunsetTime,
+                moonriseTime: defaultMoonsetTime,
+                moonsetTime: defaultMoonriseTime,
+                timeZone: defaultTimeZone
+            )
+            .preferredColorScheme(colorScheme)
+            
+            SunMoonTimesGraphic(
+                currentTime: defaultCurrentTime,
+                sunriseTime: nil,
+                sunsetTime: defaultSunsetTime,
+                moonriseTime: defaultMoonriseTime,
+                moonsetTime: defaultMoonsetTime,
+                timeZone: defaultTimeZone
+            )
+            .preferredColorScheme(colorScheme)
+            
+            SunMoonTimesGraphic(
+                currentTime: defaultCurrentTime,
+                sunriseTime: defaultSunriseTime,
+                sunsetTime: nil,
+                moonriseTime: defaultMoonriseTime,
+                moonsetTime: defaultMoonsetTime,
+                timeZone: defaultTimeZone
+            )
+            .preferredColorScheme(colorScheme)
+            
+            SunMoonTimesGraphic(
+                currentTime: defaultCurrentTime,
+                sunriseTime: nil,
+                sunsetTime: nil,
+                moonriseTime: defaultMoonriseTime,
+                moonsetTime: defaultMoonsetTime,
+                timeZone: defaultTimeZone
+            )
+            .preferredColorScheme(colorScheme)
+            
+            SunMoonTimesGraphic(
+                currentTime: defaultCurrentTime,
+                sunriseTime: defaultSunriseTime,
+                sunsetTime: defaultSunsetTime,
+                moonriseTime: nil,
+                moonsetTime: defaultMoonsetTime,
+                timeZone: defaultTimeZone
+            )
+            .preferredColorScheme(colorScheme)
+            
+            SunMoonTimesGraphic(
+                currentTime: defaultCurrentTime,
+                sunriseTime: defaultSunriseTime,
+                sunsetTime: defaultSunsetTime,
+                moonriseTime: defaultMoonriseTime,
+                moonsetTime: nil,
+                timeZone: defaultTimeZone
+            )
+            .preferredColorScheme(colorScheme)
+            
+            SunMoonTimesGraphic(
+                currentTime: defaultCurrentTime,
+                sunriseTime: defaultSunriseTime,
+                sunsetTime: defaultSunsetTime,
+                moonriseTime: nil,
+                moonsetTime: nil,
+                timeZone: defaultTimeZone
+            )
+            .preferredColorScheme(colorScheme)
         }
+        .frame(width: 400, height: 400, alignment: .center)
+        .previewLayout(.sizeThatFits)
     }
 }

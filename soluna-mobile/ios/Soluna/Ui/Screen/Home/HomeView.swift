@@ -16,7 +16,15 @@ struct HomeView: View {
             NavigationLink(destination: ReminderListView(), isActive: $observableModel.navigateToReminderList) { EmptyView() }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar { ToolbarItem(placement: .principal) { Text("Soluna") } }
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(
+                    observableModel.state is HomeViewModel.StatePopulated
+                        ? (observableModel.state as! HomeViewModel.StatePopulated).locationName
+                        : "Soluna"
+                ).font(.title)
+            }
+        }
         .bindModel(observableModel)
     }
 }
@@ -37,9 +45,6 @@ struct HomeContent : View {
             case is HomeViewModel.StatePopulated:
                 let populatedState = state as! HomeViewModel.StatePopulated
                 let timeZone = TimeZone.init(identifier: populatedState.timeZone.id) ?? TimeZone.current // TODO error handling here
-                Text(populatedState.locationName)
-                Text(populatedState.currentTime.toDisplayTime(timeZone: timeZone))
-                Text(populatedState.timeZone.id)
                 Text("Sunrise: \(populatedState.sunriseTime?.toDisplayTime(timeZone: timeZone) ?? "None")")
                 Text("Sunset: \(populatedState.sunsetTime?.toDisplayTime(timeZone: timeZone) ?? "None")")
                 Text("Moonrise: \(populatedState.moonriseTime?.toDisplayTime(timeZone: timeZone) ?? "None")")
@@ -52,6 +57,8 @@ struct HomeContent : View {
                     moonsetTime: populatedState.moonsetTime,
                     timeZone: populatedState.timeZone
                 )
+                Text("Using time zone \(populatedState.timeZone.id)")
+                    .font(.caption)
             default:
                 EmptyView()
             }

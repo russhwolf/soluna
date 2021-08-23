@@ -39,6 +39,7 @@
 		463BA40926195720008BB17B /* SolunaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 463BA40826195720008BB17B /* SolunaUITests.swift */; };
 		464E3F24268EC6EF00BB2251 /* SunMoonTimesGraphic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464E3F23268EC6EF00BB2251 /* SunMoonTimesGraphic.swift */; };
 		464E3F292690C80400BB2251 /* SolunaTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464E3F282690C80400BB2251 /* SolunaTheme.swift */; };
+		466A48A026A3C09C00B345B8 /* ArcText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466A489F26A3C09C00B345B8 /* ArcText.swift */; };
 		467F906A261E9EEE0029454A /* ObservableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F9069261E9EEE0029454A /* ObservableViewModel.swift */; };
 		467F906E261E9F4D0029454A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F906D261E9F4D0029454A /* HomeView.swift */; };
 		467F9072261E9F9D0029454A /* LocationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467F9071261E9F9D0029454A /* LocationListView.swift */; };
@@ -130,6 +131,7 @@
 		463BA40A26195720008BB17B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		464E3F23268EC6EF00BB2251 /* SunMoonTimesGraphic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SunMoonTimesGraphic.swift; sourceTree = "<group>"; };
 		464E3F282690C80400BB2251 /* SolunaTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolunaTheme.swift; sourceTree = "<group>"; };
+		466A489F26A3C09C00B345B8 /* ArcText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcText.swift; sourceTree = "<group>"; };
 		467F9069261E9EEE0029454A /* ObservableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableViewModel.swift; sourceTree = "<group>"; };
 		467F906D261E9F4D0029454A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		467F9071261E9F9D0029454A /* LocationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationListView.swift; sourceTree = "<group>"; };
@@ -415,6 +417,7 @@
 				46C75A07261FF91E009FFEB5 /* Screen */,
 				464E3F282690C80400BB2251 /* SolunaTheme.swift */,
 				464E3F23268EC6EF00BB2251 /* SunMoonTimesGraphic.swift */,
+				466A489F26A3C09C00B345B8 /* ArcText.swift */,
 			);
 			path = Ui;
 			sourceTree = "<group>";
@@ -664,6 +667,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				46E7100B262254B3004DC8FE /* DateTimeExtensions.swift in Sources */,
+				466A48A026A3C09C00B345B8 /* ArcText.swift in Sources */,
 				464E3F24268EC6EF00BB2251 /* SunMoonTimesGraphic.swift in Sources */,
 				46C75A04261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift in Sources */,
 				463ADD1326655CB10056C6AA /* ReminderListView.swift in Sources */,
