@@ -10,9 +10,10 @@ object Destination {
     const val LocationList = "locationList"
     const val AddLocation = "addLocation"
     const val ReminderList = "reminderList"
+    const val Settings = "settings"
 
     object LocationDetail {
-        val template = "locationDetail/{locationId}"
+        const val template = "locationDetail/{locationId}"
         val arguments = listOf(navArgument("locationId") { type = NavType.LongType })
         fun path(locationId: Long) = "locationDetail/$locationId"
         fun parameters(arguments: Bundle?) = parametersOf(arguments?.getLong("locationId"))

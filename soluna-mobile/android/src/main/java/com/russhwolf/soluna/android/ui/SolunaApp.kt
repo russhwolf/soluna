@@ -15,6 +15,7 @@ import com.russhwolf.soluna.android.ui.screen.HomeScreen
 import com.russhwolf.soluna.android.ui.screen.LocationDetailScreen
 import com.russhwolf.soluna.android.ui.screen.LocationListScreen
 import com.russhwolf.soluna.android.ui.screen.ReminderListScreen
+import com.russhwolf.soluna.android.ui.screen.SettingsScreen
 import com.russhwolf.soluna.android.ui.theme.SolunaTheme
 import com.russhwolf.soluna.mobile.koinUiScopeQualifier
 import org.koin.androidx.compose.getKoin
@@ -69,6 +70,7 @@ fun Scope.SolunaUi() {
                     )
                 }
                 composable(Destination.ReminderList) { ReminderListScreen(get(), navController) }
+                composable(Destination.Settings) { SettingsScreen(get(), navController) }
             }
         }
     }

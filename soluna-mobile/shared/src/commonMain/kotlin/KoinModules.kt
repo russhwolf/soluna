@@ -15,6 +15,7 @@ import com.russhwolf.soluna.mobile.screen.home.HomeViewModel
 import com.russhwolf.soluna.mobile.screen.locationdetail.LocationDetailViewModel
 import com.russhwolf.soluna.mobile.screen.locationlist.LocationListViewModel
 import com.russhwolf.soluna.mobile.screen.reminderlist.ReminderListViewModel
+import com.russhwolf.soluna.mobile.screen.settings.SettingsViewModel
 import kotlinx.datetime.Clock
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -49,6 +50,7 @@ internal val commonModule = module {
         factory { AddLocationViewModel(get(), get(), get(), get(mainDispatcherQualifier)) }
         factory { params -> LocationDetailViewModel(params.get(), get(), get(), get(mainDispatcherQualifier)) }
         factory { ReminderListViewModel(get(), get(mainDispatcherQualifier)) }
+        factory { SettingsViewModel(get(mainDispatcherQualifier)) }
     }
 }
 

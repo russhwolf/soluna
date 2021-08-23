@@ -8,12 +8,9 @@ struct HomeView: View {
     var body: some View {
         VStack {
             HomeContent(
-                state: observableModel.state,
-                onNavigateToLocationList: observableModel.onNavigateToLocationList,
-                onNavigateToReminderList: observableModel.onNavigateToReminderList
+                state: observableModel.state
             )
-            NavigationLink(destination: LocationListView(), isActive: $observableModel.navigateToLocationList) { EmptyView() }
-            NavigationLink(destination: ReminderListView(), isActive: $observableModel.navigateToReminderList) { EmptyView() }
+            NavigationLink(destination: SettingsView(), isActive: $observableModel.navigateToSettings) { EmptyView() }
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -24,6 +21,11 @@ struct HomeView: View {
                         : "Soluna"
                 ).font(.title)
             }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Image(systemName: "gear").onTapGesture {
+                    observableModel.onNavigateToSettings()
+                }
+            }
         }
         .bindModel(observableModel)
     }
@@ -31,9 +33,6 @@ struct HomeView: View {
 
 struct HomeContent : View {
     let state: HomeViewModel.State
-
-    let onNavigateToLocationList: () -> Void
-    let onNavigateToReminderList: () -> Void
 
     var body: some View {
         VStack {
@@ -60,13 +59,7 @@ struct HomeContent : View {
                 Text("Using time zone \(populatedState.timeZone.id)")
                     .font(.caption)
             default:
-                EmptyView()
-            }
-            Button("Locations") {
-                onNavigateToLocationList()
-            }
-            Button("Reminders") {
-                onNavigateToReminderList()
+                fatalError("Invalid state: \(state)")
             }
         }
     }

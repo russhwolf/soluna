@@ -123,24 +123,13 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun navigate_locationList() = suspendTest {
+    fun navigate_settings() = suspendTest {
         viewModel.stateAndEvents.test {
             assertEquals(HomeViewModel.State.NoLocationSelected, expectViewModelState())
             expectNoEvents()
 
-            viewModel.performAction(HomeViewModel.Action.Locations)
-            assertEquals(HomeViewModel.Event.Locations, expectViewModelEvent())
-        }
-    }
-
-    @Test
-    fun navigate_reminderList() = suspendTest {
-        viewModel.stateAndEvents.test {
-            assertEquals(HomeViewModel.State.NoLocationSelected, expectViewModelState())
-            expectNoEvents()
-
-            viewModel.performAction(HomeViewModel.Action.Reminders)
-            assertEquals(HomeViewModel.Event.Reminders, expectViewModelEvent())
+            viewModel.performAction(HomeViewModel.Action.Settings)
+            assertEquals(HomeViewModel.Event.Settings, expectViewModelEvent())
         }
     }
 

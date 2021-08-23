@@ -49,6 +49,8 @@
 		469AF5C126195981005D00C8 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 469AF5C026195981005D00C8 /* Shared.framework */; };
 		469AF5C226195981005D00C8 /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 469AF5C026195981005D00C8 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		469AF5CF261A8F3F005D00C8 /* CombineAdapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469AF5CE261A8F3F005D00C8 /* CombineAdapters.swift */; };
+		46B25E4726D331E800CE9D27 /* ObservableSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B25E4626D331E800CE9D27 /* ObservableSettingsViewModel.swift */; };
+		46B25E4D26D331F700CE9D27 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B25E4C26D331F700CE9D27 /* SettingsView.swift */; };
 		46C63434266DA7B700D3647E /* ReminderNotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C63433266DA7B700D3647E /* ReminderNotificationScheduler.swift */; };
 		46C63438266DA9A800D3647E /* BackgroundNotificationsScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C63437266DA9A800D3647E /* BackgroundNotificationsScheduler.swift */; };
 		46C6343C266DAAD700D3647E /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C6343B266DAAD700D3647E /* NotificationManager.swift */; };
@@ -140,6 +142,8 @@
 		4680CAC3266C69BA009F41FA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		469AF5C026195981005D00C8 /* Shared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Shared.framework; path = "../shared/build/xcode-frameworks/Shared.framework"; sourceTree = "<group>"; };
 		469AF5CE261A8F3F005D00C8 /* CombineAdapters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CombineAdapters.swift; sourceTree = "<group>"; };
+		46B25E4626D331E800CE9D27 /* ObservableSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableSettingsViewModel.swift; sourceTree = "<group>"; };
+		46B25E4C26D331F700CE9D27 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		46C63433266DA7B700D3647E /* ReminderNotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderNotificationScheduler.swift; sourceTree = "<group>"; };
 		46C63437266DA9A800D3647E /* BackgroundNotificationsScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundNotificationsScheduler.swift; sourceTree = "<group>"; };
 		46C6343B266DAAD700D3647E /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
@@ -430,6 +434,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		46B25E4526D3313200CE9D27 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				46B25E4626D331E800CE9D27 /* ObservableSettingsViewModel.swift */,
+				46B25E4C26D331F700CE9D27 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		46C7091D266C2E6100F4D5DF /* Notifications */ = {
 			isa = PBXGroup;
 			children = (
@@ -450,6 +463,7 @@
 				46C75A09261FF934009FFEB5 /* LocationList */,
 				46C75A08261FF92E009FFEB5 /* Home */,
 				463ADD0D26655C6F0056C6AA /* ReminderList */,
+				46B25E4526D3313200CE9D27 /* Settings */,
 			);
 			path = Screen;
 			sourceTree = "<group>";
@@ -667,6 +681,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				46E7100B262254B3004DC8FE /* DateTimeExtensions.swift in Sources */,
+				46B25E4D26D331F700CE9D27 /* SettingsView.swift in Sources */,
 				466A48A026A3C09C00B345B8 /* ArcText.swift in Sources */,
 				464E3F24268EC6EF00BB2251 /* SunMoonTimesGraphic.swift in Sources */,
 				46C75A04261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift in Sources */,
@@ -676,6 +691,7 @@
 				467F906A261E9EEE0029454A /* ObservableViewModel.swift in Sources */,
 				467F9072261E9F9D0029454A /* LocationListView.swift in Sources */,
 				467F9076261E9FE60029454A /* AddLocationView.swift in Sources */,
+				46B25E4726D331E800CE9D27 /* ObservableSettingsViewModel.swift in Sources */,
 				467F906E261E9F4D0029454A /* HomeView.swift in Sources */,
 				46E7101C26229F77004DC8FE /* ObservableLocationDetailViewModel.swift in Sources */,
 				46C63434266DA7B700D3647E /* ReminderNotificationScheduler.swift in Sources */,

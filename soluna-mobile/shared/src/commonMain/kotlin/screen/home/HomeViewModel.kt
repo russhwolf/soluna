@@ -56,18 +56,12 @@ class HomeViewModel(
     }
 
     override suspend fun performAction(action: Action) = when (action) {
-        Action.Locations -> navigateToLocationList()
-        Action.Reminders -> navigateToReminderList()
+        Action.Settings -> navigateToSettings()
     }
 
-    private suspend fun navigateToLocationList() {
-        emitEvent(Event.Locations)
+    private suspend fun navigateToSettings() {
+        emitEvent(Event.Settings)
     }
-
-    private suspend fun navigateToReminderList() {
-        emitEvent(Event.Reminders)
-    }
-
 
     sealed class State {
         object Loading : State()
@@ -84,12 +78,10 @@ class HomeViewModel(
     }
 
     sealed class Event {
-        object Locations : Event()
-        object Reminders : Event()
+        object Settings : Event()
     }
 
     sealed class Action {
-        object Locations : Action()
-        object Reminders : Action()
+        object Settings : Action()
     }
 }

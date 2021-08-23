@@ -12,17 +12,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,8 +48,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) =
         viewModel,
         onEvent = { event ->
             when (event) {
-                HomeViewModel.Event.Locations -> navController.navigate(Destination.LocationList)
-                HomeViewModel.Event.Reminders -> navController.navigate(Destination.ReminderList)
+                HomeViewModel.Event.Settings -> navController.navigate(Destination.Settings)
             }
         }) { state, performAction ->
         HomeScreenContent(state, performAction)
@@ -58,8 +59,14 @@ private fun HomeScreenContent(
     state: HomeViewModel.State,
     performAction: (action: HomeViewModel.Action) -> Unit
 ) {
-    Surface(Modifier.fillMaxSize()) {
-        Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+    Scaffold(
+        topBar = { HomeAppBar(state, performAction) }
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ) {
             when (state) {
                 HomeViewModel.State.Loading -> LoadingContent()
                 HomeViewModel.State.NoLocationSelected -> EmptyContent()
@@ -67,26 +74,36 @@ private fun HomeScreenContent(
                     PopulatedContent(state)
                 }
             }
-            Row(Modifier.padding(8.dp)) {
-                Button(
-                    content = { Text("Locations") },
-                    onClick = { performAction(HomeViewModel.Action.Locations) }
-                )
-                Spacer(modifier = Modifier.size(16.dp))
-                Button(
-                    content = { Text("Reminders") },
-                    onClick = { performAction(HomeViewModel.Action.Reminders) }
-                )
-            }
         }
     }
 }
 
 @Composable
+private fun HomeAppBar(
+    state: HomeViewModel.State,
+    performAction: (action: HomeViewModel.Action) -> Unit
+) {
+    TopAppBar(
+        title = {
+            val title = if (state is HomeViewModel.State.Populated) state.locationName else "Soluna"
+            Text(title, style = SolunaTheme.typography.h6)
+        },
+        actions = {
+            IconButton(
+                content = {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Settings"
+                    )
+                },
+                onClick = { performAction(HomeViewModel.Action.Settings) }
+            )
+        }
+    )
+}
+
+@Composable
 private fun ColumnScope.LoadingContent() {
-    TopAppBar {
-        Text("Soluna", modifier = Modifier.padding(horizontal = 16.dp))
-    }
     Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
         CircularProgressIndicator()
     }
@@ -94,9 +111,6 @@ private fun ColumnScope.LoadingContent() {
 
 @Composable
 private fun ColumnScope.EmptyContent() {
-    TopAppBar {
-        Text("Soluna", modifier = Modifier.padding(horizontal = 16.dp))
-    }
     Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
         Text("No location selected!")
     }
@@ -117,12 +131,10 @@ private fun ColumnScope.PopulatedContent(state: HomeViewModel.State.Populated) {
         }
     }
 
-    TopAppBar {
-        Text(state.locationName, modifier = Modifier.padding(horizontal = 16.dp))
-    }
-    Spacer(modifier = Modifier.height(16.dp))
-
-    Row(Modifier.fillMaxWidth()) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp)) {
         PortraitColumn {
             Text(
                 "Sunrise: ${state.sunriseTime?.toDisplayTime(state.timeZone) ?: "None"}",
@@ -164,7 +176,11 @@ private fun ColumnScope.PopulatedContent(state: HomeViewModel.State.Populated) {
         }
     )
 
-    Text("Using time zone ${state.timeZone.id}", style = SolunaTheme.typography.caption)
+    Text(
+        "Using time zone ${state.timeZone.id}",
+        style = SolunaTheme.typography.caption,
+        modifier = Modifier.padding(16.dp)
+    )
 
     Spacer(modifier = Modifier.weight(1f))
 }

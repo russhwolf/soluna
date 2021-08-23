@@ -9,6 +9,7 @@ import com.russhwolf.soluna.mobile.screen.home.HomeViewModel
 import com.russhwolf.soluna.mobile.screen.locationdetail.LocationDetailViewModel
 import com.russhwolf.soluna.mobile.screen.locationlist.LocationListViewModel
 import com.russhwolf.soluna.mobile.screen.reminderlist.ReminderListViewModel
+import com.russhwolf.soluna.mobile.screen.settings.SettingsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collect
@@ -45,6 +46,7 @@ object SwiftKotlinBridge : KoinComponent {
         getKoin().getScope(scopeId).get<LocationDetailViewModel> { parametersOf(id) }
 
     fun getReminderListViewModel() = getKoin().getScope(scopeId).get<ReminderListViewModel>()
+    fun getSettingsViewModel() = getKoin().getScope(scopeId).get<SettingsViewModel>()
 
     fun observeReminderNotificationList(onEach: (List<ReminderNotification>?) -> Unit) {
         coroutineScope.launch(Dispatchers.Main) {

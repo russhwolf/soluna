@@ -4,10 +4,7 @@ import Shared
 class ObservableHomeViewModel: ObservableViewModel<HomeViewModel.State, HomeViewModel.Event, HomeViewModel.Action> {
 
     @Published
-    var navigateToLocationList: Bool = false
-
-    @Published
-    var navigateToReminderList: Bool = false
+    var navigateToSettings: Bool = false
 
     init() {
         super.init(SwiftKotlinBridge().getHomeViewModel())
@@ -16,25 +13,18 @@ class ObservableHomeViewModel: ObservableViewModel<HomeViewModel.State, HomeView
     
     override func onEvent(_ event: HomeViewModel.Event) {
         switch event {
-        case is HomeViewModel.EventLocations:
-            navigateToLocationList = true
-        case is HomeViewModel.EventReminders:
-            navigateToReminderList = true
+        case is HomeViewModel.EventSettings:
+            navigateToSettings = true
         default:
             NSLog("Received unknown event \(event)")
         }
     }
     
     override func reset() {
-        navigateToLocationList = false
-        navigateToReminderList = false
+        navigateToSettings = false
     }
     
-    func onNavigateToLocationList() {
-        performAction(action: HomeViewModel.ActionLocations())
-    }
-    
-    func onNavigateToReminderList() {
-        performAction(action: HomeViewModel.ActionReminders())
+    func onNavigateToSettings() {
+        performAction(action: HomeViewModel.ActionSettings())
     }
 }
