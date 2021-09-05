@@ -1,5 +1,6 @@
 package com.russhwolf.soluna.mobile.screen.locationdetail
 
+import com.russhwolf.soluna.mobile.repository.CurrentTimeRepository
 import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.repository.SelectableLocation
 import com.russhwolf.soluna.mobile.repository.UpcomingTimesRepository
@@ -12,11 +13,13 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
+import kotlin.time.Duration
 
 class LocationDetailViewModel(
     private val locationId: Long,
     private val locationRepository: LocationRepository,
     private val upcomingTimesRepository: UpcomingTimesRepository,
+    private val currentTimeRepository: CurrentTimeRepository,
     dispatcher: CoroutineDispatcher
 ) : BaseViewModel<LocationDetailViewModel.State, LocationDetailViewModel.Event, LocationDetailViewModel.Action>(
     State.Loading,
@@ -27,8 +30,9 @@ class LocationDetailViewModel(
             if (selectedLocation != null) {
                 combine(
                     flowOf(selectedLocation),
-                    upcomingTimesRepository.getUpcomingTimes(selectedLocation)
-                ) { location, upcomingTimes ->
+                    upcomingTimesRepository.getUpcomingTimes(selectedLocation),
+                    currentTimeRepository.getCurrentTimeFlow(Duration.seconds(1))
+                ) { location, upcomingTimes, currentTime ->
                     val timeZone = if (location.timeZone in TimeZone.availableZoneIds) {
                         TimeZone.of(location.timeZone)
                     } else {
@@ -37,6 +41,7 @@ class LocationDetailViewModel(
                     }
                     State.Populated(
                         location = location,
+                        currentTime = currentTime,
                         sunriseTime = upcomingTimes?.sunriseTime,
                         sunsetTime = upcomingTimes?.sunsetTime,
                         moonriseTime = upcomingTimes?.moonriseTime,
@@ -76,6 +81,7 @@ class LocationDetailViewModel(
         object InvalidLocation : State()
         data class Populated(
             val location: SelectableLocation,
+            val currentTime: Instant,
             val sunriseTime: Instant?,
             val sunsetTime: Instant?,
             val moonriseTime: Instant?,

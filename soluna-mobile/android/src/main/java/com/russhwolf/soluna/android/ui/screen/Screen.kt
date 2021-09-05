@@ -18,24 +18,25 @@ inline fun <reified VM : BaseViewModel<State, Event, Action>, State : Any, Event
     crossinline onEvent: (event: Event) -> Unit,
     content: @Composable (state: State, performAction: (action: Action) -> Unit) -> Unit
 ) {
+    val rememberedViewModel = remember { viewModel }
     val scope = rememberCoroutineScope()
     val lifecycleOwner = LocalLifecycleOwner.current
-    val lifecycleAwareState = remember(viewModel.state, lifecycleOwner) {
-        viewModel.state.flowWithLifecycle(lifecycleOwner.lifecycle)
+    val lifecycleAwareState = remember(rememberedViewModel.state, lifecycleOwner) {
+        rememberedViewModel.state.flowWithLifecycle(lifecycleOwner.lifecycle)
     }
-    val lifecycleAwareEvents = remember(viewModel.events, lifecycleOwner) {
-        viewModel.events.flowWithLifecycle(lifecycleOwner.lifecycle)
+    val lifecycleAwareEvents = remember(rememberedViewModel.events, lifecycleOwner) {
+        rememberedViewModel.events.flowWithLifecycle(lifecycleOwner.lifecycle)
     }
 
-    LaunchedEffect(viewModel) {
+    LaunchedEffect(rememberedViewModel) {
         launch { lifecycleAwareEvents.collect { onEvent(it) } }
     }
-    val state = lifecycleAwareState.collectAsState(viewModel.state.value)
-    DisposableEffect(viewModel) {
-        viewModel.activate()
+    val state = lifecycleAwareState.collectAsState(rememberedViewModel.state.value)
+    DisposableEffect(rememberedViewModel) {
+        rememberedViewModel.activate()
         onDispose {
-            viewModel.dispose()
+            rememberedViewModel.dispose()
         }
     }
-    content(state.value) { action -> scope.launch { viewModel.performAction(action) } }
+    content(state.value) { action -> scope.launch { rememberedViewModel.performAction(action) } }
 }

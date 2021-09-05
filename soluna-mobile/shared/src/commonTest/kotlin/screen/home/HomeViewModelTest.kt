@@ -85,7 +85,9 @@ class HomeViewModelTest {
                     sunsetTime = LocalDate(2021, 1, 1).atTime(18, 1).toInstant(TimeZone.UTC),
                     moonriseTime = LocalDate(2021, 1, 1).atTime(20, 1).toInstant(TimeZone.UTC),
                     moonsetTime = LocalDate(2021, 1, 2).atTime(8, 2).toInstant(TimeZone.UTC),
-                    timeZone = TimeZone.of("UTC")
+                    timeZone = TimeZone.of("UTC"),
+                    latitude = 27.18,
+                    longitude = 62.83
                 ),
                 expectViewModelState()
             )
@@ -100,7 +102,9 @@ class HomeViewModelTest {
                     sunsetTime = LocalDate(2021, 1, 1).atTime(18, 1).toInstant(TimeZone.UTC),
                     moonriseTime = LocalDate(2021, 1, 1).atTime(20, 1).toInstant(TimeZone.UTC),
                     moonsetTime = LocalDate(2021, 1, 2).atTime(8, 2).toInstant(TimeZone.UTC),
-                    timeZone = TimeZone.of("UTC")
+                    timeZone = TimeZone.of("UTC"),
+                    latitude = 27.18,
+                    longitude = 62.83
                 ),
                 expectViewModelState()
             )
@@ -115,7 +119,9 @@ class HomeViewModelTest {
                     sunsetTime = LocalDate(2021, 1, 1).atTime(18, 1).toInstant(TimeZone.UTC),
                     moonriseTime = LocalDate(2021, 1, 1).atTime(20, 1).toInstant(TimeZone.UTC),
                     moonsetTime = LocalDate(2021, 1, 2).atTime(8, 2).toInstant(TimeZone.UTC),
-                    timeZone = TimeZone.of("UTC")
+                    timeZone = TimeZone.of("UTC"),
+                    latitude = 27.18,
+                    longitude = 62.83
                 ),
                 expectViewModelState()
             )

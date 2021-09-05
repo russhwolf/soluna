@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalTime::class)
 
-package com.russhwolf.soluna.android.ui
+package com.russhwolf.soluna.android.ui.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.graphics.Paint
@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Icon
 import androidx.compose.material.Slider
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
@@ -45,10 +44,12 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import com.russhwolf.soluna.android.R
 import com.russhwolf.soluna.android.extensions.toDisplayTime
 import com.russhwolf.soluna.android.ui.theme.SolunaTheme
 import kotlinx.datetime.Instant
@@ -90,6 +91,7 @@ fun SunMoonTimesGraphic(
     ) {
         val minSize = minOf(maxHeight, maxWidth)
         val dpPerSp = LocalContext.current.resources.displayMetrics.run { scaledDensity / density }
+        // TODO make this value less hacky
         val outerPadding = (1.25 * (largeTextStyle.fontSize.value + smallTextStyle.fontSize.value) * dpPerSp).dp
         val timesArcThickness = 32.dp
         val timesArcMargin = 8.dp
@@ -100,6 +102,8 @@ fun SunMoonTimesGraphic(
         val sunTimesOffset = outerPadding + 2 * timesArcMargin + 3 / 2f * timesArcThickness
         val currentTimeWidth = 4.dp
         val midnightWidth = 4.dp
+        val midnightString = stringResource(R.string.sunmoontimes_midnight)
+        val noonString = stringResource(R.string.sunmoontimes_noon)
 
         Canvas(
             modifier = Modifier
@@ -175,7 +179,7 @@ fun SunMoonTimesGraphic(
                         ), -180f, 180f, true
                     )
                 }
-                canvas.drawTextOnPath("Midnight", midnightPath, 0f, 0f, smallPaint)
+                canvas.drawTextOnPath(midnightString, midnightPath, 0f, 0f, smallPaint)
 
                 noonPath.apply {
                     reset()
@@ -188,7 +192,7 @@ fun SunMoonTimesGraphic(
                         ), 180f, -180f, true
                     )
                 }
-                canvas.drawTextOnPath("Noon", noonPath, 0f, 0f, smallPaint)
+                canvas.drawTextOnPath(noonString, noonPath, 0f, 0f, smallPaint)
 
                 currentTimePath.apply {
                     reset()
@@ -331,11 +335,11 @@ class Previews {
     private val defaultMoonriseTime = LocalDateTime(2021, 1, 2, 9, 0).toInstant(defaultTimeZone)
     private val defaultMoonsetTime = LocalDateTime(2021, 1, 1, 20, 0).toInstant(defaultTimeZone)
 
-    @Preview
+    @Preview(showBackground = true)
     @Composable
     fun Standard_Light() {
         SolunaTheme {
-            Surface(Modifier.aspectRatio(1f), color = SolunaTheme.colors.background) {
+            Box(Modifier.aspectRatio(1f)) {
                 SunMoonTimesGraphic(
                     currentTime = defaultCurrentTime,
                     sunriseTime = defaultSunriseTime,
@@ -348,11 +352,11 @@ class Previews {
         }
     }
 
-    @Preview(uiMode = UI_MODE_NIGHT_YES)
+    @Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
     @Composable
     fun Standard_Dark() {
         SolunaTheme {
-            Surface(Modifier.aspectRatio(1f), color = SolunaTheme.colors.background) {
+            Box(Modifier.aspectRatio(1f)) {
                 SunMoonTimesGraphic(
                     currentTime = defaultCurrentTime,
                     sunriseTime = defaultSunriseTime,
@@ -365,11 +369,11 @@ class Previews {
         }
     }
 
-    @Preview(fontScale = 2f)
+    @Preview(fontScale = 2f, showBackground = true)
     @Composable
     fun LargeText() {
         SolunaTheme {
-            Surface(Modifier.aspectRatio(1f), color = SolunaTheme.colors.background) {
+            Box(Modifier.aspectRatio(1f)) {
                 SunMoonTimesGraphic(
                     currentTime = defaultCurrentTime,
                     sunriseTime = defaultSunriseTime,
@@ -382,11 +386,11 @@ class Previews {
         }
     }
 
-    @Preview(heightDp = 320, widthDp = 320)
+    @Preview(heightDp = 320, widthDp = 320, showBackground = true)
     @Composable
     fun SmallBox() {
         SolunaTheme {
-            Surface(Modifier.aspectRatio(1f), color = SolunaTheme.colors.background) {
+            Box(Modifier.aspectRatio(1f)) {
                 SunMoonTimesGraphic(
                     currentTime = defaultCurrentTime,
                     sunriseTime = defaultSunriseTime,

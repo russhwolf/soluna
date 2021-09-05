@@ -44,7 +44,9 @@ class HomeViewModel(
                         sunsetTime = upcomingTimes?.sunsetTime,
                         moonriseTime = upcomingTimes?.moonriseTime,
                         moonsetTime = upcomingTimes?.moonsetTime,
-                        timeZone = timeZone
+                        timeZone = timeZone,
+                        latitude = location.latitude,
+                        longitude = location.longitude
                     )
                 }
             } else {
@@ -73,7 +75,9 @@ class HomeViewModel(
             val sunsetTime: Instant?,
             val moonriseTime: Instant?,
             val moonsetTime: Instant?,
-            val timeZone: TimeZone
+            val timeZone: TimeZone,
+            val latitude: Double,
+            val longitude: Double
         ) : State()
     }
 

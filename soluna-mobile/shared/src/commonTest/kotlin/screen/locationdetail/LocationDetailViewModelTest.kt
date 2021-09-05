@@ -19,7 +19,9 @@ import com.russhwolf.soluna.mobile.screen.expectViewModelState
 import com.russhwolf.soluna.mobile.screen.stateAndEvents
 import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atTime
 import kotlinx.datetime.toInstant
@@ -29,6 +31,8 @@ import kotlin.test.assertEquals
 
 class LocationDetailViewModelTest {
     private var locations: Array<Location> = emptyArray()
+    private val currentTime: Instant = LocalDateTime(2021, 1, 1, 11, 0).toInstant(TimeZone.UTC)
+
     private val driver = createInMemorySqlDriver()
     private val settings = MockSettings().toFlowSettings(Dispatchers.Unconfined)
     private val locationRepository by lazy {
@@ -49,12 +53,19 @@ class LocationDetailViewModelTest {
         override fun getTimes(date: LocalDate, zone: TimeZone, latitude: Double, longitude: Double) =
             AstronomicalData(sunrise, sunset, moonrise, moonset)
     }
+    private val currentTimeRepository = FakeCurrentTimeRepository(currentTime)
     private val upcomingTimesRepository: UpcomingTimesRepository by lazy {
         UpcomingTimesRepository.Impl(astronomicalDataRepository, FakeCurrentTimeRepository(now))
     }
 
     val viewModel by lazy {
-        LocationDetailViewModel(1, locationRepository, upcomingTimesRepository, Dispatchers.Unconfined)
+        LocationDetailViewModel(
+            1,
+            locationRepository,
+            upcomingTimesRepository,
+            currentTimeRepository,
+            Dispatchers.Unconfined
+        )
             .also { it.activate() }
     }
 
@@ -75,6 +86,7 @@ class LocationDetailViewModelTest {
             assertEquals(
                 LocationDetailViewModel.State.Populated(
                     location.toSelectableLocation(true),
+                    currentTime,
                     sunrise,
                     sunset,
                     moonrise,
@@ -95,6 +107,7 @@ class LocationDetailViewModelTest {
             assertEquals(
                 LocationDetailViewModel.State.Populated(
                     location.toSelectableLocation(false),
+                    currentTime,
                     sunrise,
                     sunset,
                     moonrise,
@@ -109,6 +122,7 @@ class LocationDetailViewModelTest {
             assertEquals(
                 LocationDetailViewModel.State.Populated(
                     location.copy(label = "Updated").toSelectableLocation(false),
+                    currentTime,
                     sunrise,
                     sunset,
                     moonrise,
@@ -130,6 +144,7 @@ class LocationDetailViewModelTest {
             assertEquals(
                 LocationDetailViewModel.State.Populated(
                     location.toSelectableLocation(false),
+                    currentTime,
                     sunrise,
                     sunset,
                     moonrise,
@@ -144,6 +159,7 @@ class LocationDetailViewModelTest {
             assertEquals(
                 LocationDetailViewModel.State.Populated(
                     location.toSelectableLocation(true),
+                    currentTime,
                     sunrise,
                     sunset,
                     moonrise,
@@ -158,6 +174,7 @@ class LocationDetailViewModelTest {
             assertEquals(
                 LocationDetailViewModel.State.Populated(
                     location.toSelectableLocation(false),
+                    currentTime,
                     sunrise,
                     sunset,
                     moonrise,
@@ -178,6 +195,7 @@ class LocationDetailViewModelTest {
             assertEquals(
                 LocationDetailViewModel.State.Populated(
                     location.toSelectableLocation(false),
+                    currentTime,
                     sunrise,
                     sunset,
                     moonrise,

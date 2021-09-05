@@ -1,7 +1,5 @@
 package com.russhwolf.soluna.android.ui
 
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
@@ -54,24 +52,22 @@ fun SolunaApp() {
 @Composable
 fun Scope.SolunaUi() {
     SolunaTheme {
-        Surface(color = MaterialTheme.colors.background) {
-            val navController = rememberNavController()
-            NavHost(navController, startDestination = Destination.Home) {
-                composable(Destination.Home) { HomeScreen(get(), navController) }
-                composable(Destination.LocationList) { LocationListScreen(get(), navController) }
-                composable(Destination.AddLocation) { AddLocationScreen(get(), navController) }
-                composable(
-                    Destination.LocationDetail.template,
-                    arguments = Destination.LocationDetail.arguments
-                ) { backStackEntry ->
-                    LocationDetailScreen(
-                        get { Destination.LocationDetail.parameters(backStackEntry.arguments) },
-                        navController
-                    )
-                }
-                composable(Destination.ReminderList) { ReminderListScreen(get(), navController) }
-                composable(Destination.Settings) { SettingsScreen(get(), navController) }
+        val navController = rememberNavController()
+        NavHost(navController, startDestination = Destination.Home) {
+            composable(Destination.Home) { HomeScreen(get(), navController) }
+            composable(Destination.LocationList) { LocationListScreen(get(), navController) }
+            composable(Destination.AddLocation) { AddLocationScreen(get(), navController) }
+            composable(
+                Destination.LocationDetail.template,
+                arguments = Destination.LocationDetail.arguments
+            ) { backStackEntry ->
+                LocationDetailScreen(
+                    get { Destination.LocationDetail.parameters(backStackEntry.arguments) },
+                    navController
+                )
             }
+            composable(Destination.ReminderList) { ReminderListScreen(get(), navController) }
+            composable(Destination.Settings) { SettingsScreen(get(), navController) }
         }
     }
 }

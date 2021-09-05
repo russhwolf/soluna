@@ -1,23 +1,39 @@
 package com.russhwolf.soluna.android.ui.screen
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Button
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.DismissValue
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.ListItem
+import androidx.compose.material.RadioButton
+import androidx.compose.material.Scaffold
+import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.StarOutline
+import androidx.compose.material.icons.filled.AddLocation
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.navigation.NavController
+import com.russhwolf.soluna.android.R
+import com.russhwolf.soluna.android.ui.components.ConfirmationDialog
+import com.russhwolf.soluna.android.ui.theme.SolunaTheme
+import com.russhwolf.soluna.mobile.repository.SelectableLocationSummary
 import com.russhwolf.soluna.mobile.screen.locationlist.LocationListViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LocationListScreen(viewModel: LocationListViewModel, navController: NavController) =
     Screen(
@@ -31,30 +47,158 @@ fun LocationListScreen(viewModel: LocationListViewModel, navController: NavContr
             }
         }
     ) { state, performAction ->
-        Column {
-            LazyColumn {
-                items(state.locations.size) { index ->
-                    val location = state.locations[index]
-                    Row(
-                        modifier = Modifier.combinedClickable(
-                            onLongClick = { performAction(LocationListViewModel.Action.RemoveLocation(location.id)) },
-                            onClick = { performAction(LocationListViewModel.Action.LocationDetails(location.id)) }
-                        )
-                    ) {
-                        IconButton(
-                            onClick = { performAction(LocationListViewModel.Action.ToggleLocationSelected(location.id)) }
-                        ) {
-                            Icon(
-                                imageVector = if (location.selected) Icons.Filled.Star else Icons.Filled.StarOutline,
-                                contentDescription = if (location.selected) "Unselect" else "Select"
-                            )
-                        }
-                        Text(location.label)
-                    }
-                }
-            }
-            Button(onClick = { performAction(LocationListViewModel.Action.AddLocation) }) {
-                Text("Add Location")
+        LocationListScreenContent(
+            state = state,
+            onNavigateUp = { navController.navigateUp() },
+            onAddLocation = { performAction(LocationListViewModel.Action.AddLocation) },
+            onLocationDetails = { performAction(LocationListViewModel.Action.LocationDetails(it)) },
+            onSelectLocation = { performAction(LocationListViewModel.Action.ToggleLocationSelected(it)) },
+            onRemoveLocation = { performAction(LocationListViewModel.Action.RemoveLocation(it)) }
+        )
+    }
+
+@Composable
+private fun LocationListScreenContent(
+    state: LocationListViewModel.State,
+    onNavigateUp: () -> Unit,
+    onAddLocation: () -> Unit,
+    onLocationDetails: (Long) -> Unit,
+    onSelectLocation: (Long) -> Unit,
+    onRemoveLocation: (Long) -> Unit
+) {
+    Scaffold(
+        topBar = {
+            LocationListAppBar(
+                onNavigateUp = onNavigateUp,
+                onAddLocation = onAddLocation
+            )
+        }
+    ) {
+        LazyColumn {
+            items(state.locations) { location ->
+                LocationListItem(
+                    location = location,
+                    onLocationDetails = onLocationDetails,
+                    onSelectLocation = onSelectLocation,
+                    onRemoveLocation = onRemoveLocation
+                )
             }
         }
     }
+}
+
+@Composable
+private fun LocationListItem(
+    location: SelectableLocationSummary,
+    onLocationDetails: (Long) -> Unit,
+    onSelectLocation: (Long) -> Unit,
+    onRemoveLocation: (Long) -> Unit
+) {
+    val confirmDeleteLocation = remember { mutableStateOf(false) }
+    val dismissState = rememberDismissState(
+        confirmStateChange = {
+            val confirmed = it != DismissValue.Default
+            if (confirmed) {
+                confirmDeleteLocation.value = true
+            }
+            return@rememberDismissState confirmed
+        }
+    )
+    SwipeToDismiss(
+        state = dismissState,
+        background = {}
+    ) {
+        ListItem(
+            Modifier.clickable { onLocationDetails(location.id) },
+            icon = {
+                RadioButton(
+                    selected = location.selected,
+                    onClick = { onSelectLocation(location.id) },
+                )
+            },
+            text = { Text(location.label) },
+        )
+    }
+    Divider()
+
+    if (confirmDeleteLocation.value) {
+        ConfirmationDialog(
+            confirmButtonContent = { Text(stringResource(R.string.action_delete)) },
+            dismissButtonContent = { Text(stringResource(R.string.action_cancel)) },
+            onConfirm = { onRemoveLocation(location.id) },
+            onDismiss = { confirmDeleteLocation.value = false },
+            content = { Text(stringResource(R.string.locations_confirm_remove, location.label)) }
+        )
+    } else {
+        LaunchedEffect(confirmDeleteLocation) {
+            dismissState.animateTo(DismissValue.Default)
+        }
+    }
+}
+
+@Composable
+private fun LocationListAppBar(onNavigateUp: () -> Unit, onAddLocation: () -> Unit) {
+    TopAppBar(
+        navigationIcon = {
+            IconButton(onClick = onNavigateUp) {
+                Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.action_back))
+            }
+        },
+        title = { Text(stringResource(R.string.title_locations), style = SolunaTheme.typography.h6) },
+        actions = {
+            IconButton(onClick = onAddLocation) {
+                Icon(
+                    imageVector = Icons.Default.AddLocation,
+                    contentDescription = stringResource(R.string.locations_action_add)
+                )
+            }
+        }
+    )
+}
+
+class LocationListProvider : PreviewParameterProvider<LocationListViewModel.State> {
+    override val values: Sequence<LocationListViewModel.State> = sequenceOf(
+        LocationListViewModel.State(
+            listOf(
+                SelectableLocationSummary(0, "Home", selected = true),
+                SelectableLocationSummary(1, "Away", selected = false)
+            )
+        )
+    )
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun LocationListScreenContent_Light(
+    @PreviewParameter(provider = LocationListProvider::class)
+    state: LocationListViewModel.State
+) {
+    SolunaTheme {
+        LocationListScreenContent(
+            state = state,
+            onNavigateUp = {},
+            onAddLocation = {},
+            onLocationDetails = {},
+            onSelectLocation = {},
+            onRemoveLocation = {}
+        )
+    }
+}
+
+@Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun LocationListScreenContent_Dark(
+    @PreviewParameter(provider = LocationListProvider::class)
+    state: LocationListViewModel.State
+) {
+    SolunaTheme {
+        LocationListScreenContent(
+            state = state,
+            onNavigateUp = {},
+            onAddLocation = {},
+            onLocationDetails = {},
+            onSelectLocation = {},
+            onRemoveLocation = {}
+        )
+    }
+}
