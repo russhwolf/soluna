@@ -3,11 +3,8 @@ import Shared
 
 class ObservableSettingsViewModel : ObservableViewModel<SettingsViewModel.State, SettingsViewModel.Event, SettingsViewModel.Action> {
 
-    @Published
-    var navigateToLocationList: Bool = false
-
-    @Published
-    var navigateToReminderList: Bool = false
+    let locationListTrigger = NavigationTrigger<Bool>()
+    let reminderListTrigger = NavigationTrigger<Bool>()
 
     init() {
         super.init(SwiftKotlinBridge().getSettingsViewModel())
@@ -17,17 +14,17 @@ class ObservableSettingsViewModel : ObservableViewModel<SettingsViewModel.State,
     override func onEvent(_ event: SettingsViewModel.Event) {
         switch event {
         case SettingsViewModel.Event.locations:
-            navigateToLocationList = true
+            locationListTrigger.navigate()
         case SettingsViewModel.Event.reminders:
-            navigateToReminderList = true
+            reminderListTrigger.navigate()
         default:
             NSLog("Received unknown event \(event)")
         }
     }
     
     override func reset() {
-        navigateToLocationList = false
-        navigateToReminderList = false
+        locationListTrigger.reset()
+        reminderListTrigger.reset()
     }
     
     func onNavigateToLocationList() {

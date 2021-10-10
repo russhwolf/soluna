@@ -11,8 +11,8 @@ struct SettingsView: View {
                 onNavigateToLocationList: { observableModel.onNavigateToLocationList() },
                 onNavigateToReminderList: { observableModel.onNavigateToReminderList() }
             )
-            NavigationLink(destination: LocationListView(), isActive: $observableModel.navigateToLocationList) { EmptyView() }
-            NavigationLink(destination: ReminderListView(), isActive: $observableModel.navigateToReminderList) { EmptyView() }
+            observableModel.locationListTrigger.createLink { LocationListView() }
+            observableModel.reminderListTrigger.createLink { ReminderListView() }
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { ToolbarItem(placement: .principal) { Text("Settings") } }

@@ -3,11 +3,8 @@ import Shared
 
 class ObservableLocationListViewModel : ObservableViewModel<LocationListViewModel.State, LocationListViewModel.Event, LocationListViewModel.Action> {
  
-    @Published
-    var navigateToAddLocation: Bool = false
-    
-    @Published
-    var navigateToLocationDetails: Int64? = nil
+    let addLocationTrigger = NavigationTrigger<Bool>()
+    let locationDetailsTrigger = NavigationTrigger<Int64>()
 
     init() {
         super.init(SwiftKotlinBridge().getLocationListViewModel())
@@ -17,18 +14,18 @@ class ObservableLocationListViewModel : ObservableViewModel<LocationListViewMode
     override func onEvent(_ event: LocationListViewModel.Event) {
         switch event {
         case is LocationListViewModel.EventAddLocation:
-            navigateToAddLocation = true
+            addLocationTrigger.navigate()
         case is LocationListViewModel.EventLocationDetails:
             let event = event as! LocationListViewModel.EventLocationDetails
-            navigateToLocationDetails = event.locationId
+            locationDetailsTrigger.navigate(event.locationId)
         default:
             NSLog("Received unknown event \(event)")
         }
     }
     
     override func reset() {
-        navigateToAddLocation = false
-        navigateToLocationDetails = nil
+        addLocationTrigger.reset()
+        locationDetailsTrigger.reset()
     }
     
     func onAddLocationClick() {

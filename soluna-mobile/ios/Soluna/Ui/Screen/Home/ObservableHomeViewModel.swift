@@ -3,8 +3,7 @@ import Shared
 
 class ObservableHomeViewModel: ObservableViewModel<HomeViewModel.State, HomeViewModel.Event, HomeViewModel.Action> {
 
-    @Published
-    var navigateToSettings: Bool = false
+    let settingsTrigger = NavigationTrigger<Bool>()
 
     init() {
         super.init(SwiftKotlinBridge().getHomeViewModel())
@@ -14,14 +13,14 @@ class ObservableHomeViewModel: ObservableViewModel<HomeViewModel.State, HomeView
     override func onEvent(_ event: HomeViewModel.Event) {
         switch event {
         case is HomeViewModel.EventSettings:
-            navigateToSettings = true
+            settingsTrigger.navigate()
         default:
             NSLog("Received unknown event \(event)")
         }
     }
     
     override func reset() {
-        navigateToSettings = false
+        settingsTrigger.reset()
     }
     
     func onNavigateToSettings() {

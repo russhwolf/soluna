@@ -49,6 +49,7 @@
 		469AF5C126195981005D00C8 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 469AF5C026195981005D00C8 /* Shared.framework */; };
 		469AF5C226195981005D00C8 /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 469AF5C026195981005D00C8 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		469AF5CF261A8F3F005D00C8 /* CombineAdapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469AF5CE261A8F3F005D00C8 /* CombineAdapters.swift */; };
+		46A032782713906600403037 /* NavigationTrigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A032772713906600403037 /* NavigationTrigger.swift */; };
 		46B25E4726D331E800CE9D27 /* ObservableSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B25E4626D331E800CE9D27 /* ObservableSettingsViewModel.swift */; };
 		46B25E4D26D331F700CE9D27 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B25E4C26D331F700CE9D27 /* SettingsView.swift */; };
 		46C63434266DA7B700D3647E /* ReminderNotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C63433266DA7B700D3647E /* ReminderNotificationScheduler.swift */; };
@@ -142,6 +143,7 @@
 		4680CAC3266C69BA009F41FA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		469AF5C026195981005D00C8 /* Shared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Shared.framework; path = "../shared/build/xcode-frameworks/Shared.framework"; sourceTree = "<group>"; };
 		469AF5CE261A8F3F005D00C8 /* CombineAdapters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CombineAdapters.swift; sourceTree = "<group>"; };
+		46A032772713906600403037 /* NavigationTrigger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTrigger.swift; sourceTree = "<group>"; };
 		46B25E4626D331E800CE9D27 /* ObservableSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableSettingsViewModel.swift; sourceTree = "<group>"; };
 		46B25E4C26D331F700CE9D27 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		46C63433266DA7B700D3647E /* ReminderNotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderNotificationScheduler.swift; sourceTree = "<group>"; };
@@ -420,6 +422,7 @@
 			children = (
 				46C75A07261FF91E009FFEB5 /* Screen */,
 				464E3F282690C80400BB2251 /* SolunaTheme.swift */,
+				46A032772713906600403037 /* NavigationTrigger.swift */,
 				464E3F23268EC6EF00BB2251 /* SunMoonTimesGraphic.swift */,
 				466A489F26A3C09C00B345B8 /* ArcText.swift */,
 			);
@@ -702,6 +705,7 @@
 				46C75A00261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift in Sources */,
 				464E3F292690C80400BB2251 /* SolunaTheme.swift in Sources */,
 				46C63438266DA9A800D3647E /* BackgroundNotificationsScheduler.swift in Sources */,
+				46A032782713906600403037 /* NavigationTrigger.swift in Sources */,
 				46C759FA261FF379009FFEB5 /* ObservableHomeViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

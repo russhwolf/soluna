@@ -10,23 +10,14 @@ struct LocationListView: View {
             LocationListContent(
                 state: observableModel.state,
                 createLocationDetailLink: { id in
-                    NavigationLink(
-                        destination: LocationDetailView(id: id),
-                        tag: id,
-                        selection: $observableModel.navigateToLocationDetails,
-                        label: { EmptyView() }
-                    )
+                    observableModel.locationDetailsTrigger.createLink(tag: id) { LocationDetailView(id: id) }
                 },
                 onAddLocationClick: { observableModel.onAddLocationClick() },
                 onDeleteLocationClick: { locationId in observableModel.onRemoveLocationClick(locationId) },
                 onSelectLocationClick: { locationId in observableModel.onSelectLocationClick(locationId) },
                 onLocationDetailClick: { locationId in observableModel.onLocationDetailClick(locationId) }
             )
-            NavigationLink(
-                destination: AddLocationView(),
-                isActive: $observableModel.navigateToAddLocation,
-                label: { EmptyView() }
-            )
+            observableModel.addLocationTrigger.createLink { AddLocationView() }
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { ToolbarItem(placement: .principal) { Text("Locations") } }
@@ -34,10 +25,10 @@ struct LocationListView: View {
     }
 }
 
-struct LocationListContent : View {
+struct LocationListContent<LocationDetailLink: View> : View {
     let state: LocationListViewModel.State
     
-    let createLocationDetailLink: (Int64) -> NavigationLink<EmptyView, LocationDetailView>
+    let createLocationDetailLink: (Int64) -> LocationDetailLink
 
     let onAddLocationClick: () -> Void
     let onDeleteLocationClick: (Int64) -> Void

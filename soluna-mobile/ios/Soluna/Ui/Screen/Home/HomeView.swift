@@ -10,7 +10,7 @@ struct HomeView: View {
             HomeContent(
                 state: observableModel.state
             )
-            NavigationLink(destination: SettingsView(), isActive: $observableModel.navigateToSettings) { EmptyView() }
+            observableModel.settingsTrigger.createLink { SettingsView() }
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
