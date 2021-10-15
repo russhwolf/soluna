@@ -27,11 +27,7 @@ struct LocationDetailView: View {
             Text(title)
         } }
         .bindModel(observableModel)
-        .onReceive(observableModel.$goBack, perform: { goBack in
-            if goBack {
-                self.presentationMode.wrappedValue.dismiss()
-            }
-        })
+        .bindBackNavigation(trigger: observableModel.goBack)
     }
 }
 

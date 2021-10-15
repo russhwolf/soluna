@@ -2,9 +2,8 @@ import SwiftUI
 import Shared
 
 class ObservableLocationDetailViewModel: ObservableViewModel<LocationDetailViewModel.State, LocationDetailViewModel.Event, LocationDetailViewModel.Action> {
-
-    @Published
-    var goBack = false
+    
+    let goBack = BackNavigationTrigger()
 
     init(id: Int64) {
         super.init(SwiftKotlinBridge().getLocationDetailViewModel(id: id))
@@ -14,16 +13,16 @@ class ObservableLocationDetailViewModel: ObservableViewModel<LocationDetailViewM
     override func onEvent(_ event: LocationDetailViewModel.Event) {
         switch event {
         case is LocationDetailViewModel.EventExit:
-            goBack = true
+            goBack.navigate()
         default:
             NSLog("Received unknown event \(event)")
         }
     }
-    
+
     override func reset() {
-        goBack = false
+        goBack.reset()
     }
-    
+
     func setLabel(label: String) {
         performAction(action: LocationDetailViewModel.ActionSetLabel(label: label))
     }

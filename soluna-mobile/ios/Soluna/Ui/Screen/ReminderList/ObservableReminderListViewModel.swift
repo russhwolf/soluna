@@ -3,8 +3,7 @@ import Shared
 
 class ObservableReminderListViewModel : ObservableViewModel<ReminderListViewModel.State, ReminderListViewModel.Event, ReminderListViewModel.Action> {
 
-    @Published
-    var goBack = false
+    let goBack = BackNavigationTrigger()
 
     init() {
         super.init(SwiftKotlinBridge().getReminderListViewModel())
@@ -14,14 +13,14 @@ class ObservableReminderListViewModel : ObservableViewModel<ReminderListViewMode
     override func onEvent(_ event: ReminderListViewModel.Event) {
         switch event {
         case is ReminderListViewModel.EventExit:
-            goBack = true
+            goBack.navigate()
         default:
             NSLog("Received unknown event \(event)")
         }
     }
-    
+
     override func reset() {
-        goBack = false
+        goBack.reset()
     }
     
     func onAddReminderClick() {

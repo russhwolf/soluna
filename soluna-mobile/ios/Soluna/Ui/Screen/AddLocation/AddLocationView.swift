@@ -2,8 +2,6 @@ import SwiftUI
 import Shared
 
 struct AddLocationView : View {
-    @Environment(\.presentationMode)
-    var presentationMode: Binding
 
     @StateObject
     private var observableModel = ObservableAddLocationViewModel()
@@ -45,11 +43,7 @@ struct AddLocationView : View {
             )
         }
         .bindModel(observableModel)
-        .onReceive(observableModel.$goBack, perform: { goBack in
-            if goBack {
-                self.presentationMode.wrappedValue.dismiss()
-            }
-        })
+        .bindBackNavigation(trigger: observableModel.goBack)
         .onReceive(observableModel.geocodeSubject, perform: { geocodeEvent in
             latitude = String(geocodeEvent.latitude)
             longitude = String(geocodeEvent.longitude)

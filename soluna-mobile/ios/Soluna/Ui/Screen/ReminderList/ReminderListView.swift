@@ -19,6 +19,7 @@ struct ReminderListView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { ToolbarItem(placement: .principal) { Text("Reminders") } }
         .bindModel(observableModel)
+        .bindBackNavigation(trigger: observableModel.goBack)
     }
 }
 
