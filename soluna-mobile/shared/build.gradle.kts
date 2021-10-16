@@ -40,17 +40,17 @@ kotlin {
         all {
             languageSettings.apply {
                 progressiveMode = true
-                useExperimentalAnnotation("kotlin.RequiresOptIn")
-                useExperimentalAnnotation("kotlinx.coroutines.ExperimentalCoroutinesApi")
-                useExperimentalAnnotation("com.russhwolf.settings.ExperimentalSettingsApi")
-                useExperimentalAnnotation("com.russhwolf.settings.ExperimentalSettingsImplementation")
-                useExperimentalAnnotation("kotlin.time.ExperimentalTime")
+                optIn("kotlin.RequiresOptIn")
+                optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
+                optIn("com.russhwolf.settings.ExperimentalSettingsApi")
+                optIn("com.russhwolf.settings.ExperimentalSettingsImplementation")
+                optIn("kotlin.time.ExperimentalTime")
             }
         }
 
         matching { it.name.endsWith("Test") }.configureEach {
             languageSettings.apply {
-                useExperimentalAnnotation("kotlinx.coroutines.FlowPreview")
+                optIn("kotlinx.coroutines.FlowPreview")
             }
         }
 
