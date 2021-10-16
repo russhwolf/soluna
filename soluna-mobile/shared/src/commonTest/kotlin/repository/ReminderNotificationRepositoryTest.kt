@@ -9,11 +9,7 @@ import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atTime
-import kotlinx.datetime.toInstant
+import kotlinx.datetime.*
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -52,7 +48,7 @@ class ReminderNotificationRepositoryTest {
         reminderRepository.addReminder(ReminderType.Sunset, 15)
 
         repository.getUpcomingNotifications().test {
-            assertNull(expectItem())
+            assertNull(awaitItem())
         }
     }
 
@@ -62,7 +58,7 @@ class ReminderNotificationRepositoryTest {
         locationRepository.toggleSelectedLocation(locationRepository.getLocations().first().first().id)
 
         repository.getUpcomingNotifications().test {
-            assertNull(expectItem())
+            assertNull(awaitItem())
         }
     }
 
@@ -84,7 +80,7 @@ class ReminderNotificationRepositoryTest {
                         timeZone = "UTC"
                     )
                 },
-                actual = expectItem()
+                actual = awaitItem()
             )
         }
     }

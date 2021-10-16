@@ -2,7 +2,7 @@ package com.russhwolf.soluna.android.ui.screen
 
 import android.os.Bundle
 import androidx.navigation.NavType
-import androidx.navigation.compose.navArgument
+import androidx.navigation.navArgument
 import org.koin.core.parameter.parametersOf
 
 object Destination {

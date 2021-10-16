@@ -2,11 +2,7 @@ package com.russhwolf.soluna.mobile.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.plus
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.*
 import kotlin.time.Duration
 
 interface UpcomingTimesRepository {
@@ -29,7 +25,7 @@ interface UpcomingTimesRepository {
 
             val zone = TimeZone.of(location.timeZone)
             val today = currentInstant.toLocalDateTime(zone).date
-            val tomorrow = today.plus(DateTimeUnit.DateBased.DayBased(1))
+            val tomorrow = today.plus(DateTimeUnit.DayBased(1))
             val times =
                 astronomicalDataRepository.getTimes(today, zone, location.latitude, location.longitude)
             val timesTomorrow =

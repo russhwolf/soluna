@@ -10,11 +10,7 @@ import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.repository.LocationRepository.Impl.Companion.KEY_SELECTED_LOCATION_ID
 import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
-import kotlin.test.AfterTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 class LocationRepositoryTest {
 
@@ -26,7 +22,7 @@ class LocationRepositoryTest {
     @Test
     fun getLocations() = suspendTest {
         repository.getLocations().test {
-            assertEquals(emptyList(), expectItem())
+            assertEquals(emptyList(), awaitItem())
 
             database.insertDummyLocation(1)
             assertEquals(
@@ -37,7 +33,7 @@ class LocationRepositoryTest {
                         selected = false
                     )
                 ),
-                actual = expectItem()
+                actual = awaitItem()
             )
             expectNoEvents()
 
@@ -55,7 +51,7 @@ class LocationRepositoryTest {
                         selected = false
                     )
                 ),
-                actual = expectItem()
+                actual = awaitItem()
             )
             expectNoEvents()
 
@@ -73,7 +69,7 @@ class LocationRepositoryTest {
                         selected = true
                     )
                 ),
-                actual = expectItem()
+                actual = awaitItem()
             )
             expectNoEvents()
         }
@@ -84,11 +80,11 @@ class LocationRepositoryTest {
         database.insertDummyLocation()
 
         repository.getLocation(1).test {
-            assertEquals(dummyLocation, expectItem())
+            assertEquals(dummyLocation, awaitItem())
             expectNoEvents()
 
             database.locationQueries.updateLocationLabelById("Updated location", 1)
-            assertEquals(dummyLocation.copy(label = "Updated location"), expectItem())
+            assertEquals(dummyLocation.copy(label = "Updated location"), awaitItem())
             expectNoEvents()
 
             database.insertDummyLocation(2)
@@ -98,11 +94,11 @@ class LocationRepositoryTest {
             expectNoEvents()
 
             settings.putLong(KEY_SELECTED_LOCATION_ID, 1)
-            assertEquals(dummyLocation.copy(label = "Updated location", selected = true), expectItem())
+            assertEquals(dummyLocation.copy(label = "Updated location", selected = true), awaitItem())
             expectNoEvents()
 
             database.locationQueries.deleteLocationById(1)
-            assertNull(expectItem())
+            assertNull(awaitItem())
             expectNoEvents()
         }
     }
@@ -155,18 +151,18 @@ class LocationRepositoryTest {
     @Test
     fun getSelectedItem() = suspendTest {
         repository.getSelectedLocation().test {
-            assertNull(expectItem())
+            assertNull(awaitItem())
             expectNoEvents()
 
             database.insertDummyLocation()
             expectNoEvents()
 
             settings.putLong(KEY_SELECTED_LOCATION_ID, dummyLocation.id)
-            assertEquals(dummyLocation.copy(selected = true), expectItem())
+            assertEquals(dummyLocation.copy(selected = true), awaitItem())
             expectNoEvents()
 
             database.locationQueries.deleteLocationById(dummyLocation.id)
-            assertNull(expectItem())
+            assertNull(awaitItem())
             expectNoEvents()
         }
     }
@@ -177,17 +173,17 @@ class LocationRepositoryTest {
         database.insertDummyLocation(2)
 
         repository.getSelectedLocation().test {
-            assertNull(expectItem())
+            assertNull(awaitItem())
 
 
             repository.toggleSelectedLocation(1)
-            assertEquals(dummyLocation.copy(id = 1, label = "Test Location 1", selected = true), expectItem())
+            assertEquals(dummyLocation.copy(id = 1, label = "Test Location 1", selected = true), awaitItem())
 
             repository.toggleSelectedLocation(2)
-            assertEquals(dummyLocation.copy(id = 2, label = "Test Location 2", selected = true), expectItem())
+            assertEquals(dummyLocation.copy(id = 2, label = "Test Location 2", selected = true), awaitItem())
 
             repository.toggleSelectedLocation(2)
-            assertNull(expectItem())
+            assertNull(awaitItem())
         }
     }
 

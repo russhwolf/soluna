@@ -22,20 +22,20 @@ class ReminderRepositoryTest {
     @Test
     fun getReminders() = suspendTest {
         repository.getReminders().test {
-            assertEquals(emptyList(), expectItem())
+            assertEquals(emptyList(), awaitItem())
             expectNoEvents()
 
             database.insertDummyReminder()
 
-            assertEquals(listOf(dummyReminder), expectItem())
+            assertEquals(listOf(dummyReminder), awaitItem())
             expectNoEvents()
 
             database.reminderQueries.deleteReminderById(1)
-            assertEquals(emptyList(), expectItem())
+            assertEquals(emptyList(), awaitItem())
             expectNoEvents()
 
             database.insertDummyReminder()
-            assertEquals(listOf(dummyReminder.copy(id = 2)), expectItem())
+            assertEquals(listOf(dummyReminder.copy(id = 2)), awaitItem())
             expectNoEvents()
         }
     }

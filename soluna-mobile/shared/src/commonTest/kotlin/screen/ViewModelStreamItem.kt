@@ -19,13 +19,13 @@ val <State : Any, Event : Any, Action : Any> BaseViewModel<State, Event, Action>
     )
 
 suspend inline fun <State, Event> FlowTurbine<ViewModelStreamItem<State, Event>>.expectViewModelState(): State {
-    val item = expectItem()
+    val item = awaitItem()
     assertTrue(item is ViewModelStreamItem.State<State>)
     return item.state
 }
 
 suspend inline fun <State, Event> FlowTurbine<ViewModelStreamItem<State, Event>>.expectViewModelEvent(): Event {
-    val item = expectItem()
+    val item = awaitItem()
     assertTrue(item is ViewModelStreamItem.Event<Event>)
     return item.event
 }

@@ -2,11 +2,7 @@ package com.russhwolf.soluna.mobile.repository
 
 import app.cash.turbine.test
 import com.russhwolf.soluna.mobile.suspendTest
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atTime
-import kotlinx.datetime.toInstant
+import kotlinx.datetime.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -40,7 +36,7 @@ class UpcomingTimesRepositoryTest {
                     moonriseTime = LocalDate(2021, 1, 1).atTime(20, 1).toInstant(TimeZone.UTC),
                     moonsetTime = LocalDate(2021, 1, 1).atTime(8, 1).toInstant(TimeZone.UTC)
                 ),
-                expectItem()
+                awaitItem()
             )
         }
     }
@@ -57,7 +53,7 @@ class UpcomingTimesRepositoryTest {
                     moonriseTime = LocalDate(2021, 1, 1).atTime(20, 1).toInstant(TimeZone.UTC),
                     moonsetTime = LocalDate(2021, 1, 2).atTime(8, 2).toInstant(TimeZone.UTC)
                 ),
-                expectItem()
+                awaitItem()
             )
         }
     }
@@ -74,7 +70,7 @@ class UpcomingTimesRepositoryTest {
                     moonriseTime = LocalDate(2021, 1, 2).atTime(20, 2).toInstant(TimeZone.UTC),
                     moonsetTime = LocalDate(2021, 1, 2).atTime(8, 2).toInstant(TimeZone.UTC)
                 ),
-                expectItem()
+                awaitItem()
             )
         }
     }

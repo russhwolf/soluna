@@ -53,6 +53,7 @@ dependencies {
     implementation(Deps.AndroidX.Compose.tooling)
     implementation(Deps.AndroidX.lifecycleRuntime)
     implementation(Deps.AndroidX.activityCompose)
+    implementation(Deps.AndroidX.navigationCommon)
     implementation(Deps.AndroidX.navigationCompose)
     implementation(Deps.AndroidX.dataStore)
     implementation(Deps.AndroidX.workManager)

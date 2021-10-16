@@ -1,44 +1,45 @@
 object Versions {
-    const val kotlin = "1.5.21"
+    const val kotlin = "1.5.31"
 
     object Android {
-        const val gradle = "7.0.0"
+        const val gradle = "7.0.3"
         const val minSdk = 23
-        const val compileSdk = 30
-        const val targetSdk = 30
+        const val compileSdk = 31
+        const val targetSdk = 31
     }
 
-    const val buildKonfig = "0.8.0"
+    const val buildKonfig = "0.10.2"
     const val desugar = "1.1.5"
-    const val islandTime = "0.6.0"
+    const val islandTime = "0.6.2"
     const val junit = "4.13.2"
-    const val koin = "3.1.1"
-    const val ktor = "1.6.0"
+    const val koin = "3.1.2"
+    const val ktor = "1.6.4"
     const val playServicesLocation = "18.0.0"
-    const val robolectric = "4.5.1"
-    const val settings = "0.7.7"
-    const val sqlDelight = "1.5.0"
-    const val stately = "1.1.7"
-    const val turbine = "0.5.2"
+    const val robolectric = "4.6.1"
+    const val settings = "0.8.1"
+    const val sqlDelight = "1.5.2"
+    const val stately = "1.1.10"
+    const val turbine = "0.6.1"
 
     object KotlinX {
-        const val coroutines = "1.5.0-native-mt"
-        const val dateTime = "0.2.1"
-        const val serialization = "1.2.1"
+        const val coroutines = "1.5.2-native-mt"
+        const val dateTime = "0.3.0"
+        const val serialization = "1.3.0"
     }
 
     object AndroidX {
-        const val activityCompose = "1.3.0"
-        const val compose = "1.0.2"
-        const val coreKtx = "1.5.0"
-        const val dataStore = "1.0.0-rc02"
-        const val lifecycle = "2.4.0-alpha02"
-        const val navigationCompose = "2.4.0-alpha05"
-        const val workManager = "2.5.0"
+        const val activityCompose = "1.3.1"
+        const val compose = "1.0.4"
+        const val coreKtx = "1.6.0"
+        const val dataStore = "1.0.0"
+        const val lifecycle = "2.4.0-rc01"
+        const val navigationCommon = "2.3.5"
+        const val navigationCompose = "2.4.0-alpha10"
+        const val workManager = "2.7.0"
 
         object Test {
-            const val core = "1.3.0"
-            const val junit = "1.1.2"
+            const val core = "1.4.0"
+            const val junit = "1.1.3"
         }
     }
 }
@@ -56,6 +57,7 @@ object Deps {
         const val coreKtx = "androidx.core:core-ktx:${Versions.AndroidX.coreKtx}"
         const val dataStore = "androidx.datastore:datastore-preferences:${Versions.AndroidX.dataStore}"
         const val lifecycleRuntime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.AndroidX.lifecycle}"
+        const val navigationCommon = "androidx.navigation:navigation-common:${Versions.AndroidX.navigationCommon}"
         const val navigationCompose = "androidx.navigation:navigation-compose:${Versions.AndroidX.navigationCompose}"
         const val workManager = "androidx.work:work-runtime-ktx:${Versions.AndroidX.workManager}"
 
@@ -70,8 +72,8 @@ object Deps {
         }
 
         object Test {
-            const val core = "androidx.test:core:${Versions.AndroidX.Test.core}"
-            const val junit = "androidx.test.ext:junit:${Versions.AndroidX.Test.junit}"
+            const val core = "androidx.test:core-ktx:${Versions.AndroidX.Test.core}"
+            const val junit = "androidx.test.ext:junit-ktx:${Versions.AndroidX.Test.junit}"
         }
     }
 
