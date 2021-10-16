@@ -10,23 +10,12 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(":soluna-core"))
-                api(Deps.islandTime)
+                api(libs.islandTime)
             }
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-            }
-        }
-        val jvmMain by getting {
-            dependencies {
-            }
-        }
-        val jvmTest by getting {
-            dependencies {
                 implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
             }
         }
     }

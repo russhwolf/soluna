@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    compileSdk = Versions.Android.compileSdk
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.russhwolf.soluna.android"
-        minSdk = Versions.Android.minSdk
-        targetSdk = Versions.Android.targetSdk
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,41 +38,40 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = Versions.AndroidX.compose
+        kotlinCompilerExtensionVersion = libs.versions.androidx.compose.get()
+    }
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
     }
 }
 
 dependencies {
     implementation(project(":soluna-mobile:shared"))
 
-    implementation(Deps.AndroidX.coreKtx)
-    implementation(Deps.AndroidX.Compose.ui)
-    implementation(Deps.AndroidX.Compose.material)
-    implementation(Deps.AndroidX.Compose.materialIcons)
-    implementation(Deps.AndroidX.Compose.materialIconsExtended)
-    implementation(Deps.AndroidX.Compose.tooling)
-    implementation(Deps.AndroidX.lifecycleRuntime)
-    implementation(Deps.AndroidX.activityCompose)
-    implementation(Deps.AndroidX.navigationCommon)
-    implementation(Deps.AndroidX.navigationCompose)
-    implementation(Deps.AndroidX.dataStore)
-    implementation(Deps.AndroidX.workManager)
+    implementation(libs.bundles.androidx.compose)
+    implementation(libs.androidx.coreKtx)
+    implementation(libs.androidx.lifecycleRuntime)
+    implementation(libs.androidx.dataStore)
+    implementation(libs.androidx.workManager)
 
-    implementation(Deps.KotlinX.Coroutines.core)
-    implementation(Deps.KotlinX.Coroutines.android)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
 
-    implementation(Deps.KotlinX.dateTime)
-    coreLibraryDesugaring(Deps.desugar)
+    implementation(libs.kotlinx.dateTime)
+    coreLibraryDesugaring(libs.desugar)
 
-    implementation(Deps.Koin.core)
-    implementation(Deps.Koin.android)
-    implementation(Deps.Koin.compose)
-    implementation(Deps.Koin.workManager)
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.compose)
+    implementation(libs.koin.workManager)
 
-    implementation(Deps.playServicesLocation)
-    implementation(Deps.KotlinX.Coroutines.playServices)
+    implementation(libs.playServicesLocation)
+    implementation(libs.kotlinx.coroutines.playServices)
 
-    testImplementation(Deps.junit)
-    androidTestImplementation(Deps.AndroidX.Test.junit)
-    androidTestImplementation(Deps.AndroidX.Compose.test)
+    testImplementation(libs.junit)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.androidx.compose.test)
 }

@@ -13,8 +13,8 @@ tasks.withType(JavaExec::class) {
 
 dependencies {
     implementation(project(":soluna-core:island-time"))
-    implementation(Deps.islandTime)
-    testImplementation(Deps.junit)
+    implementation(libs.islandTime)
+    testImplementation(libs.junit)
     testImplementation(kotlin("test-junit"))
 }
 

@@ -6,9 +6,9 @@ import java.util.Properties
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
-    id("kotlinx-serialization") version Versions.kotlin
-    id("com.squareup.sqldelight") version Versions.sqlDelight
-    id("com.codingfeline.buildkonfig") version Versions.buildKonfig
+    alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.sqlDelight)
+    alias(libs.plugins.buildKonfig)
 }
 
 // workaround for https://youtrack.jetbrains.com/issue/KT-43944
@@ -31,7 +31,7 @@ kotlin {
         binaries {
             framework {
                 baseName = "Shared"
-                export(Deps.KotlinX.dateTime)
+                export(libs.kotlinx.dateTime)
             }
         }
     }
@@ -58,81 +58,56 @@ kotlin {
             dependencies {
                 implementation(project(":soluna-core:kotlinx-datetime"))
 
-                implementation(Deps.KotlinX.Coroutines.core)
-
-                implementation(Deps.SqlDelight.coroutines)
-
-                implementation(Deps.KotlinX.Serialization.core)
-                implementation(Deps.KotlinX.Serialization.json)
-
-                implementation(Deps.Ktor.core)
-                implementation(Deps.Ktor.json)
-                implementation(Deps.Ktor.serialization)
-                implementation(Deps.Ktor.logging)
-
-                api(Deps.KotlinX.dateTime)
-
-                implementation(Deps.Stately.core)
-
-                implementation(Deps.Koin.core)
-
-                implementation(Deps.Settings.core)
-                implementation(Deps.Settings.coroutines)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.sqlDelight.coroutines)
+                implementation(libs.bundles.kotlinx.serialization.common)
+                implementation(libs.bundles.ktor.common)
+                api(libs.kotlinx.dateTime)
+                implementation(libs.stately.core)
+                implementation(libs.koin.core)
+                implementation(libs.bundles.settings.common)
             }
         }
         commonTest {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                implementation(kotlin("test"))
 
-                implementation(Deps.Ktor.mock)
-
-                implementation(Deps.Koin.test)
-
-                implementation(Deps.Settings.test)
-
-                implementation(Deps.turbine)
+                implementation(libs.ktor.mock)
+                implementation(libs.koin.test)
+                implementation(libs.settings.test)
+                implementation(libs.turbine)
             }
         }
         val androidMain by getting {
             dependencies {
-                implementation(Deps.KotlinX.Coroutines.android)
+                implementation(libs.kotlinx.coroutines.android)
 
-                implementation(Deps.SqlDelight.android)
+                implementation(libs.sqlDelight.android)
 
-                implementation(Deps.Ktor.android)
+                implementation(libs.ktor.android)
 
-                implementation(Deps.AndroidX.dataStore)
-                implementation(Deps.Settings.dataStore)
+                implementation(libs.androidx.dataStore)
+                implementation(libs.settings.dataStore)
 
-                implementation(Deps.AndroidX.activityCompose)
-                implementation(Deps.playServicesLocation)
-                implementation(Deps.KotlinX.Coroutines.playServices)
+                implementation(libs.androidx.activityCompose)
+                implementation(libs.playServicesLocation)
+                implementation(libs.kotlinx.coroutines.playServices)
             }
         }
         val androidTest by getting {
             dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
+                implementation(libs.androidx.test.core)
+                implementation(libs.androidx.test.junit)
+                implementation(libs.robolectric)
 
-                implementation(Deps.AndroidX.Test.core)
-                implementation(Deps.AndroidX.Test.junit)
-                implementation(Deps.robolectric)
-
-                implementation(Deps.SqlDelight.jvm)
+                implementation(libs.sqlDelight.jvm)
             }
         }
         val iosMain by getting {
             dependencies {
-                implementation(Deps.KotlinX.Coroutines.core) {
-                    version {
-                        strictly(Versions.KotlinX.coroutines)
-                    }
-                }
-
-                implementation(Deps.SqlDelight.native)
-
-                implementation(Deps.Ktor.ios)
+                implementation(libs.kotlinx.coroutines.core.strict)
+                implementation(libs.sqlDelight.native)
+                implementation(libs.ktor.ios)
             }
         }
         val iosTest by getting {
@@ -171,9 +146,9 @@ sqldelight {
 }
 
 android {
-    compileSdk = Versions.Android.compileSdk
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig {
-        minSdk = Versions.Android.minSdk
+        minSdk = libs.versions.android.minSdk.get().toInt()
     }
 
     testOptions.unitTests.isIncludeAndroidResources = true
