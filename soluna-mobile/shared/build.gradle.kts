@@ -86,6 +86,8 @@ kotlin {
 
                 implementation(libs.ktor.android)
 
+                implementation(libs.koin.android)
+
                 implementation(libs.androidx.dataStore)
                 implementation(libs.settings.dataStore)
 

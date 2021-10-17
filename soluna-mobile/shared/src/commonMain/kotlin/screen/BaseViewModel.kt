@@ -15,7 +15,8 @@ import kotlinx.coroutines.flow.StateFlow
 abstract class BaseViewModel<State : Any, Event : Any, Action : Any>(
     initialState: State,
     dispatcher: CoroutineDispatcher
-) {
+) : BasePlatformViewModel() {
+
     internal val coroutineScope = SupervisorScope(dispatcher)
 
     private val mutableState: MutableStateFlow<State> = MutableStateFlow(initialState)
@@ -36,3 +37,5 @@ abstract class BaseViewModel<State : Any, Event : Any, Action : Any>(
         coroutineScope.clear()
     }
 }
+
+expect abstract class BasePlatformViewModel()

@@ -3,6 +3,7 @@ package com.russhwolf.soluna.mobile
 import android.content.Context
 import android.util.Log
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.lifecycle.ViewModel
 import com.russhwolf.settings.coroutines.FlowSettings
 import com.russhwolf.settings.datastore.DataStoreSettings
 import com.russhwolf.soluna.mobile.db.SolunaDb
@@ -14,9 +15,14 @@ import io.ktor.client.features.logging.MessageLengthLimitingLogger
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import org.koin.core.definition.Definition
+import org.koin.core.instance.InstanceFactory
 import org.koin.core.module.Module
+import org.koin.core.qualifier.Qualifier
+import org.koin.dsl.ScopeDSL
 import org.koin.dsl.module
 import java.io.File
+import org.koin.androidx.viewmodel.dsl.viewModel as androidViewModel
 
 actual val platformModule: Module = module {
     single<SqlDriver> { AndroidSqliteDriver(SolunaDb.Schema, get(), "Soluna.db") }
@@ -40,4 +46,11 @@ actual val platformModule: Module = module {
     }
     single<CoroutineDispatcher>(mainDispatcherQualifier) { Dispatchers.Main }
     single(ioDispatcherQualifier) { Dispatchers.IO }
+}
+
+actual inline fun <reified T : ViewModel> ScopeDSL.viewModel(
+    qualifier: Qualifier?,
+    noinline definition: Definition<T>
+): Pair<Module, InstanceFactory<T>> {
+    return androidViewModel(qualifier, definition)
 }

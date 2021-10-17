@@ -10,6 +10,7 @@ import com.russhwolf.soluna.mobile.repository.LocationRepository
 import com.russhwolf.soluna.mobile.repository.ReminderNotificationRepository
 import com.russhwolf.soluna.mobile.repository.ReminderRepository
 import com.russhwolf.soluna.mobile.repository.UpcomingTimesRepository
+import com.russhwolf.soluna.mobile.screen.BasePlatformViewModel
 import com.russhwolf.soluna.mobile.screen.addlocation.AddLocationViewModel
 import com.russhwolf.soluna.mobile.screen.home.HomeViewModel
 import com.russhwolf.soluna.mobile.screen.locationdetail.LocationDetailViewModel
@@ -18,8 +19,12 @@ import com.russhwolf.soluna.mobile.screen.reminderlist.ReminderListViewModel
 import com.russhwolf.soluna.mobile.screen.settings.SettingsViewModel
 import kotlinx.datetime.Clock
 import org.koin.core.context.startKoin
+import org.koin.core.definition.Definition
+import org.koin.core.instance.InstanceFactory
 import org.koin.core.module.Module
+import org.koin.core.qualifier.Qualifier
 import org.koin.core.qualifier.named
+import org.koin.dsl.ScopeDSL
 import org.koin.dsl.module
 
 fun initKoin(appModule: Module) = startKoin {
@@ -45,13 +50,18 @@ internal val commonModule = module {
     single<ReminderNotificationRepository> { ReminderNotificationRepository.Impl(get(), get(), get(), get()) }
 
     scope(koinUiScopeQualifier) {
-        factory { HomeViewModel(get(), get(), get(), get(mainDispatcherQualifier)) }
-        factory { LocationListViewModel(get(), get(mainDispatcherQualifier)) }
-        factory { AddLocationViewModel(get(), get(), get(), get(mainDispatcherQualifier)) }
-        factory { params -> LocationDetailViewModel(params.get(), get(), get(), get(), get(mainDispatcherQualifier)) }
-        factory { ReminderListViewModel(get(), get(mainDispatcherQualifier)) }
-        factory { SettingsViewModel(get(mainDispatcherQualifier)) }
+        viewModel { HomeViewModel(get(), get(), get(), get(mainDispatcherQualifier)) }
+        viewModel { LocationListViewModel(get(), get(mainDispatcherQualifier)) }
+        viewModel { AddLocationViewModel(get(), get(), get(), get(mainDispatcherQualifier)) }
+        viewModel { params -> LocationDetailViewModel(params.get(), get(), get(), get(), get(mainDispatcherQualifier)) }
+        viewModel { ReminderListViewModel(get(), get(mainDispatcherQualifier)) }
+        viewModel { SettingsViewModel(get(mainDispatcherQualifier)) }
     }
 }
 
 internal expect val platformModule: Module
+
+expect inline fun <reified T : BasePlatformViewModel> ScopeDSL.viewModel(
+    qualifier: Qualifier? = null,
+    noinline definition: Definition<T>
+): Pair<Module, InstanceFactory<T>>

@@ -4,6 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDeepLink
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -17,6 +23,8 @@ import com.russhwolf.soluna.android.ui.screen.SettingsScreen
 import com.russhwolf.soluna.android.ui.theme.SolunaTheme
 import com.russhwolf.soluna.mobile.koinUiScopeQualifier
 import org.koin.androidx.compose.getKoin
+import org.koin.androidx.viewmodel.ViewModelOwner
+import org.koin.androidx.viewmodel.scope.getViewModel
 import org.koin.core.scope.Scope
 import org.koin.dsl.module
 
@@ -54,21 +62,65 @@ fun Scope.SolunaUi() {
     SolunaTheme {
         val navController = rememberNavController()
         NavHost(navController, startDestination = Destination.Home) {
-            composable(Destination.Home) { HomeScreen(get(), navController) }
-            composable(Destination.LocationList) { LocationListScreen(get(), navController) }
-            composable(Destination.AddLocation) { AddLocationScreen(get(), navController) }
-            composable(
-                Destination.LocationDetail.template,
-                arguments = Destination.LocationDetail.arguments
-            ) { backStackEntry ->
-                LocationDetailScreen(
-                    get { Destination.LocationDetail.parameters(backStackEntry.arguments) },
+            composableWithViewModelOwner(Destination.Home) { viewModelOwner, _ ->
+                HomeScreen(
+                    getViewModel(owner = { viewModelOwner }),
                     navController
                 )
             }
-            composable(Destination.ReminderList) { ReminderListScreen(get(), navController) }
-            composable(Destination.Settings) { SettingsScreen(get(), navController) }
+            composableWithViewModelOwner(Destination.LocationList) { viewModelOwner, _ ->
+                LocationListScreen(
+                    getViewModel(owner = { viewModelOwner }),
+                    navController
+                )
+            }
+            composableWithViewModelOwner(Destination.AddLocation) { viewModelOwner, _ ->
+                AddLocationScreen(
+                    getViewModel(owner = { viewModelOwner }),
+                    navController
+                )
+            }
+            composableWithViewModelOwner(
+                Destination.LocationDetail.template,
+                arguments = Destination.LocationDetail.arguments
+            ) { viewModelOwner, backStackEntry ->
+                LocationDetailScreen(
+                    getViewModel(owner = { viewModelOwner }) {
+                        Destination.LocationDetail.parameters(backStackEntry.arguments)
+                    },
+                    navController
+                )
+            }
+            composableWithViewModelOwner(Destination.ReminderList) { viewModelOwner, _ ->
+                ReminderListScreen(
+                    getViewModel(owner = { viewModelOwner }),
+                    navController
+                )
+            }
+            composableWithViewModelOwner(Destination.Settings) { viewModelOwner, _ ->
+                SettingsScreen(
+                    getViewModel(owner = { viewModelOwner }),
+                    navController
+                )
+            }
         }
     }
 }
 
+private fun NavGraphBuilder.composableWithViewModelOwner(
+    route: String,
+    arguments: List<NamedNavArgument> = emptyList(),
+    deepLinks: List<NavDeepLink> = emptyList(),
+    content: @Composable (ViewModelOwner, NavBackStackEntry) -> Unit
+) {
+    composable(route, arguments, deepLinks) { navBackStackEntry ->
+        val viewModelStoreOwner = LocalViewModelStoreOwner.current
+        val savedStateRegistryOwner = LocalSavedStateRegistryOwner.current
+        if (viewModelStoreOwner != null) {
+            content(ViewModelOwner.from(viewModelStoreOwner, savedStateRegistryOwner), navBackStackEntry)
+        } else {
+            // TODO or maybe show some error UI?
+            error("Missing LocalViewModelStoreOwner!")
+        }
+    }
+}
