@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -156,7 +157,7 @@ private fun LocationListAppBar(onNavigateUp: () -> Unit, onAddLocation: () -> Un
     )
 }
 
-class LocationListProvider : PreviewParameterProvider<LocationListViewModel.State> {
+internal class LocationListProvider : PreviewParameterProvider<LocationListViewModel.State> {
     override val values: Sequence<LocationListViewModel.State> = sequenceOf(
         LocationListViewModel.State(
             listOf(
@@ -168,26 +169,14 @@ class LocationListProvider : PreviewParameterProvider<LocationListViewModel.Stat
 }
 
 @Preview(showSystemUi = true)
-@Composable
-fun LocationListScreenContent_Light(
-    @PreviewParameter(provider = LocationListProvider::class)
-    state: LocationListViewModel.State
-) {
-    SolunaTheme {
-        LocationListScreenContent(
-            state = state,
-            onNavigateUp = {},
-            onAddLocation = {},
-            onLocationDetails = {},
-            onSelectLocation = {},
-            onRemoveLocation = {}
-        )
-    }
-}
-
 @Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+// TODO awaiting better landscape preview APIs
+@Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 800, heightDp = 480)
+@Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 800, heightDp = 480, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showSystemUi = true, fontScale = 2f)
+@Preview(showSystemUi = true, fontScale = 2f, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun LocationListScreenContent_Dark(
+fun LocationListScreenContent_Previews(
     @PreviewParameter(provider = LocationListProvider::class)
     state: LocationListViewModel.State
 ) {

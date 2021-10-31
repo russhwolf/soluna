@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -240,79 +241,14 @@ internal class HomeStateProvider : PreviewParameterProvider<HomeViewModel.State>
 }
 
 @Preview(showSystemUi = true)
-@Composable
-fun HomeScreenContent_Portrait_Light(
-    @PreviewParameter(provider = HomeStateProvider::class)
-    state: HomeViewModel.State
-) {
-    SolunaTheme {
-        HomeScreenContent(
-            state = state,
-            onSettingsClick = {}
-        )
-    }
-}
-
 @Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun HomeScreenContent_Portrait_Dark(
-    @PreviewParameter(provider = HomeStateProvider::class)
-    state: HomeViewModel.State
-) {
-    SolunaTheme {
-        HomeScreenContent(
-            state = state,
-            onSettingsClick = {}
-        )
-    }
-}
-
-// TODO awaiting better portrait preview APIs
-@Preview(widthDp = 800, heightDp = 480)
-@Composable
-fun HomeScreenContent_Landscape_Light(
-    @PreviewParameter(provider = HomeStateProvider::class)
-    state: HomeViewModel.State
-) {
-    SolunaTheme {
-        HomeScreenContent(
-            state = state,
-            onSettingsClick = {}
-        )
-    }
-}
-
-@Preview(widthDp = 800, heightDp = 480, uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun HomeScreenContent_Landscape_Dark(
-    @PreviewParameter(provider = HomeStateProvider::class)
-    state: HomeViewModel.State
-) {
-    SolunaTheme {
-        HomeScreenContent(
-            state = state,
-            onSettingsClick = {}
-        )
-    }
-}
-
+// TODO awaiting better landscape preview APIs
+@Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 800, heightDp = 480)
+@Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 800, heightDp = 480, uiMode = UI_MODE_NIGHT_YES)
 @Preview(showSystemUi = true, fontScale = 2f)
-@Composable
-fun HomeScreenContent_Portrait_Light_LargeText(
-    @PreviewParameter(provider = HomeStateProvider::class)
-    state: HomeViewModel.State
-) {
-    SolunaTheme {
-        HomeScreenContent(
-            state = state,
-            onSettingsClick = {}
-        )
-    }
-}
-
 @Preview(showSystemUi = true, fontScale = 2f, uiMode = UI_MODE_NIGHT_YES)
 @Composable
-fun HomeScreenContent_Portrait_Dark_LargeText(
+fun HomeScreenContent_Previews(
     @PreviewParameter(provider = HomeStateProvider::class)
     state: HomeViewModel.State
 ) {
@@ -323,5 +259,3 @@ fun HomeScreenContent_Portrait_Dark_LargeText(
         )
     }
 }
-
-

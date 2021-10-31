@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -277,25 +278,14 @@ private fun GeocodeDialog(
 }
 
 @Preview(showSystemUi = true)
-@Composable
-fun AddLocationScreenContent_Portrait_Light() {
-    SolunaTheme {
-        AddLocationScreenContent(
-            label = remember { mutableStateOf("Somewhere") },
-            latitude = remember { mutableStateOf("62.831") },
-            longitude = remember { mutableStateOf("-27.182") },
-            timeZone = remember { mutableStateOf("") },
-            onNavigateUp = {},
-            onAddLocation = {},
-            onGeocodeLocation = {},
-            onDeviceLocation = {}
-        )
-    }
-}
-
 @Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES)
+// TODO awaiting better landscape preview APIs
+@Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 800, heightDp = 480)
+@Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 800, heightDp = 480, uiMode = UI_MODE_NIGHT_YES)
+@Preview(showSystemUi = true, fontScale = 2f)
+@Preview(showSystemUi = true, fontScale = 2f, uiMode = UI_MODE_NIGHT_YES)
 @Composable
-fun AddLocationScreenContent_Portrait_Dark() {
+fun AddLocationScreenContent_Previews() {
     SolunaTheme {
         AddLocationScreenContent(
             label = remember { mutableStateOf("Somewhere") },

@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -267,7 +268,7 @@ private fun getDescriptionStrings(): List<String> {
     return split.zip(matches) { a, b -> a to b }.flatMap { listOf(it.first, it.second) } + split.drop(matches.size)
 }
 
-class ReminderListProvider : PreviewParameterProvider<ReminderListViewModel.State> {
+internal class ReminderListProvider : PreviewParameterProvider<ReminderListViewModel.State> {
     override val values: Sequence<ReminderListViewModel.State> = sequenceOf(
         ReminderListViewModel.State(
             listOf(
@@ -279,29 +280,14 @@ class ReminderListProvider : PreviewParameterProvider<ReminderListViewModel.Stat
 }
 
 @Preview(showSystemUi = true)
-@Composable
-fun ReminderListScreenContent_Light(
-    @PreviewParameter(provider = ReminderListProvider::class)
-    state: ReminderListViewModel.State
-) {
-    SolunaTheme {
-        Surface(color = MaterialTheme.colors.background) {
-            ReminderListScreenContent(
-                state = state,
-                onNavigateUp = {},
-                onAddReminder = { _, _ -> },
-                onSetReminderType = { _, _ -> },
-                onSetReminderMinutesBefore = { _, _ -> },
-                onSetReminderEnabled = { _, _ -> },
-                onRemoveReminder = {},
-            )
-        }
-    }
-}
-
 @Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+// TODO awaiting better landscape preview APIs
+@Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 800, heightDp = 480)
+@Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 800, heightDp = 480, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showSystemUi = true, fontScale = 2f)
+@Preview(showSystemUi = true, fontScale = 2f, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ReminderListScreenContent_Dark(
+fun ReminderListScreenContent_Previews(
     @PreviewParameter(provider = ReminderListProvider::class)
     state: ReminderListViewModel.State
 ) {
@@ -319,6 +305,3 @@ fun ReminderListScreenContent_Dark(
         }
     }
 }
-
-
-

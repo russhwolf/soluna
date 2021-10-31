@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -279,8 +280,14 @@ internal class LocationDetailStateProvider : PreviewParameterProvider<LocationDe
 }
 
 @Preview(showSystemUi = true)
+@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES)
+// TODO awaiting better landscape preview APIs
+@Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 800, heightDp = 480)
+@Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 800, heightDp = 480, uiMode = UI_MODE_NIGHT_YES)
+@Preview(showSystemUi = true, fontScale = 2f)
+@Preview(showSystemUi = true, fontScale = 2f, uiMode = UI_MODE_NIGHT_YES)
 @Composable
-fun LocationDetailScreenContent_Portrait_Light(
+fun LocationDetailScreenContent_Previews(
     @PreviewParameter(provider = LocationDetailStateProvider::class)
     state: LocationDetailViewModel.State
 ) {
@@ -294,18 +301,3 @@ fun LocationDetailScreenContent_Portrait_Light(
     }
 }
 
-@Preview(showSystemUi = true, uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun LocationDetailScreenContent_Portrait_Dark(
-    @PreviewParameter(provider = LocationDetailStateProvider::class)
-    state: LocationDetailViewModel.State
-) {
-    SolunaTheme {
-        LocationDetailScreenContent(
-            state = state,
-            onNavigateUp = {},
-            onDeleteLocation = {},
-            onSelectLocation = {}
-        )
-    }
-}
