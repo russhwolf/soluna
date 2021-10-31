@@ -62,3 +62,21 @@ struct LocationListContent<LocationDetailLink: View> : View {
         }
     }
 }
+
+struct LocationListContent_Previews : PreviewProvider {
+    private static let locations = [
+        SelectableLocationSummary(id: 0, label: "Home", selected: true),
+        SelectableLocationSummary(id: 1, label: "Away", selected: false)
+    ]
+    
+    static var previews: some View {
+        LocationListContent(
+            state: LocationListViewModel.State(locations: locations),
+            createLocationDetailLink: { _ in EmptyView() },
+            onAddLocationClick: {},
+            onDeleteLocationClick: { _ in },
+            onSelectLocationClick: { _ in },
+            onLocationDetailClick: { _ in }
+        ).screenPreview()
+    }
+}

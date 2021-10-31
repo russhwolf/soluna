@@ -89,3 +89,36 @@ struct AddLocationContent : View {
         }
     }
 }
+
+struct AddLocationContent_Previews : PreviewProvider {
+    
+    @State
+    static var label = "Somewhere"
+    
+    @State
+    static var latitude = "62.831"
+    
+    @State
+    static var longitude = "-27.182"
+    
+    @State
+    static var timeZone = ""
+    
+    static var previews: some View {
+        AddLocationContent(
+            state: AddLocationViewModel.State(
+                latitudeFormatError: false,
+                longitudeFormatError: false,
+                geocodeError: false,
+                deviceLocationError: nil
+            ),
+            onSubmitClick: { _, _, _, _ in },
+            onGeocodeClick: { _ in },
+            onGpsClick: {},
+            label: $label,
+            latitude: $latitude,
+            longitude: $longitude,
+            timeZone: $timeZone
+        ).screenPreview()
+    }
+}

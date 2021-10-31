@@ -64,3 +64,37 @@ struct LocationDetailContent : View {
         }
     }
 }
+
+struct LocationDetailContent_Previews : PreviewProvider {
+    private static let timeZone =
+        Shared.TimeZone.Companion().of(zoneId: "America/New_York")
+    
+    static var previews: some View {
+        LocationDetailContent(
+            state: LocationDetailViewModel.StatePopulated(
+                location: SelectableLocation(
+                    id: 0,
+                    label: "Home",
+                    latitude: 27.183,
+                    longitude: 62.832,
+                    timeZone: timeZone.id,
+                    selected: true
+                ),
+                currentTime: LocalDateTime(year: 2021, monthNumber: 1, dayOfMonth: 1, hour: 11, minute: 0, second: 0, nanosecond: 0).toInstant(timeZone: timeZone),
+                sunriseTime: LocalDateTime(year: 2021, monthNumber: 1, dayOfMonth: 1, hour: 6, minute: 0, second: 0, nanosecond: 0).toInstant(timeZone: timeZone),
+                sunsetTime: LocalDateTime(year: 2021, monthNumber: 1, dayOfMonth: 1, hour: 20, minute: 0, second: 0, nanosecond: 0).toInstant(timeZone: timeZone),
+                moonriseTime: LocalDateTime(year: 2021, monthNumber: 1, dayOfMonth: 1, hour: 8, minute: 30, second: 0, nanosecond: 0).toInstant(timeZone: timeZone),
+                moonsetTime: LocalDateTime(year: 2021, monthNumber: 1, dayOfMonth: 1, hour: 22, minute: 0, second: 0, nanosecond: 0).toInstant(timeZone: timeZone),
+                timeZone: timeZone
+            ),
+            onDeleteClick: {},
+            onSelectLocationClick: {}
+        ).screenPreview()
+        
+        HomeContent(state: HomeViewModel.StateLoading())
+            .screenPreview()
+
+        HomeContent(state: HomeViewModel.StateNoLocationSelected())
+            .screenPreview()
+    }
+}

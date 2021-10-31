@@ -120,3 +120,21 @@ extension ReminderType : Identifiable {
         }
     }
 }
+
+struct ReminderListContent_Previews : PreviewProvider {
+    private static let reminders = [
+        Reminder(id: 0, type: ReminderType.sunset, minutesBefore: 120, enabled: true),
+        Reminder(id: 1, type: ReminderType.sunrise, minutesBefore: 15, enabled: false)
+    ]
+    
+    static var previews: some View {
+        ReminderListContent(
+            state: ReminderListViewModel.State(reminders: reminders),
+            onAddReminderClick: {},
+            onDeleteReminderClick: { _ in },
+            onUpdateReminderEnabled: { _, _ in },
+            onUpdateReminderMinutesBefore: { _, _ in },
+            onUpdateReminderType: { _, _ in }
+        ).screenPreview()
+    }
+}

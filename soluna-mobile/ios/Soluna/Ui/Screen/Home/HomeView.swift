@@ -64,3 +64,28 @@ struct HomeContent : View {
         }
     }
 }
+
+struct HomeContent_Previews : PreviewProvider {
+    private static let timeZone =
+        Shared.TimeZone.Companion().of(zoneId: "America/New_York")
+    
+    static var previews: some View {
+       HomeContent(state: HomeViewModel.StatePopulated(
+            locationName: "Home",
+            currentTime: LocalDateTime(year: 2021, monthNumber: 1, dayOfMonth: 1, hour: 11, minute: 0, second: 0, nanosecond: 0).toInstant(timeZone: timeZone),
+            sunriseTime: LocalDateTime(year: 2021, monthNumber: 1, dayOfMonth: 1, hour: 6, minute: 0, second: 0, nanosecond: 0).toInstant(timeZone: timeZone),
+            sunsetTime: LocalDateTime(year: 2021, monthNumber: 1, dayOfMonth: 1, hour: 20, minute: 0, second: 0, nanosecond: 0).toInstant(timeZone: timeZone),
+            moonriseTime: LocalDateTime(year: 2021, monthNumber: 1, dayOfMonth: 1, hour: 8, minute: 30, second: 0, nanosecond: 0).toInstant(timeZone: timeZone),
+            moonsetTime: LocalDateTime(year: 2021, monthNumber: 1, dayOfMonth: 1, hour: 22, minute: 0, second: 0, nanosecond: 0).toInstant(timeZone: timeZone),
+            timeZone: timeZone,
+            latitude: 27.183,
+            longitude: 62.832
+        )).screenPreview()
+        
+        HomeContent(state: HomeViewModel.StateLoading())
+            .screenPreview()
+
+        HomeContent(state: HomeViewModel.StateNoLocationSelected())
+            .screenPreview()
+    }
+}

@@ -25,11 +25,18 @@ struct SettingsContent : View {
     let onNavigateToReminderList: () -> Void
 
     var body: some View {
-        VStack {
+        List {
             Button("Locations", action: onNavigateToLocationList)
             Button("Reminders", action: onNavigateToReminderList)
         }
     }
 }
 
-
+struct SettingsContent_Previews : PreviewProvider {
+    static var previews: some View {
+        SettingsContent(
+            onNavigateToLocationList: {},
+            onNavigateToReminderList: {}
+        ).screenPreview()
+    }
+}
