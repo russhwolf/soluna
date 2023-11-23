@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.workmanager.dsl.worker
 import org.koin.androidx.workmanager.koin.workManagerFactory
-import org.koin.core.KoinExperimentalAPI
 import org.koin.dsl.module
 
 class SolunaApplication : Application() {
@@ -29,7 +28,6 @@ class SolunaApplication : Application() {
         val koinApplication = initKoin(module {
             single<Context> { applicationContext }
 
-            @OptIn(KoinExperimentalAPI::class)
             worker {
                 ScheduleReminderNotificationsWorker(get(), get(), get(), reminderNotificationScheduler)
             }
@@ -39,7 +37,6 @@ class SolunaApplication : Application() {
             }
         })
 
-        @OptIn(KoinExperimentalAPI::class)
         koinApplication.workManagerFactory()
 
         koinApplication.koin.get<ReminderNotificationRepository>().getUpcomingNotifications()

@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
-import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 class HomeViewModel(
     private val locationRepository: LocationRepository,
@@ -29,7 +29,7 @@ class HomeViewModel(
                 combine(
                     flowOf(selectedLocation),
                     upcomingTimesRepository.getUpcomingTimes(selectedLocation),
-                    currentTimeRepository.getCurrentTimeFlow(Duration.seconds(1))
+                    currentTimeRepository.getCurrentTimeFlow(1.seconds)
                 ) { location, upcomingTimes, instant ->
                     val timeZone = if (location.timeZone in TimeZone.availableZoneIds) {
                         TimeZone.of(location.timeZone)

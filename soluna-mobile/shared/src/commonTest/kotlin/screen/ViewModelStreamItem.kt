@@ -1,6 +1,6 @@
 package com.russhwolf.soluna.mobile.screen
 
-import app.cash.turbine.FlowTurbine
+import app.cash.turbine.TurbineTestContext
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlin.test.assertTrue
@@ -18,13 +18,13 @@ val <State : Any, Event : Any, Action : Any> BaseViewModel<State, Event, Action>
         events.map { ViewModelStreamItem.Event(it) }
     )
 
-suspend inline fun <State, Event> FlowTurbine<ViewModelStreamItem<State, Event>>.expectViewModelState(): State {
+suspend inline fun <State, Event> TurbineTestContext<ViewModelStreamItem<State, Event>>.expectViewModelState(): State {
     val item = awaitItem()
     assertTrue(item is ViewModelStreamItem.State<State>)
     return item.state
 }
 
-suspend inline fun <State, Event> FlowTurbine<ViewModelStreamItem<State, Event>>.expectViewModelEvent(): Event {
+suspend inline fun <State, Event> TurbineTestContext<ViewModelStreamItem<State, Event>>.expectViewModelEvent(): Event {
     val item = awaitItem()
     assertTrue(item is ViewModelStreamItem.Event<Event>)
     return item.event

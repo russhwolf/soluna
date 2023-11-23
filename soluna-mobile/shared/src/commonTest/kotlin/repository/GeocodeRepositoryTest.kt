@@ -2,8 +2,8 @@ package com.russhwolf.soluna.mobile.repository
 
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.suspendTest
-import io.ktor.client.features.logging.EMPTY
-import io.ktor.client.features.logging.Logger
+import io.ktor.client.plugins.logging.EMPTY
+import io.ktor.client.plugins.logging.Logger
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

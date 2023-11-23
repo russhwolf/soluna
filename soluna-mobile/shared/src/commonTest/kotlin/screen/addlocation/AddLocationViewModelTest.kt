@@ -1,7 +1,7 @@
 package com.russhwolf.soluna.mobile.screen.addlocation
 
 import app.cash.turbine.test
-import com.russhwolf.settings.MockSettings
+import com.russhwolf.settings.MapSettings
 import com.russhwolf.settings.coroutines.toFlowSettings
 import com.russhwolf.soluna.mobile.api.GoogleApiClient
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
@@ -18,8 +18,8 @@ import com.russhwolf.soluna.mobile.screen.expectViewModelEvent
 import com.russhwolf.soluna.mobile.screen.expectViewModelState
 import com.russhwolf.soluna.mobile.screen.stateAndEvents
 import com.russhwolf.soluna.mobile.suspendTest
-import io.ktor.client.features.logging.EMPTY
-import io.ktor.client.features.logging.Logger
+import io.ktor.client.plugins.logging.EMPTY
+import io.ktor.client.plugins.logging.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlin.test.AfterTest
@@ -28,7 +28,7 @@ import kotlin.test.assertEquals
 
 class AddLocationViewModelTest {
     private val driver = createInMemorySqlDriver()
-    private val settings = MockSettings().toFlowSettings(Dispatchers.Unconfined)
+    private val settings = MapSettings().toFlowSettings(Dispatchers.Unconfined)
     private val locationRepository =
         LocationRepository.Impl(
             createDatabase(driver),

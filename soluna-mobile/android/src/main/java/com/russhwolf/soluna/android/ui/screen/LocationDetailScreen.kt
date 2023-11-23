@@ -30,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.russhwolf.soluna.android.R
 import com.russhwolf.soluna.android.extensions.toDisplayTime
@@ -78,13 +77,13 @@ private fun LocationDetailScreenContent(
                 onDeleteLocation = onDeleteLocation
             )
         }
-    ) {
+    ) { paddingValues ->
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(paddingValues)
         ) {
             when (state) {
                 LocationDetailViewModel.State.Loading -> Loading()

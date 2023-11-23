@@ -1,12 +1,12 @@
 package com.russhwolf.soluna.mobile.repository
 
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
+import app.cash.sqldelight.coroutines.mapToOneOrNull
 import com.russhwolf.settings.coroutines.FlowSettings
 import com.russhwolf.soluna.mobile.db.Location
 import com.russhwolf.soluna.mobile.db.LocationSummary
 import com.russhwolf.soluna.mobile.db.SolunaDb
-import com.squareup.sqldelight.runtime.coroutines.asFlow
-import com.squareup.sqldelight.runtime.coroutines.mapToList
-import com.squareup.sqldelight.runtime.coroutines.mapToOneOrNull
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine

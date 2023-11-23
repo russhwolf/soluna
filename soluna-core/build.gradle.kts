@@ -7,6 +7,7 @@ kotlin {
     jvm()
     iosArm64()
     iosX64()
+    iosSimulatorArm64()
     sourceSets {
         all {
             languageSettings.apply {

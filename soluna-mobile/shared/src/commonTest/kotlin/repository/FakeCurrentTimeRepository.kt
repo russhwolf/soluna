@@ -14,6 +14,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(DelicateCoroutinesApi::class)
 class FakeCurrentTimeRepository(
@@ -37,7 +38,7 @@ class FakeCurrentTimeRepository(
 
     override fun getCurrentTimeFlow(period: Duration): Flow<Instant> = currentInstant
 
-    suspend fun tick(duration: Duration = Duration.seconds(0)) {
+    suspend fun tick(duration: Duration = 0.seconds) {
         ticker.emit(duration)
     }
 }

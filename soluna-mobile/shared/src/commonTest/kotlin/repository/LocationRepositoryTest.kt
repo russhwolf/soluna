@@ -1,7 +1,7 @@
 package com.russhwolf.soluna.mobile.repository
 
 import app.cash.turbine.test
-import com.russhwolf.settings.MockSettings
+import com.russhwolf.settings.MapSettings
 import com.russhwolf.settings.coroutines.toFlowSettings
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.LocationSummary
@@ -10,13 +10,17 @@ import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.repository.LocationRepository.Impl.Companion.KEY_SELECTED_LOCATION_ID
 import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
-import kotlin.test.*
+import kotlin.test.AfterTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class LocationRepositoryTest {
 
     private val driver = createInMemorySqlDriver()
     private val database = createDatabase(driver)
-    private val settings = MockSettings().toFlowSettings(Dispatchers.Unconfined)
+    private val settings = MapSettings().toFlowSettings(Dispatchers.Unconfined)
     private val repository = LocationRepository.Impl(database, settings, Dispatchers.Unconfined)
 
     @Test

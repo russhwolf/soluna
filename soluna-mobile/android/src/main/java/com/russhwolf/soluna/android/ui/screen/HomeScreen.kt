@@ -75,11 +75,11 @@ private fun HomeScreenContent(
                 onSettingsClick = onSettingsClick
             )
         }
-    ) {
+    ) { paddingValues ->
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().padding(paddingValues)
         ) {
             when (state) {
                 HomeViewModel.State.Loading -> LoadingContent()

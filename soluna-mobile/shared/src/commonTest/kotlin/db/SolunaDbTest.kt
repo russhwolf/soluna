@@ -1,7 +1,7 @@
 package com.russhwolf.soluna.mobile.db
 
+import app.cash.sqldelight.db.SqlDriver
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
-import com.squareup.sqldelight.db.SqlDriver
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

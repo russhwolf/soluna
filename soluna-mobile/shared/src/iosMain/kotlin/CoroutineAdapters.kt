@@ -9,24 +9,19 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlin.native.concurrent.freeze
 
 class FlowAdapter<T : Any>(
     private val scope: CoroutineScope,
     private val flow: Flow<T>
 ) {
-    init {
-        freeze()
-    }
-
     fun subscribe(
         onEvent: (T) -> Unit,
         onError: (Throwable) -> Unit,
         onComplete: () -> Unit
     ): Job =
         flow
-            .onEach { onEvent(it.freeze()) }
-            .catch { onError(it.freeze()) }
+            .onEach { onEvent(it) }
+            .catch { onError(it) }
             .onCompletion { onComplete() }
             .launchIn(scope)
 }
@@ -35,21 +30,17 @@ class SuspendAdapter<T : Any>(
     private val scope: CoroutineScope,
     private val suspender: suspend () -> T
 ) {
-    init {
-        freeze()
-    }
-
     fun subscribe(
         onSuccess: (T) -> Unit,
         onError: (Throwable) -> Unit
     ): Job =
         scope.launch {
             try {
-                onSuccess(suspender().freeze())
+                onSuccess(suspender())
             } catch (error: CancellationException) {
                 // Don't call error block on cancellation
             } catch (error: Throwable) {
-                onError(error.freeze())
+                onError(error)
             }
-        }.freeze()
+        }
 }

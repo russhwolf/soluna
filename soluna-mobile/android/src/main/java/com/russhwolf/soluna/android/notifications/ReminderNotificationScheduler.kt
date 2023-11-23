@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import androidx.core.app.AlarmManagerCompat
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.getSystemService
@@ -92,12 +93,14 @@ class ReminderNotificationScheduler(context: Context) {
             it[existingAlarmsKey] = it[existingAlarmsKey].orEmpty() + showRequestCode.toString()
         }
 
-        alarmManager.setExactAndAllowWhileIdle(
+        AlarmManagerCompat.setExactAndAllowWhileIdle(
+            alarmManager,
             AlarmManager.RTC_WAKEUP,
             reminderNotification.notificationTime.toEpochMilliseconds(),
             showPendingIntent
         )
-        alarmManager.setExactAndAllowWhileIdle(
+        AlarmManagerCompat.setExactAndAllowWhileIdle(
+            alarmManager,
             AlarmManager.RTC_WAKEUP,
             reminderNotification.eventTime.toEpochMilliseconds(),
             hidePendingIntent

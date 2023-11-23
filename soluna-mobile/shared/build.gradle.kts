@@ -1,7 +1,7 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.util.Properties
+import java.util.*
 
 plugins {
     kotlin("multiplatform")
@@ -24,10 +24,13 @@ android {
 }
 
 kotlin {
-    android()
-    val isDevice = System.getenv("SDK_NAME")?.startsWith("iphoneos") == true
-    val ios: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = if (isDevice) ::iosArm64 else ::iosX64
-    ios("ios") {
+    androidTarget()
+
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+    targets.withType<KotlinNativeTarget>().configureEach {
         binaries {
             framework {
                 baseName = "Shared"
@@ -61,7 +64,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.sqlDelight.coroutines)
                 implementation(libs.bundles.kotlinx.serialization.common)
-                implementation(libs.bundles.ktor.common)
+                implementation(libs.bundles.ktor.client.common)
                 api(libs.kotlinx.dateTime)
                 implementation(libs.stately.core)
                 implementation(libs.koin.core)
@@ -72,19 +75,19 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
 
-                implementation(libs.ktor.mock)
+                implementation(libs.ktor.client.mock)
                 implementation(libs.koin.test)
                 implementation(libs.settings.test)
                 implementation(libs.turbine)
             }
         }
-        val androidMain by getting {
+        androidMain {
             dependencies {
                 implementation(libs.kotlinx.coroutines.android)
 
                 implementation(libs.sqlDelight.android)
 
-                implementation(libs.ktor.android)
+                implementation(libs.ktor.client.android)
 
                 implementation(libs.koin.android)
 
@@ -96,7 +99,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.playServices)
             }
         }
-        val androidTest by getting {
+        val androidUnitTest by getting {
             dependencies {
                 implementation(libs.androidx.test.core)
                 implementation(libs.androidx.test.junit)
@@ -105,14 +108,13 @@ kotlin {
                 implementation(libs.sqlDelight.jvm)
             }
         }
-        val iosMain by getting {
+        iosMain {
             dependencies {
-                implementation(libs.kotlinx.coroutines.core.strict)
                 implementation(libs.sqlDelight.native)
-                implementation(libs.ktor.ios)
+                implementation(libs.ktor.client.ios)
             }
         }
-        val iosTest by getting {
+        iosTest {
             dependencies {
             }
         }
@@ -138,16 +140,18 @@ buildkonfig {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "17"
 }
 
 sqldelight {
-    database("SolunaDb") {
-        packageName = "com.russhwolf.soluna.mobile.db"
+    databases.create("SolunaDb") {
+        packageName.set("com.russhwolf.soluna.mobile.db")
     }
 }
 
 android {
+    namespace = "com.russhwolf.soluna.mobile.shared"
+
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -156,22 +160,7 @@ android {
     testOptions.unitTests.isIncludeAndroidResources = true
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
-
-val packForXcode by tasks.creating(Sync::class) {
-    group = "build"
-    val mode = System.getenv("CONFIGURATION") ?: "DEBUG"
-    val sdkName = System.getenv("SDK_NAME") ?: "iphonesimulator"
-    val targetName = "ios"// + if (sdkName.startsWith("iphoneos")) "Arm64" else "X64"
-    val framework = kotlin.targets.getByName<KotlinNativeTarget>(targetName).binaries.getFramework(mode)
-    inputs.property("mode", mode)
-    dependsOn(framework.linkTask)
-    val targetDir = File(buildDir, "xcode-frameworks")
-    from({ framework.outputDirectory })
-    into(targetDir)
-}
-
-tasks.getByName("build").dependsOn(packForXcode)

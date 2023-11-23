@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -24,7 +24,6 @@
 		4680CABE266C630B009F41FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4680CABD266C630B009F41FA /* LaunchScreen.storyboard */; };
 		4680CAC4266C69BA009F41FA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4680CAC3266C69BA009F41FA /* ContentView.swift */; };
 		469AF5C126195981005D00C8 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 469AF5C026195981005D00C8 /* Shared.framework */; };
-		469AF5C226195981005D00C8 /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 469AF5C026195981005D00C8 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		469AF5CF261A8F3F005D00C8 /* CombineAdapters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 469AF5CE261A8F3F005D00C8 /* CombineAdapters.swift */; };
 		46A032782713906600403037 /* NavigationTrigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A032772713906600403037 /* NavigationTrigger.swift */; };
 		46A0DE67271937EF00EC4638 /* BackNavigationTrigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A0DE66271937EF00EC4638 /* BackNavigationTrigger.swift */; };
@@ -68,7 +67,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				469AF5C226195981005D00C8 /* Shared.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -113,6 +111,7 @@
 		46C759F9261FF379009FFEB5 /* ObservableHomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableHomeViewModel.swift; sourceTree = "<group>"; };
 		46C759FF261FF8A6009FFEB5 /* ObservableLocationListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableLocationListViewModel.swift; sourceTree = "<group>"; };
 		46C75A03261FF8CF009FFEB5 /* ObservableAddLocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableAddLocationViewModel.swift; sourceTree = "<group>"; };
+		46D7578E2B0F0C2D0039C522 /* Shared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Shared.framework; path = "../shared/build/xcode-frameworks/Debug/iphonesimulator16.4/Shared.framework"; sourceTree = "<group>"; };
 		46E7100A262254B3004DC8FE /* DateTimeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTimeExtensions.swift; sourceTree = "<group>"; };
 		46E7101B26229F77004DC8FE /* ObservableLocationDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableLocationDetailViewModel.swift; sourceTree = "<group>"; };
 		46E710212622A09C004DC8FE /* LocationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationDetailView.swift; sourceTree = "<group>"; };
@@ -156,6 +155,7 @@
 		463BA3DF2619571F008BB17B = {
 			isa = PBXGroup;
 			children = (
+				46D7578E2B0F0C2D0039C522 /* Shared.framework */,
 				46A0DE77271A33FA00EC4638 /* commonMain */,
 				46A0DE76271A33FA00EC4638 /* iosMain */,
 				463BA3EA2619571F008BB17B /* Soluna */,
@@ -442,6 +442,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		469AF5B526195861005D00C8 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -455,7 +456,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$SRCROOT/../..\"\n./gradlew :soluna-mobile:shared:packForXcode -PXCODE_CONFIGURATION=${CONFIGURATION}\n";
+			shellScript = "cd \"$SRCROOT/../..\"\n./gradlew :soluna-mobile:shared:embedAndSignAppleFrameworkForXcode\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -650,12 +651,18 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Soluna/Preview Content\"";
 				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
 				ENABLE_PREVIEWS = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks";
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				INFOPLIST_FILE = Soluna/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					Shared,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.russhwolf.Soluna;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -673,12 +680,18 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Soluna/Preview Content\"";
 				DEVELOPMENT_TEAM = QDQ7CWKQQ6;
 				ENABLE_PREVIEWS = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks";
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)";
 				INFOPLIST_FILE = Soluna/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					Shared,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.russhwolf.Soluna;
 				PRODUCT_NAME = "$(TARGET_NAME)";

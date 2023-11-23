@@ -1,10 +1,10 @@
 package com.russhwolf.soluna.mobile.repository
 
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
 import com.russhwolf.soluna.mobile.db.Reminder
 import com.russhwolf.soluna.mobile.db.ReminderType
 import com.russhwolf.soluna.mobile.db.SolunaDb
-import com.squareup.sqldelight.runtime.coroutines.asFlow
-import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged

@@ -1,8 +1,8 @@
 package com.russhwolf.soluna.mobile
 
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.russhwolf.soluna.mobile.db.SolunaDb
-import com.squareup.sqldelight.db.SqlDriver
-import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import kotlinx.coroutines.CoroutineScope
 import kotlin.coroutines.CoroutineContext
 

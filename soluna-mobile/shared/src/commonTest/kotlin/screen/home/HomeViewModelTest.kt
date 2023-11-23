@@ -1,7 +1,7 @@
 package com.russhwolf.soluna.mobile.screen.home
 
 import app.cash.turbine.test
-import com.russhwolf.settings.MockSettings
+import com.russhwolf.settings.MapSettings
 import com.russhwolf.settings.coroutines.toFlowSettings
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.Location
@@ -26,7 +26,7 @@ import kotlinx.datetime.toInstant
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 
 class HomeViewModelTest {
     private var locations: Array<Location> = emptyArray()
@@ -39,7 +39,7 @@ class HomeViewModelTest {
         database.configureMockLocationData(*locations)
         LocationRepository.Impl(database, settings, Dispatchers.Unconfined)
     }
-    private val settings = MockSettings().toFlowSettings(Dispatchers.Unconfined)
+    private val settings = MapSettings().toFlowSettings(Dispatchers.Unconfined)
     private val astronomicalDataRepository = object : AstronomicalDataRepository {
         override fun getTimes(date: LocalDate, zone: TimeZone, latitude: Double, longitude: Double) =
             AstronomicalData(
@@ -93,7 +93,7 @@ class HomeViewModelTest {
             )
             expectNoEvents()
 
-            clockRepository.tick(Duration.minutes(1))
+            clockRepository.tick(1.minutes)
             assertEquals(
                 HomeViewModel.State.Populated(
                     locationName = "Home",
@@ -110,7 +110,7 @@ class HomeViewModelTest {
             )
             expectNoEvents()
 
-            clockRepository.tick(Duration.minutes(1))
+            clockRepository.tick(1.minutes)
             assertEquals(
                 HomeViewModel.State.Populated(
                     locationName = "Home",

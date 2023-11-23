@@ -3,6 +3,7 @@ package com.russhwolf.soluna.android.ui.screen
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -48,8 +49,9 @@ private fun SettingsScreenContent(
 ) {
     Scaffold(
         topBar = { SettingsAppBar(onNavigateUp = onNavigateUp) }
-    ) {
+    ) { paddingValues ->
         SettingsList(
+            modifier = Modifier.padding(paddingValues),
             onLocationsClick = onLocationsClick,
             onRemindersClick = onRemindersClick
         )
@@ -69,8 +71,8 @@ private fun SettingsAppBar(onNavigateUp: () -> Unit) {
 }
 
 @Composable
-private fun SettingsList(onLocationsClick: () -> Unit, onRemindersClick: () -> Unit) {
-    Column {
+private fun SettingsList(modifier: Modifier, onLocationsClick: () -> Unit, onRemindersClick: () -> Unit) {
+    Column(modifier) {
         ListItem(Modifier.clickable { onLocationsClick() }) {
             Text(stringResource(R.string.settings_action_locations))
         }

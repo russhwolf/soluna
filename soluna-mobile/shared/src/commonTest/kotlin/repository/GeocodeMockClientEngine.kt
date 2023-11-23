@@ -24,17 +24,19 @@ fun createGeocodeMockClientEngine(geocodeMap: Map<String, GeocodeData> = mutable
 
     fun getResponseBody(httpRequestData: HttpRequestData): String? {
         return when (httpRequestData.url.encodedPath) {
-            "place/autocomplete/json" -> {
+            "/maps/api/place/autocomplete/json" -> {
                 val query = httpRequestData.url.parameters["input"]
                 val id = ids[query] ?: return null
                 """{ "predictions" : [{ "place_id" : "$id" }] }"""
             }
-            "geocode/json" -> {
+
+            "/maps/api/geocode/json" -> {
                 val placeId = httpRequestData.url.parameters["place_id"]
                 val location = locations[placeId] ?: return null
                 """{ "results" : [{ "geometry" : { "location" : { "lat" : ${location.first}, "lng" : ${location.second} } } }] }"""
             }
-            "timezone/json" -> {
+
+            "/maps/api/timezone/json" -> {
                 val location = httpRequestData.url.parameters["location"]
                 val timeZone = timeZones[location] ?: return null
                 """{ "timeZoneId" : "$timeZone" }"""

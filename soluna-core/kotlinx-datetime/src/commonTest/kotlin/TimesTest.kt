@@ -14,6 +14,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 
@@ -80,7 +82,7 @@ class TimesTest {
                 assertNearEquals(
                     expected,
                     actual ?: Instant.fromEpochMilliseconds(0),
-                    Duration.seconds(60)
+                    60.seconds
                 )
             }
         }
@@ -144,7 +146,7 @@ class TimesTest {
                 assertNearEquals(
                     expected ?: Instant.fromEpochMilliseconds(0),
                     actual ?: Instant.fromEpochMilliseconds(0),
-                    Duration.minutes(5) + Duration.seconds(30)
+                    5.minutes + 30.seconds
                 )
             }
         }

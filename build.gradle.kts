@@ -5,14 +5,14 @@ plugins {
     alias(libs.plugins.android.library) apply false
 }
 
-subprojects {
+allprojects {
     repositories {
         google()
         mavenCentral()
     }
 
     tasks.withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "17"
     }
 
     tasks.withType<AbstractTestTask> {

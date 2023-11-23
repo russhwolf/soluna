@@ -1,6 +1,7 @@
 package com.russhwolf.soluna.mobile.repository
 
 import kotlinx.atomicfu.atomic
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Deferred
@@ -14,8 +15,9 @@ import platform.CoreLocation.kCLAuthorizationStatusAuthorizedAlways
 import platform.CoreLocation.kCLAuthorizationStatusAuthorizedWhenInUse
 import platform.Foundation.NSError
 import platform.darwin.NSObject
-import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
+@OptIn(ExperimentalForeignApi::class)
 class IosDeviceLocationService : DeviceLocationService {
     private val locationDelegate = LocationDelegate()
     private val locationManager = CLLocationManager().also { it.delegate = locationDelegate }
@@ -43,13 +45,13 @@ class IosDeviceLocationService : DeviceLocationService {
     private suspend fun requestLocationPermission(): Boolean {
         val deferred = locationDelegate.getAuthorizationAsync()
         locationManager.requestWhenInUseAuthorization()
-        return withTimeoutOrNull(Duration.seconds(10)) { deferred.await().hasLocationPermission } ?: false
+        return withTimeoutOrNull(10.seconds) { deferred.await().hasLocationPermission } ?: false
     }
 
     private suspend fun getCurrentDeviceLocationUnsafe(): DeviceLocationResult {
         val deferred = locationDelegate.getLocationAsync()
         locationManager.requestLocation()
-        return withTimeoutOrNull(Duration.seconds(10)) {
+        return withTimeoutOrNull(10.seconds) {
             deferred.await().coordinate.useContents {
                 DeviceLocationResult.Success(
                     latitude = latitude,

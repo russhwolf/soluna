@@ -4,19 +4,19 @@ import android.content.Context
 import android.util.Log
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.lifecycle.ViewModel
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.russhwolf.settings.coroutines.FlowSettings
 import com.russhwolf.settings.datastore.DataStoreSettings
 import com.russhwolf.soluna.mobile.db.SolunaDb
-import com.squareup.sqldelight.android.AndroidSqliteDriver
-import com.squareup.sqldelight.db.SqlDriver
 import io.ktor.client.engine.android.Android
-import io.ktor.client.features.logging.Logger
-import io.ktor.client.features.logging.MessageLengthLimitingLogger
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.MessageLengthLimitingLogger
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.definition.Definition
-import org.koin.core.instance.InstanceFactory
+import org.koin.core.definition.KoinDefinition
 import org.koin.core.module.Module
 import org.koin.core.qualifier.Qualifier
 import org.koin.dsl.ScopeDSL
@@ -51,6 +51,6 @@ actual val platformModule: Module = module {
 actual inline fun <reified T : ViewModel> ScopeDSL.viewModel(
     qualifier: Qualifier?,
     noinline definition: Definition<T>
-): Pair<Module, InstanceFactory<T>> {
+): KoinDefinition<T> {
     return androidViewModel(qualifier, definition)
 }

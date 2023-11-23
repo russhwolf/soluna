@@ -2,8 +2,13 @@ package com.russhwolf.soluna.mobile.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.*
-import kotlin.time.Duration
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.minutes
 
 interface UpcomingTimesRepository {
 
@@ -14,7 +19,7 @@ interface UpcomingTimesRepository {
         private val currentTimeRepository: CurrentTimeRepository
     ) : UpcomingTimesRepository {
         override fun getUpcomingTimes(location: SelectableLocation): Flow<UpcomingTimes?> =
-            currentTimeRepository.getCurrentTimeFlow(Duration.minutes(1))
+            currentTimeRepository.getCurrentTimeFlow(1.minutes)
                 .map { getUpcomingTimesForLocation(location, it) }
 
         private fun getUpcomingTimesForLocation(
@@ -33,13 +38,13 @@ interface UpcomingTimesRepository {
 
             return UpcomingTimes(
                 sunriseTime = times.sunriseTime?.takeIf { it > currentInstant }
-                    ?: timesTomorrow.sunriseTime?.takeIf { it < currentInstant.plus(Duration.days(1)) },
+                    ?: timesTomorrow.sunriseTime?.takeIf { it < currentInstant.plus(1.days) },
                 sunsetTime = times.sunsetTime?.takeIf { it > currentInstant }
-                    ?: timesTomorrow.sunsetTime?.takeIf { it < currentInstant.plus(Duration.days(1)) },
+                    ?: timesTomorrow.sunsetTime?.takeIf { it < currentInstant.plus(1.days) },
                 moonriseTime = times.moonriseTime?.takeIf { it > currentInstant }
-                    ?: timesTomorrow.moonriseTime?.takeIf { it < currentInstant.plus(Duration.days(1)) },
+                    ?: timesTomorrow.moonriseTime?.takeIf { it < currentInstant.plus(1.days) },
                 moonsetTime = times.moonsetTime?.takeIf { it > currentInstant }
-                    ?: timesTomorrow.moonsetTime?.takeIf { it < currentInstant.plus(Duration.days(1)) }
+                    ?: timesTomorrow.moonsetTime?.takeIf { it < currentInstant.plus(1.days) }
             )
         }
     }

@@ -3,6 +3,7 @@ package com.russhwolf.soluna.android.ui.screen
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -100,8 +101,8 @@ private fun ReminderListScreenContent(
                 onAddReminder = onAddReminder
             )
         }
-    ) {
-        LazyColumn {
+    ) { paddingValues ->
+        LazyColumn(Modifier.padding(paddingValues)) {
             items(state.reminders) { reminder ->
                 ReminderListItem(
                     onSetReminderEnabled = onSetReminderEnabled,

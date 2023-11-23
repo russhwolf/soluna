@@ -6,8 +6,10 @@ import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 import org.koin.test.check.checkModules
 import kotlin.test.AfterTest
+import kotlin.test.Ignore
 import kotlin.test.Test
 
+@Ignore // TODO These tests are failing due to https://github.com/InsertKoinIO/koin/issues/1711
 class IosKoinModulesTest {
     private val testAppModule = module {
     }

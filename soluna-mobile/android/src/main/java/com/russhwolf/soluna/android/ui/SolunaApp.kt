@@ -5,6 +5,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
@@ -23,8 +24,7 @@ import com.russhwolf.soluna.android.ui.screen.SettingsScreen
 import com.russhwolf.soluna.android.ui.theme.SolunaTheme
 import com.russhwolf.soluna.mobile.koinUiScopeQualifier
 import org.koin.androidx.compose.getKoin
-import org.koin.androidx.viewmodel.ViewModelOwner
-import org.koin.androidx.viewmodel.scope.getViewModel
+import org.koin.androidx.compose.getViewModel
 import org.koin.core.scope.Scope
 import org.koin.dsl.module
 
@@ -62,44 +62,44 @@ fun Scope.SolunaUi() {
     SolunaTheme {
         val navController = rememberNavController()
         NavHost(navController, startDestination = Destination.Home) {
-            composableWithViewModelOwner(Destination.Home) { viewModelOwner, _ ->
+            composableWithViewModelStoreOwner(Destination.Home) { viewModelStoreOwner, _ ->
                 HomeScreen(
-                    getViewModel(owner = { viewModelOwner }),
+                    getViewModel(viewModelStoreOwner = viewModelStoreOwner),
                     navController
                 )
             }
-            composableWithViewModelOwner(Destination.LocationList) { viewModelOwner, _ ->
+            composableWithViewModelStoreOwner(Destination.LocationList) { viewModelStoreOwner, _ ->
                 LocationListScreen(
-                    getViewModel(owner = { viewModelOwner }),
+                    getViewModel(viewModelStoreOwner = viewModelStoreOwner),
                     navController
                 )
             }
-            composableWithViewModelOwner(Destination.AddLocation) { viewModelOwner, _ ->
+            composableWithViewModelStoreOwner(Destination.AddLocation) { viewModelStoreOwner, _ ->
                 AddLocationScreen(
-                    getViewModel(owner = { viewModelOwner }),
+                    getViewModel(viewModelStoreOwner = viewModelStoreOwner),
                     navController
                 )
             }
-            composableWithViewModelOwner(
+            composableWithViewModelStoreOwner(
                 Destination.LocationDetail.template,
                 arguments = Destination.LocationDetail.arguments
-            ) { viewModelOwner, backStackEntry ->
+            ) { viewModelStoreOwner, backStackEntry ->
                 LocationDetailScreen(
-                    getViewModel(owner = { viewModelOwner }) {
+                    getViewModel(viewModelStoreOwner = viewModelStoreOwner) {
                         Destination.LocationDetail.parameters(backStackEntry.arguments)
                     },
                     navController
                 )
             }
-            composableWithViewModelOwner(Destination.ReminderList) { viewModelOwner, _ ->
+            composableWithViewModelStoreOwner(Destination.ReminderList) { viewModelStoreOwner, _ ->
                 ReminderListScreen(
-                    getViewModel(owner = { viewModelOwner }),
+                    getViewModel(viewModelStoreOwner = viewModelStoreOwner),
                     navController
                 )
             }
-            composableWithViewModelOwner(Destination.Settings) { viewModelOwner, _ ->
+            composableWithViewModelStoreOwner(Destination.Settings) { viewModelStoreOwner, _ ->
                 SettingsScreen(
-                    getViewModel(owner = { viewModelOwner }),
+                    getViewModel(viewModelStoreOwner = viewModelStoreOwner),
                     navController
                 )
             }
@@ -107,17 +107,20 @@ fun Scope.SolunaUi() {
     }
 }
 
-private fun NavGraphBuilder.composableWithViewModelOwner(
+private fun NavGraphBuilder.composableWithViewModelStoreOwner(
     route: String,
     arguments: List<NamedNavArgument> = emptyList(),
     deepLinks: List<NavDeepLink> = emptyList(),
-    content: @Composable (ViewModelOwner, NavBackStackEntry) -> Unit
+    content: @Composable (ViewModelStoreOwner, NavBackStackEntry) -> Unit
 ) {
     composable(route, arguments, deepLinks) { navBackStackEntry ->
         val viewModelStoreOwner = LocalViewModelStoreOwner.current
         val savedStateRegistryOwner = LocalSavedStateRegistryOwner.current
         if (viewModelStoreOwner != null) {
-            content(ViewModelOwner.from(viewModelStoreOwner, savedStateRegistryOwner), navBackStackEntry)
+            // TODO previously this did ViewModelOwner(viewModelOwner, savedStateRegistryOwner) instead of
+            //  viewModelStoreOwner. Do we still need to wire in savedStateRegistryOwner? Was it actually doing
+            //  anything before?
+            content(viewModelStoreOwner, navBackStackEntry)
         } else {
             // TODO or maybe show some error UI?
             error("Missing LocalViewModelStoreOwner!")

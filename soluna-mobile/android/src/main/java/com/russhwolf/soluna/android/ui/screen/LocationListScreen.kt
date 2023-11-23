@@ -2,6 +2,7 @@ package com.russhwolf.soluna.android.ui.screen
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.DismissValue
@@ -74,8 +75,8 @@ private fun LocationListScreenContent(
                 onAddLocation = onAddLocation
             )
         }
-    ) {
-        LazyColumn {
+    ) { paddingValues ->
+        LazyColumn(Modifier.padding(paddingValues)) {
             items(state.locations) { location ->
                 LocationListItem(
                     location = location,

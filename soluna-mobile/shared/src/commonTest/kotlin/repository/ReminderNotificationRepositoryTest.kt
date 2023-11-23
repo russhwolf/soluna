@@ -1,7 +1,7 @@
 package com.russhwolf.soluna.mobile.repository
 
 import app.cash.turbine.test
-import com.russhwolf.settings.MockSettings
+import com.russhwolf.settings.MapSettings
 import com.russhwolf.settings.coroutines.toFlowSettings
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.ReminderType
@@ -9,7 +9,11 @@ import com.russhwolf.soluna.mobile.db.createDatabase
 import com.russhwolf.soluna.mobile.suspendTest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.datetime.*
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atTime
+import kotlinx.datetime.toInstant
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -20,7 +24,7 @@ class ReminderNotificationRepositoryTest {
 
     private val driver = createInMemorySqlDriver()
     private val database = createDatabase(driver)
-    private val settings = MockSettings().toFlowSettings(Dispatchers.Unconfined)
+    private val settings = MapSettings().toFlowSettings(Dispatchers.Unconfined)
     private val locationRepository = LocationRepository.Impl(database, settings, Dispatchers.Unconfined)
     private val reminderRepository = ReminderRepository.Impl(database, Dispatchers.Unconfined)
     private val astronomicalDataRepository = object : AstronomicalDataRepository {

@@ -1,14 +1,20 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm")
     application
 }
 
 application {
-    mainClassName = "com.russhwolf.soluna.calendar.MainKt"
+    mainClass.set("com.russhwolf.soluna.calendar.MainKt")
 }
 
-tasks.withType(JavaExec::class) {
+tasks.withType<JavaExec> {
     args = (findProperty("args") as? String ?: "").split(" ")
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "17"
 }
 
 dependencies {

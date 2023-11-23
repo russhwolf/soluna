@@ -104,8 +104,9 @@ private fun AddLocationScreenContent(
                 onDeviceLocation = onDeviceLocation
             )
         }
-    ) {
+    ) { paddingValues ->
         AddLocationForm(
+            modifier = Modifier.padding(paddingValues),
             label = label,
             latitude = latitude,
             longitude = longitude,
@@ -161,13 +162,14 @@ private fun AddLocationAppBar(
 
 @Composable
 private fun AddLocationForm(
+    modifier: Modifier,
     label: MutableState<String>,
     latitude: MutableState<String>,
     longitude: MutableState<String>,
     timeZone: MutableState<String>,
     onAddLocation: () -> Unit
 ) {
-    Column(Modifier.padding(16.dp)) {
+    Column(modifier) {
         OutlinedTextField(
             value = label.value,
             onValueChange = { label.value = it },
@@ -207,17 +209,25 @@ private fun CoordinateInput(
     negativeLabel: String,
     label: @Composable () -> Unit
 ) {
-    val numericalState = derivedStateOf {
-        textState.value.toDoubleOrNull()
+    val numericalState = remember {
+        derivedStateOf {
+            textState.value.toDoubleOrNull()
+        }
     }
-    val absNumericalState = derivedStateOf {
-        numericalState.value?.let { abs(it) }
+    val absNumericalState = remember {
+        derivedStateOf {
+            numericalState.value?.let { abs(it) }
+        }
     }
-    val positiveTextState = derivedStateOf {
-        absNumericalState.value?.toString() ?: textState.value
+    val positiveTextState = remember {
+        derivedStateOf {
+            absNumericalState.value?.toString() ?: textState.value
+        }
     }
-    val isPositive = derivedStateOf {
-        numericalState.value.let { it == null || it > 0 }  // bias positive if invalid
+    val isPositive = remember {
+        derivedStateOf {
+            numericalState.value.let { it == null || it > 0 }  // bias positive if invalid
+        }
     }
 
     Row(verticalAlignment = Alignment.CenterVertically) {

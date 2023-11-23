@@ -58,6 +58,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 
@@ -264,7 +266,7 @@ private fun DrawScope.drawTimesArc(
 ) {
     if (riseTime != null || setTime != null) {
         val effectiveRiseTime = riseTime ?: currentTime
-        val effectiveSetTime = setTime ?: currentTime.plus(Duration.days(1))
+        val effectiveSetTime = setTime ?: currentTime.plus(1.days)
 
         val flip = riseTime != null && setTime != null &&
                 riseTime.toAngle(timeZone) > setTime.toAngle(timeZone)
@@ -314,7 +316,7 @@ private fun TimeIcon(angle: Float?, radius: Dp, size: Dp, iconColor: Color, icon
 }
 
 private fun Duration.toAngle(): Float = let {
-    if (it < Duration.days(0)) it + Duration.days(1) else it
+    if (it < 0.days) it + 1.days else it
 }.toDouble(DurationUnit.DAYS).toFloat() * 360
 
 private fun Instant.toAngle(timeZone: TimeZone): Float {
@@ -409,7 +411,7 @@ class Previews {
         SolunaTheme {
             Box(Modifier.aspectRatio(1f)) {
                 SunMoonTimesGraphic(
-                    currentTime = defaultCurrentTime.plus(Duration.hours(12)),
+                    currentTime = defaultCurrentTime.plus(12.hours),
                     sunriseTime = defaultSunriseTime,
                     sunsetTime = defaultSunsetTime,
                     moonriseTime = defaultMoonriseTime,
@@ -546,9 +548,9 @@ class Previews {
             { value ->
                 val localMidnight = currentTimeState.value.toLocalDateTime(defaultTimeZone)
                     .run { LocalDateTime(year, month, dayOfMonth, 0, 0) }
-                val instantAtValue = localMidnight.toInstant(defaultTimeZone) + Duration.days(value / 360.0)
+                val instantAtValue = localMidnight.toInstant(defaultTimeZone) + (value / 360.0).days
                 timeState.value = instantAtValue +
-                        if (currentTimeState.value > instantAtValue) Duration.days(1) else Duration.ZERO
+                        if (currentTimeState.value > instantAtValue) 1.days else Duration.ZERO
             }
 
         val hasSunrise = remember { mutableStateOf(true) }
@@ -569,7 +571,7 @@ class Previews {
                     onValueChange = { value ->
                         val localMidnight = currentTime.value.toLocalDateTime(defaultTimeZone)
                             .run { LocalDateTime(year, month, dayOfMonth, 0, 0) }
-                        val instantAtValue = localMidnight.toInstant(defaultTimeZone) + Duration.days(value / 360.0)
+                        val instantAtValue = localMidnight.toInstant(defaultTimeZone) + (value / 360.0).days
                         currentTime.value = instantAtValue
                     },
                     valueRange = 0f..360f

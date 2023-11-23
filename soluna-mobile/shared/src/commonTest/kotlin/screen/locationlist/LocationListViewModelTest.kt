@@ -1,7 +1,7 @@
 package com.russhwolf.soluna.mobile.screen.locationlist
 
 import app.cash.turbine.test
-import com.russhwolf.settings.MockSettings
+import com.russhwolf.settings.MapSettings
 import com.russhwolf.settings.coroutines.toFlowSettings
 import com.russhwolf.soluna.mobile.createInMemorySqlDriver
 import com.russhwolf.soluna.mobile.db.Location
@@ -23,7 +23,7 @@ class LocationListViewModelTest {
     private var locations: Array<Location> = emptyArray()
 
     private val driver = createInMemorySqlDriver()
-    private val settings = MockSettings().toFlowSettings(Dispatchers.Unconfined)
+    private val settings = MapSettings().toFlowSettings(Dispatchers.Unconfined)
     private val locationRepository by lazy {
         val database = createDatabase(driver)
         database.configureMockLocationData(*locations)

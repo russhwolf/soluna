@@ -1,4 +1,6 @@
 import com.russhwolf.soluna.mobile.db.ReminderType;
+import kotlin.Boolean;
+import kotlin.Int;
 
 CREATE TABLE reminder (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,

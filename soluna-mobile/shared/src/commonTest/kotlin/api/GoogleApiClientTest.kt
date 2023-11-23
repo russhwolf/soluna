@@ -4,8 +4,8 @@ import com.russhwolf.soluna.mobile.BuildKonfig
 import com.russhwolf.soluna.mobile.suspendTest
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
-import io.ktor.client.features.logging.EMPTY
-import io.ktor.client.features.logging.Logger
+import io.ktor.client.plugins.logging.EMPTY
+import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.request.HttpRequestData
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
@@ -116,7 +116,7 @@ fun createMockEngine(requestValidator: (HttpRequestData) -> Unit) = MockEngine {
     requestValidator.invoke(httpRequestData)
 
     val body = when (val path = httpRequestData.url.encodedPath) {
-        "place/autocomplete/json" ->
+        "/maps/api/place/autocomplete/json" ->
             """
                 {
                    "predictions" : [
@@ -222,7 +222,8 @@ fun createMockEngine(requestValidator: (HttpRequestData) -> Unit) = MockEngine {
                    "status" : "OK"
                 }
                 """.trimIndent()
-        "geocode/json" ->
+
+        "/maps/api/geocode/json" ->
             """
                 {
                    "results" : [
@@ -284,7 +285,8 @@ fun createMockEngine(requestValidator: (HttpRequestData) -> Unit) = MockEngine {
                    "status" : "OK"
                 }
                 """.trimIndent()
-        "timezone/json" ->
+
+        "/maps/api/timezone/json" ->
             """
                 {
                    "dstOffset" : 3600,
