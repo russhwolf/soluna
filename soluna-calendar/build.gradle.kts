@@ -12,7 +12,7 @@ tasks.withType<JavaExec> {
 }
 
 dependencies {
-    implementation(project(":soluna-core:island-time"))
+    implementation(projects.solunaCore.islandTime)
     implementation(libs.islandTime)
     testImplementation(libs.junit)
     implementation(libs.kotlin.test.junit)

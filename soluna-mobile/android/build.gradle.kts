@@ -42,7 +42,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":soluna-mobile:shared"))
+    implementation(projects.solunaMobile.shared)
 
     implementation(libs.bundles.androidx.compose)
     implementation(libs.androidx.coreKtx)

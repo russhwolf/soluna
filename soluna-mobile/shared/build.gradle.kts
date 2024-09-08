@@ -46,7 +46,7 @@ kotlin {
 
         commonMain {
             dependencies {
-                implementation(project(":soluna-core:kotlinx-datetime"))
+                implementation(projects.solunaCore.kotlinxDatetime)
 
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.sqlDelight.coroutines)

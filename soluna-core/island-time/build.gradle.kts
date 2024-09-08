@@ -10,7 +10,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(project(":soluna-core"))
+                api(projects.solunaCore)
                 api(libs.islandTime)
             }
         }

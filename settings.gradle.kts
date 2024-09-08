@@ -22,3 +22,5 @@ include(":soluna-calendar")
 include(":soluna-mobile")
 include(":soluna-mobile:shared")
 include(":soluna-mobile:android")
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
