@@ -1,26 +1,13 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.*
 
 plugins {
-    kotlin("multiplatform")
-    id("com.android.library")
-    alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.sqlDelight)
     alias(libs.plugins.buildKonfig)
-}
-
-// workaround for https://youtrack.jetbrains.com/issue/KT-43944
-android {
-    configurations {
-        create("androidTestApi")
-        create("androidTestDebugApi")
-        create("androidTestReleaseApi")
-        create("testApi")
-        create("testDebugApi")
-        create("testReleaseApi")
-    }
 }
 
 kotlin {
@@ -66,7 +53,6 @@ kotlin {
                 implementation(libs.bundles.kotlinx.serialization.common)
                 implementation(libs.bundles.ktor.client.common)
                 api(libs.kotlinx.dateTime)
-                implementation(libs.stately.core)
                 implementation(libs.koin.core)
                 implementation(libs.bundles.settings.common)
             }
@@ -137,10 +123,6 @@ buildkonfig {
     defaultConfigs {
         buildConfigField(FieldSpec.Type.STRING, "GOOGLE_API_KEY", localProperties.getProperty("googleApiKey") ?: "")
     }
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "17"
 }
 
 sqldelight {

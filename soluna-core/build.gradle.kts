@@ -1,6 +1,5 @@
 plugins {
-    kotlin("multiplatform")
-    id("maven-publish")
+    alias(libs.plugins.kotlin.multiplatform)
 }
 
 kotlin {
@@ -21,7 +20,7 @@ kotlin {
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test"))
+                implementation(libs.kotlin.test)
             }
         }
     }
