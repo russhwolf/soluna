@@ -1,5 +1,3 @@
-@file:Suppress("LocalVariableName")
-
 package com.russhwolf.soluna
 
 import com.russhwolf.soluna.math.Degree
@@ -24,46 +22,104 @@ import com.russhwolf.soluna.math.unaryMinus
 import kotlin.math.roundToLong
 import kotlin.math.sqrt
 
-fun sunTimes(
+interface AstronomicalCalculator<out TimeUnit : Any> {
+    val sunTimes: RiseSetResult<TimeUnit>
+    val moonTimes: RiseSetResult<TimeUnit>
+    val moonPhase: MoonPhase?
+}
+
+fun <A : Any, B : Any> AstronomicalCalculator<A>.map(transform: (A) -> B): AstronomicalCalculator<B> =
+    object : AstronomicalCalculator<B> {
+        override val sunTimes: RiseSetResult<B> by lazy { this@map.sunTimes.map(transform) }
+        override val moonTimes: RiseSetResult<B> by lazy { this@map.moonTimes.map(transform) }
+        override val moonPhase: MoonPhase? by lazy { this@map.moonPhase }
+    }
+
+class MillisTimeAstronomicalCalculator(
     year: Int,
     month: Int,
     day: Int,
-    offset: Double, // Hours
-    latitude: Double, // Degrees
-    longitude: Double // Degrees
-): Pair<Long?, Long?> {
-    val JD = julianDayNumber(year, month, day)
-    val size = { _: Degree -> (50.0 / 60.0).deg }
-    val riseTime = timeAtAltitude(::solarEphemeris, size, latitude.deg, longitude.deg, JD, offset.hour, +1)
-    val setTime = timeAtAltitude(::solarEphemeris, size, latitude.deg, longitude.deg, JD, offset.hour, -1)
+    offsetHours: Double, // Hours
+    latitudeDegrees: Double, // Degrees
+    longitudeDegrees: Double // Degrees
+) : AstronomicalCalculator<Long> {
+    private val JD by lazy {
+        julianDayNumber(year, month, day)
+    }
 
-    return riseTime?.toMillisTime(JD, offset) to setTime?.toMillisTime(JD, offset)
+    private val lunarEphemerisAtLocation: (Int, HourAngle) -> EphemerisPoint by lazy {
+        { JD: Int, UT: HourAngle -> lunarEphemeris(JD, UT, latitudeDegrees.deg, longitudeDegrees.deg) }
+    }
+
+    private val sunriseTime: EventResult<Long> by lazy {
+        timeAtAltitude(
+            ::solarEphemeris,
+            ::solarSize,
+            latitudeDegrees.deg,
+            longitudeDegrees.deg,
+            JD,
+            offsetHours.hour,
+            +1
+        ).map { it.toMillisTime(JD, offsetHours) }
+    }
+
+    private val sunsetTime: EventResult<Long> by lazy {
+        timeAtAltitude(
+            ::solarEphemeris,
+            ::solarSize,
+            latitudeDegrees.deg,
+            longitudeDegrees.deg,
+            JD,
+            offsetHours.hour,
+            -1
+        ).map { it.toMillisTime(JD, offsetHours) }
+    }
+
+    private val moonriseTime: EventResult<Long> by lazy {
+        timeAtAltitude(
+            lunarEphemerisAtLocation,
+            ::lunarSize,
+            latitudeDegrees.deg,
+            longitudeDegrees.deg,
+            JD,
+            offsetHours.hour,
+            +1
+        ).map { it.toMillisTime(JD, offsetHours) }
+    }
+
+    private val moonsetTime: EventResult<Long> by lazy {
+        timeAtAltitude(
+            lunarEphemerisAtLocation,
+            ::lunarSize,
+            latitudeDegrees.deg,
+            longitudeDegrees.deg,
+            JD,
+            offsetHours.hour,
+            -1
+        ).map { it.toMillisTime(JD, offsetHours) }
+    }
+
+    override val sunTimes by lazy { combineResults(sunriseTime, sunsetTime) }
+
+    override val moonTimes by lazy { combineResults(moonriseTime, moonsetTime) }
+
+    override val moonPhase: MoonPhase? by lazy {
+        moonPhase(longitudeDegrees.deg, latitudeDegrees.deg, JD, offsetHours.hour)
+    }
 }
 
-fun moonTimes(
-    year: Int,
-    month: Int,
-    day: Int,
-    offset: Double, // Hours
-    latitude: Double, // Degrees
-    longitude: Double // Degrees
-): Pair<Long?, Long?> {
-    val lunarEphemerisAtLocation = { JD: Int, UT: HourAngle -> lunarEphemeris(JD, UT, latitude.deg, longitude.deg) }
-    val size = { pi: Degree -> (34.0 / 60.0).deg + 0.7275 * pi }
-    val JD = julianDayNumber(year, month, day)
-
-    val riseTime = timeAtAltitude(lunarEphemerisAtLocation, size, latitude.deg, longitude.deg, JD, offset.hour, +1)
-    val setTime = timeAtAltitude(lunarEphemerisAtLocation, size, latitude.deg, longitude.deg, JD, offset.hour, -1)
-
-    return riseTime?.toMillisTime(JD, offset) to setTime?.toMillisTime(JD, offset)
-}
-
-private val JDepoch = julianDayNumber(1970, 1, 1)
 private fun HourAngle.toMillisTime(JD: Int, offset: Double): Long {
-    val daysSinceEpoch = JD - JDepoch
-    val millisSinceEpoch = ((daysSinceEpoch * 24) + this.value - offset) * 60 * 60 * 1000
-    return millisSinceEpoch.roundToLong()
+    val hoursSinceEpoch = (JD - julianDayNumber(1970, 1, 1)) * 24
+    val millisTime = (hoursSinceEpoch + this.value - offset) * 60 * 60 * 1000
+    return millisTime.roundToLong()
 }
+
+internal data class EphemerisPoint(val GHA: Degree, val delta: Degree, val pi: Degree = 0.deg)
+
+@Suppress("UNUSED_PARAMETER") // Time calculation needs Degree input, but sun doesn't use it
+private fun solarSize(pi: Degree) = (50.0 / 60.0).deg
+
+private fun lunarSize(pi: Degree) = (34.0 / 60.0).deg + 0.7275 * pi
 
 internal fun solarEphemeris(
     JD: Int, // Julian date
@@ -134,6 +190,7 @@ internal fun lunarEphemeris(
 
     @Suppress("UnnecessaryVariable")
     val phi_prime = latitude
+
     @Suppress("UnnecessaryVariable")
     val lambda_prime = longitude
 
@@ -167,11 +224,12 @@ private fun timeAtAltitude(
     JD: Int,
     offset: HourAngle,
     sign: Int // +1 for rise, -1 for set
-): HourAngle? {
+): EventResult<HourAngle> {
     // Based on section 12.3.3 (p. 515)
     var UT = (-12).hour + offset
 
     var converged = false
+    var cos_t = 0.0
     for (i in 1..100) {
         val UT0 = UT
 
@@ -179,7 +237,7 @@ private fun timeAtAltitude(
         val h = -size(pi)
 
         // Hour angle (eq 12.11 and 12.12)
-        val cos_t = (sin(h) - sin(phi) * sin(delta)) / (cos(phi) * cos(delta))
+        cos_t = (sin(h) - sin(phi) * sin(delta)) / (cos(phi) * cos(delta))
         val t = when {
             cos_t > 1 -> 0.deg
             cos_t < -1 -> 180.deg
@@ -188,44 +246,42 @@ private fun timeAtAltitude(
 
         // Update guess (eq. 12.10)
         UT = (UT0 + -(GHA + lambda + sign * t).toHourAngle() + offset).coerceInRange() - offset
-
         if (abs(UT0 - UT) < 0.008.hour) {
             converged = cos_t > -1 && cos_t < 1 // Only mark as converged if we had a valid angle
             break
         }
     }
-    if (!converged) return null
 
     // TODO add correction described in 12.13 for high latitudes
-    return (UT + offset).coerceInRange()
+
+    return when {
+        converged -> EventResult.Value((UT + offset).coerceInRange())
+        cos_t > 1 -> EventResult.TooLow // Likely down all day
+        cos_t < -1 -> EventResult.TooHigh // Likely up all day
+        else -> EventResult.Error // We failed to converge but are in a range where we should have a value
+    }
 }
 
-internal data class EphemerisPoint(val GHA: Degree, val delta: Degree, val pi: Degree = 0.deg)
-
-fun moonPhase(
-    year: Int,
-    month: Int,
-    day: Int,
-    offset: Double, // Hours
-    longitude: Double // Degrees
+private fun moonPhase(
+    latitude: Degree,
+    longitude: Degree,
+    JD: Int,
+    offset: HourAngle
 ): MoonPhase? {
-    val JD = julianDayNumber(year, month, day)
-    val UTstart = (-12 + offset).hour
-    val UTend = (12 + offset).hour
+    val UTstart = (-12).hour + offset
+    val UTend = 12.hour + offset
 
-    val phaseStart = moonPhaseTable(JD, UTstart, longitude.deg, longitude.deg)
-    val phaseEnd = moonPhaseTable(JD, UTend, longitude.deg, longitude.deg)
+    val phaseStart = moonPhaseTable(JD, UTstart, latitude, longitude)
+    val phaseEnd = moonPhaseTable(JD, UTend, latitude, longitude)
 
     if (phaseEnd < phaseStart) return MoonPhase.NEW
-    for (phase in MoonPhase.values().toList().minus(MoonPhase.NEW)) {
+    for (phase in MoonPhase.entries.minus(MoonPhase.NEW)) {
         if (phase.angle in phaseStart..phaseEnd) {
             return phase
         }
     }
     return null
 }
-
-enum class MoonPhase(internal val angle: Degree) { NEW(0.deg), FIRST_QUARTER(90.deg), FULL(180.deg), LAST_QUARTER(270.deg) }
 
 private fun moonPhaseTable(JD: Int, UT: HourAngle, latitude: Degree, longitude: Degree): Degree {
     val solarGHA = solarEphemeris(JD, UT).GHA

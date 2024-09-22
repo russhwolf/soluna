@@ -11,7 +11,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(projects.solunaCore)
-                api(libs.kotlinx.dateTime)
+                implementation(libs.kotlinx.dateTime)
             }
         }
         val commonTest by getting {

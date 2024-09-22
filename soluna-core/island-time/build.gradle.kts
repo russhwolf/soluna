@@ -11,7 +11,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(projects.solunaCore)
-                api(libs.islandTime)
+                implementation(libs.islandTime)
             }
         }
         val commonTest by getting {

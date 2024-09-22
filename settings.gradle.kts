@@ -18,9 +18,9 @@ dependencyResolutionManagement {
 include(":soluna-core")
 include(":soluna-core:island-time")
 include(":soluna-core:kotlinx-datetime")
-include(":soluna-calendar")
-include(":soluna-mobile")
-include(":soluna-mobile:shared")
-include(":soluna-mobile:android")
+//include(":soluna-calendar")
+//include(":soluna-mobile")
+//include(":soluna-mobile:shared")
+//include(":soluna-mobile:android")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
