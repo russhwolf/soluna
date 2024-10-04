@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+
+    <string name="object_sun">Sun</string>
+    <string name="object_moon">Moon</string>
+
+    <string name="coordinate_format">%1$1.3f%2$s</string>
+    <string name="direction_north">N</string>
+    <string name="direction_south">S</string>
+    <string name="direction_east">E</string>
+    <string name="direction_west">W</string>
+    <string name="dst_start">DST starts</string>
+    <string name="dst_end">DST ends</string>
+    <string name="event_rise">%1$srise: %2$s</string>
+    <string name="event_set">%1$sset: %2$s</string>
+    <string name="event_no_rise">No %1$srise</string>
+    <string name="event_no_set">No %1$sset</string>
+    <string name="event_unknown">No %1$s events</string>
+    <string name="event_up_always">%1$s up all day</string>
+    <string name="event_down_always">%1$s down all day</string>
+    <string name="footer_about">Copyright © 2024 Russell Wolf. All rights reserved.</string>
+    <string name="footer_location">Times computed for %1$s, %2$s using timezone %3$s</string>
+    <string name="moon_phase_new">\uD83C\uDF11</string>
+    <string name="moon_phase_first_quarter">\uD83C\uDF13</string>
+    <string name="moon_phase_full">\uD83C\uDF15</string>
+    <string name="moon_phase_last_quarter">\uD83C\uDF17</string>
+
+</resources>

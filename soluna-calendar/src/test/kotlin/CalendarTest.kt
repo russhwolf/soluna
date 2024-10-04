@@ -14,7 +14,7 @@ import kotlin.test.fail
  * Integration tests to track calendar drift
  */
 // TODO find a less flaky way to do this
-@Ignore("Flaky")
+//@Ignore("Flaky")
 class CalendarTest {
 
     /**
@@ -104,7 +104,7 @@ class CalendarTest {
                 )
             }
         } finally {
-            actualFile.delete()
+//            actualFile.delete()
         }
 
     }

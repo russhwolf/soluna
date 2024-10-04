@@ -33,6 +33,8 @@ androidx-workManager = "2.9.1"
 androidx-test-core = "1.6.1"
 androidx-test-junit = "1.2.1"
 
+compose-multiplatform = "1.6.11"
+
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
@@ -133,6 +135,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 
 android-library = { id = "com.android.library", version.ref = "android-gradle" }
 android-application = { id = "com.android.application", version.ref = "android-gradle" }
