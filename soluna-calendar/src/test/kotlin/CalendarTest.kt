@@ -1,8 +1,10 @@
 package com.russhwolf.soluna.calendar
 
+import com.russhwolf.soluna.time.TimeAstronomicalCalculator
+import io.islandtime.Date
+import io.islandtime.DayOfWeek
 import io.islandtime.Month
 import io.islandtime.TimeZone
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -46,22 +48,19 @@ class CalendarTest {
         timeZone = TimeZone("UTC")
     )
 
-
     /**
      * DST overlapping moon phase
-     * No Sunrise
-     *
-     * This wouldn't be the correct time-zone in practice but it works as a rendering test-case
+     * No Moonrise/set
      */
     @Test
-    fun east_base_2020_11() = assertMatchingCalendar(
-        filename = "East-Base-2020-11.png",
-        locationName = "East-Base",
-        month = Month.NOVEMBER,
-        year = 2020,
-        latitude = -68.183841,
-        longitude = -66.998158,
-        timeZone = TimeZone("America/New_York")
+    fun troll_2020_03() = assertMatchingCalendar(
+        filename = "Troll-2023-10.png",
+        locationName = "Troll",
+        month = Month.OCTOBER,
+        year = 2023,
+        latitude = -72.0121236,
+        longitude = 2.5240873,
+        timeZone = TimeZone("Antarctica/Troll")
     )
 
     private fun assertMatchingCalendar(
@@ -73,7 +72,15 @@ class CalendarTest {
         longitude: Double,
         timeZone: TimeZone
     ) {
-        val actualFile = renderCalendarToFile(locationName, month, year, latitude, longitude, timeZone)
+        val calendarDataGenerator = CalendarDataGenerator(IslandTimeCalendarDataHelper(timeZone)) { year, month, day ->
+            TimeAstronomicalCalculator(Date(year, month, day), timeZone, latitude, longitude)
+        }
+        val firstDayOfWeek = DayOfWeek.SUNDAY
+        val monthContent =
+            calendarDataGenerator.generateCalendarMonth(year, month, firstDayOfWeek, latitude, longitude, timeZone)
+                .toCalendarMonthContent()
+
+        val actualFile = renderCalendarToFile(monthContent, locationName, month, year)
 
         try {
             val expected = Thread.currentThread().contextClassLoader.getResourceAsStream(filename)
