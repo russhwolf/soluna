@@ -33,5 +33,25 @@ class LocalTimeAstronomicalCalculator(
     }
 }
 
+class InstantAstronomicalCalculator(
+    date: LocalDate,
+    zone: TimeZone,
+    latitude: Double, // Degrees
+    longitude: Double // Degrees
+) : AstronomicalCalculator<Instant> by MillisTimeAstronomicalCalculator(
+    date.year,
+    date.monthNumber,
+    date.dayOfMonth,
+    offsetHoursAtNoon(date, zone),
+    latitude,
+    longitude
+).map({ Instant.fromEpochMilliseconds(it) }) {
+    companion object {
+        fun factory(timeZone: TimeZone, latitude: Double, longitude: Double) = { year: Int, month: Month, day: Int ->
+            InstantAstronomicalCalculator(LocalDate(year, month, day), timeZone, latitude, longitude)
+        }
+    }
+}
+
 private fun offsetHoursAtNoon(date: LocalDate, zone: TimeZone) =
     zone.offsetAt(date.atTime(12, 0).toInstant(zone)).totalSeconds / 3600.0

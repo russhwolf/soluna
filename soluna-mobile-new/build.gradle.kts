@@ -30,7 +30,6 @@ kotlin {
         }
     }
 
-    // TODO can we make this work?
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
     applyDefaultHierarchyTemplate {
         common {
@@ -132,7 +131,7 @@ kotlin {
 buildkonfig {
     packageName = "com.russhwolf.soluna.mobile"
     defaultConfigs {
-        buildConfigField(FieldSpec.Type.STRING, "GOOGLE_API_KEY", properties.get("googleApiKey")?.toString() ?: "")
+        buildConfigField(FieldSpec.Type.STRING, "GOOGLE_API_KEY", properties["googleApiKey"]?.toString() ?: "")
     }
 }
 

@@ -17,14 +17,38 @@ internal fun <A : Any, B : Any> EventResult<A>.map(
         is EventResult.Error -> EventResult.Error
     }
 
+val <TimeUnit : Any> EventResult<TimeUnit>.timeOrNull: TimeUnit?
+    get() = when (this) {
+        is EventResult.Value<TimeUnit> -> time
+        is EventResult.TooHigh,
+        is EventResult.TooLow,
+        is EventResult.Error -> null
+    }
+
 sealed interface RiseSetResult<out TimeUnit : Any> {
-    data class RiseThenSet<TimeUnit : Any>(val riseTime: TimeUnit, val setTime: TimeUnit) : RiseSetResult<TimeUnit>
-    data class SetThenRise<TimeUnit : Any>(val setTime: TimeUnit, val riseTime: TimeUnit) : RiseSetResult<TimeUnit>
-    data class RiseOnly<TimeUnit : Any>(val riseTime: TimeUnit) : RiseSetResult<TimeUnit>
-    data class SetOnly<TimeUnit : Any>(val setTime: TimeUnit) : RiseSetResult<TimeUnit>
+    data class RiseThenSet<TimeUnit : Any>(
+        override val riseTime: TimeUnit,
+        override val setTime: TimeUnit
+    ) : RiseSetResult<TimeUnit>, HasRise<TimeUnit>, HasSet<TimeUnit>
+
+    data class SetThenRise<TimeUnit : Any>(
+        override val setTime: TimeUnit,
+        override val riseTime: TimeUnit
+    ) : RiseSetResult<TimeUnit>, HasRise<TimeUnit>, HasSet<TimeUnit>
+
+    data class RiseOnly<TimeUnit : Any>(override val riseTime: TimeUnit) : RiseSetResult<TimeUnit>, HasRise<TimeUnit>
+    data class SetOnly<TimeUnit : Any>(override val setTime: TimeUnit) : RiseSetResult<TimeUnit>, HasSet<TimeUnit>
     data object UpAllDay : RiseSetResult<Nothing>
     data object DownAllDay : RiseSetResult<Nothing>
     data object Unknown : RiseSetResult<Nothing>
+
+    sealed interface HasRise<TimeUnit : Any> : RiseSetResult<TimeUnit> {
+        val riseTime: TimeUnit
+    }
+
+    sealed interface HasSet<TimeUnit : Any> : RiseSetResult<TimeUnit> {
+        val setTime: TimeUnit
+    }
 }
 
 internal fun <A : Any, B : Any> RiseSetResult<A>.map(
@@ -91,3 +115,21 @@ internal fun <TimeUnit : Comparable<TimeUnit>> combineResults(
         }
     }
 }
+
+val <TimeUnit : Any> RiseSetResult<TimeUnit>.riseOrNull: TimeUnit?
+    get() = when (this) {
+        is RiseSetResult.HasRise -> riseTime
+        is RiseSetResult.SetOnly,
+        is RiseSetResult.UpAllDay,
+        is RiseSetResult.DownAllDay,
+        is RiseSetResult.Unknown -> null
+    }
+
+val <TimeUnit : Any> RiseSetResult<TimeUnit>.setOrNull: TimeUnit?
+    get() = when (this) {
+        is RiseSetResult.HasSet -> setTime
+        is RiseSetResult.RiseOnly,
+        is RiseSetResult.UpAllDay,
+        is RiseSetResult.DownAllDay,
+        is RiseSetResult.Unknown -> null
+    }
