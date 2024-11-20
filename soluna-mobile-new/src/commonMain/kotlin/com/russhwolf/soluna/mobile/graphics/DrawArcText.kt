@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -76,12 +75,11 @@ fun DrawScope.drawArcText(
     rotation: Float = 0f,
     maxAngle: Float = 180f,
     style: TextStyle = TextStyle.Default,
-    topLeft: Offset = Offset.Zero,
-    size: Size = Size(this.size.width - topLeft.x, this.size.height - topLeft.y)
+    radius: Float = size.minDimension / 2.0f,
+    center: Offset = this.center,
 ) {
-    val boundsSize = if (size == Size.Unspecified) this.size else size
-
     val lineHeight = lineHeightFromMetrics(style)
+
     val offset = when (direction) {
         ArcTextDirection.Up -> when (baseline) {
             ArcTextBaseline.Inside -> 0f
@@ -96,10 +94,10 @@ fun DrawScope.drawArcText(
         }
     }
     val bounds = Rect(
-        topLeft.x - offset,
-        topLeft.y - offset,
-        topLeft.x + boundsSize.width + offset,
-        topLeft.y + boundsSize.height + offset
+        center.x - offset - radius,
+        center.y - offset - radius,
+        center.x + offset + radius,
+        center.y + offset + radius
     )
     val path = Path().apply {
         when (direction) {

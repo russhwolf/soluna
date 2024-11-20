@@ -1,7 +1,9 @@
 package com.russhwolf.soluna.mobile
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -9,6 +11,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.russhwolf.soluna.RiseSetResult
+import com.russhwolf.soluna.mobile.theme.SolunaTheme
 import com.russhwolf.soluna.time.InstantAstronomicalCalculator
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -17,22 +20,27 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
 @Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun SunTimesGraphic_Daily(
     @PreviewParameter(TimesResultPreviewProviderDaily::class)
     times: Pair<RiseSetResult<Instant>, RiseSetResult<Instant>>
 ) {
-    val currentTime = LocalDateTime(2000, 1, 1, 12, 30).toInstant(TimeZone.UTC)
+    val currentTime = LocalDateTime(2000, 1, 1, 18, 30).toInstant(TimeZone.UTC)
     val (sunTimes, moonTimes) = times
-    SunMoonTimesGraphic(
-        currentTime,
-        sunTimes,
-        moonTimes,
-        TimeZone.UTC,
-        modifier = Modifier
-            .width(300.dp)
-            .padding(16.dp)
-    )
+    SolunaTheme {
+        Surface {
+            SunMoonTimesGraphic(
+                currentTime,
+                sunTimes,
+                moonTimes,
+                TimeZone.UTC,
+                modifier = Modifier
+                    .width(300.dp)
+                    .padding(16.dp)
+            )
+        }
+    }
 }
 
 @Preview
@@ -43,16 +51,20 @@ fun SunTimesGraphic_Next(
 ) {
     val currentTime = LocalDateTime(2000, 1, 1, 12, 30).toInstant(TimeZone.UTC)
     val (sunTimes, moonTimes) = times
-    SunMoonTimesGraphic(
-        currentTime,
-        sunTimes,
-        moonTimes,
-        TimeZone.UTC,
-        mode = SunMoonTimesGraphicMode.Next,
-        modifier = Modifier
-            .width(300.dp)
-            .padding(16.dp)
-    )
+    SolunaTheme {
+        Surface {
+            SunMoonTimesGraphic(
+                currentTime,
+                sunTimes,
+                moonTimes,
+                TimeZone.UTC,
+                mode = SunMoonTimesGraphicMode.Next,
+                modifier = Modifier
+                    .width(300.dp)
+                    .padding(16.dp)
+            )
+        }
+    }
 }
 
 @Preview
@@ -66,15 +78,19 @@ fun SunTimesGraphic_DST() {
         latitude = 42.388,
         longitude = -71.100
     )
-    SunMoonTimesGraphic(
-        currentTime,
-        calculator.sunTimes,
-        calculator.moonTimes,
-        timeZone,
-        modifier = Modifier
-            .width(300.dp)
-            .padding(16.dp)
-    )
+    SolunaTheme {
+        Surface {
+            SunMoonTimesGraphic(
+                currentTime,
+                calculator.sunTimes,
+                calculator.moonTimes,
+                timeZone,
+                modifier = Modifier
+                    .width(300.dp)
+                    .padding(16.dp)
+            )
+        }
+    }
 }
 
 private class TimesResultPreviewProviderDaily :
