@@ -32,6 +32,7 @@ import com.russhwolf.soluna.mobile.graphics.ArcTextDirection
 import com.russhwolf.soluna.mobile.graphics.drawArcStroke
 import com.russhwolf.soluna.mobile.graphics.drawArcText
 import com.russhwolf.soluna.mobile.theme.SolunaTheme
+import com.russhwolf.soluna.mobile.util.LocaleUtils
 import com.russhwolf.soluna.riseOrNull
 import com.russhwolf.soluna.setOrNull
 import kotlinx.datetime.DateTimeUnit
@@ -73,14 +74,22 @@ fun SunMoonTimesGraphic(
         SunMoonTimesGraphicMode.Next -> currentTime
     }
     val currentLocalTime = currentTime.toLocalDateTime(timeZone).time
-    val timeFormat = remember {
-        LocalTime.Format {
-            // TODO check user setting for 12h/24h
-            amPmHour(padding = Padding.NONE)
-            char(':')
-            minute(padding = Padding.ZERO)
-            char(' ')
-            amPmMarker("AM", "PM")
+    val is24h = LocaleUtils.is24h()
+    val timeFormat = remember(is24h) {
+        if (is24h) {
+            LocalTime.Format {
+                hour(padding = Padding.NONE)
+                char(':')
+                minute(padding = Padding.ZERO)
+            }
+        } else {
+            LocalTime.Format {
+                amPmHour(padding = Padding.NONE)
+                char(':')
+                minute(padding = Padding.ZERO)
+                char(' ')
+                amPmMarker("AM", "PM") // TODO this should be localized
+            }
         }
     }
 
