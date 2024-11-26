@@ -10,23 +10,19 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 
-
 @Composable
 fun SolunaTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-//    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = true,
     content: @Composable() () -> Unit
 ) {
-    val colorScheme = when {
-//        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-//            val context = LocalContext.current
-//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-//        }
-
-        darkTheme -> darkScheme
-        else -> lightScheme
-    }
+    val colorScheme = getMaterialColorScheme(
+        darkTheme = darkTheme,
+        dynamicColor = dynamicColor,
+        lightScheme = lightScheme,
+        darkScheme = darkScheme,
+    )
 
     val extendedColorScheme = if (darkTheme) extendedDark else extendedLight
 
@@ -61,3 +57,11 @@ object SolunaTheme {
 }
 
 val LocalSolunaColorScheme = staticCompositionLocalOf { SolunaColorScheme() }
+
+@Composable
+expect fun getMaterialColorScheme(
+    darkTheme: Boolean,
+    dynamicColor: Boolean,
+    lightScheme: ColorScheme,
+    darkScheme: ColorScheme
+): ColorScheme
