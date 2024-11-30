@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.vector.VectorPainter
@@ -129,7 +130,18 @@ fun SunMoonTimesGraphic(
             val labelRadius = backgroundRadius + labelPadding.toPx()
             val timeRadius = labelRadius + labelPadding.toPx() + labelStyle.fontSize.toPx()
 
-            drawCircle(colors.surfaceVariant, radius = backgroundRadius)
+            drawCircle(colors.surfaceContainer, radius = backgroundRadius)
+
+            drawCircle(
+                colors.surfaceContainerHighest,
+                radius = sunArcRadius,
+                style = Stroke(width = timesArcThickness.toPx())
+            )
+            drawCircle(
+                colors.surfaceContainerHighest,
+                radius = moonArcRadius,
+                style = Stroke(width = timesArcThickness.toPx())
+            )
 
             drawArcText(
                 text = midnightString,
