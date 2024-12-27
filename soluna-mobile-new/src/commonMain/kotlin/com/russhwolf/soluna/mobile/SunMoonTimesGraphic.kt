@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -33,7 +32,7 @@ import com.russhwolf.soluna.mobile.graphics.ArcTextDirection
 import com.russhwolf.soluna.mobile.graphics.drawArcStroke
 import com.russhwolf.soluna.mobile.graphics.drawArcText
 import com.russhwolf.soluna.mobile.theme.SolunaTheme
-import com.russhwolf.soluna.mobile.util.LocaleUtils
+import com.russhwolf.soluna.mobile.util.formatTime
 import com.russhwolf.soluna.riseOrNull
 import com.russhwolf.soluna.setOrNull
 import kotlinx.datetime.DateTimeUnit
@@ -42,9 +41,6 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
-import kotlinx.datetime.format
-import kotlinx.datetime.format.Padding
-import kotlinx.datetime.format.char
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
@@ -53,46 +49,20 @@ import soluna.soluna_mobile_new.generated.resources.Res
 import soluna.soluna_mobile_new.generated.resources.midnight
 import soluna.soluna_mobile_new.generated.resources.noon
 
-enum class SunMoonTimesGraphicMode {
-    Daily, Next
-}
-
 @Composable
 fun SunMoonTimesGraphic(
-    currentTime: Instant,
-    sunTimes: RiseSetResult<Instant>,
-    moonTimes: RiseSetResult<Instant>,
-    timeZone: TimeZone,
-    mode: SunMoonTimesGraphicMode = SunMoonTimesGraphicMode.Daily,
+    state: SunMoonTimesGraphicState,
     modifier: Modifier = Modifier
 ) {
     val colors = SolunaTheme.colorScheme
     val typography = SolunaTheme.typography
 
-    val midnight = currentTime.midnightBefore(timeZone)
-    val startTime = when (mode) {
-        SunMoonTimesGraphicMode.Daily -> midnight
-        SunMoonTimesGraphicMode.Next -> currentTime
+    val midnight = state.currentTime.midnightBefore(state.timeZone)
+    val startTime = when (state.mode) {
+        SunMoonTimesGraphicState.Mode.Daily -> midnight
+        SunMoonTimesGraphicState.Mode.Next -> state.currentTime
     }
-    val currentLocalTime = currentTime.toLocalDateTime(timeZone).time
-    val is24h = LocaleUtils.is24h()
-    val timeFormat = remember(is24h) {
-        if (is24h) {
-            LocalTime.Format {
-                hour(padding = Padding.NONE)
-                char(':')
-                minute(padding = Padding.ZERO)
-            }
-        } else {
-            LocalTime.Format {
-                amPmHour(padding = Padding.NONE)
-                char(':')
-                minute(padding = Padding.ZERO)
-                char(' ')
-                amPmMarker("AM", "PM") // TODO this should be localized
-            }
-        }
-    }
+    val currentLocalTime = state.currentTime.toLocalDateTime(state.timeZone).time
 
     val timesArcThickness = 32.dp
     val innerPadding = 8.dp
@@ -108,6 +78,7 @@ fun SunMoonTimesGraphic(
     val moonrisePainter = rememberVectorPainter(Icons.Filled.DarkMode)
     val moonsetPainter = rememberVectorPainter(Icons.Outlined.DarkMode)
 
+    val currentTimeString = currentLocalTime.formatTime()
     val midnightString = stringResource(Res.string.midnight)
     val noonString = stringResource(Res.string.noon)
 
@@ -121,10 +92,8 @@ fun SunMoonTimesGraphic(
 
         Canvas(Modifier.fillMaxSize()) {
 
-            val backgroundRadius = minOf(
-                maxWidth,
-                maxHeight
-            ).toPx() / 2 - 2 * labelPadding.toPx() - labelStyle.fontSize.toPx() - timeStyle.fontSize.toPx()
+            val backgroundRadius = minOf(maxWidth, maxHeight).toPx() / 2 -
+                    2 * labelPadding.toPx() - labelStyle.fontSize.toPx() - timeStyle.fontSize.toPx()
             val sunArcRadius = backgroundRadius - timesArcThickness.toPx() / 2 - innerPadding.toPx()
             val moonArcRadius = backgroundRadius - 3 * timesArcThickness.toPx() / 2 - innerPadding.toPx() * 2
             val labelRadius = backgroundRadius + labelPadding.toPx()
@@ -160,18 +129,18 @@ fun SunMoonTimesGraphic(
 
             val isCurrentTimeOnBottom = currentLocalTime in LocalTime(6, 0)..LocalTime(18, 0)
             drawArcText(
-                text = currentLocalTime.format(timeFormat),
+                text = currentTimeString,
                 direction = if (isCurrentTimeOnBottom) ArcTextDirection.Up else ArcTextDirection.Down,
                 baseline = ArcTextBaseline.Outside,
                 style = timeStyle,
                 radius = timeRadius,
-                rotation = currentTime.angleFrom(midnight, timeZone) + if (isCurrentTimeOnBottom) 180 else 0
+                rotation = state.currentTime.angleFrom(midnight, state.timeZone) + if (isCurrentTimeOnBottom) 180 else 0
             )
 
             rotate(-90f) {
                 drawTimesArc(
-                    times = sunTimes,
-                    timeZone = timeZone,
+                    times = state.sunTimes,
+                    timeZone = state.timeZone,
                     midnight = midnight,
                     startTime = startTime,
                     startColor = colors.sunriseContainer,
@@ -181,8 +150,8 @@ fun SunMoonTimesGraphic(
                 )
 
                 drawTimesArc(
-                    times = moonTimes,
-                    timeZone = timeZone,
+                    times = state.moonTimes,
+                    timeZone = state.timeZone,
                     midnight = midnight,
                     startTime = startTime,
                     startColor = colors.moonriseContainer,
@@ -192,34 +161,33 @@ fun SunMoonTimesGraphic(
                 )
             }
 
+            fun Instant.toTimeIconAngle() = takeIf { it in startTime..startTime.plusOneDay(state.timeZone) }
+                ?.angleFrom(midnight, state.timeZone)
+
             drawIcon(
                 painter = sunrisePainter,
-                angle = sunTimes.riseOrNull?.takeIf { it in startTime..startTime.plusOneDay(timeZone) }
-                    ?.angleFrom(midnight, timeZone),
+                angle = state.sunTimes.riseOrNull?.toTimeIconAngle(),
                 radius = sunArcRadius,
                 size = timesArcThickness.toPx(),
                 color = colors.onSunriseContainer
             )
             drawIcon(
                 painter = sunsetPainter,
-                angle = sunTimes.setOrNull?.takeIf { it in startTime..startTime.plusOneDay(timeZone) }
-                    ?.angleFrom(midnight, timeZone),
+                angle = state.sunTimes.setOrNull?.toTimeIconAngle(),
                 radius = sunArcRadius,
                 size = timesArcThickness.toPx(),
                 color = colors.onSunsetContainer
             )
             drawIcon(
                 painter = moonrisePainter,
-                angle = moonTimes.riseOrNull?.takeIf { it in startTime..startTime.plusOneDay(timeZone) }
-                    ?.angleFrom(midnight, timeZone),
+                angle = state.moonTimes.riseOrNull?.toTimeIconAngle(),
                 radius = moonArcRadius,
                 size = timesArcThickness.toPx(),
                 color = colors.onMoonriseContainer
             )
             drawIcon(
                 painter = moonsetPainter,
-                angle = moonTimes.setOrNull?.takeIf { it in startTime..startTime.plusOneDay(timeZone) }
-                    ?.angleFrom(midnight, timeZone),
+                angle = state.moonTimes.setOrNull?.toTimeIconAngle(),
                 radius = moonArcRadius,
                 size = timesArcThickness.toPx(),
                 color = colors.onMoonsetContainer
@@ -233,7 +201,7 @@ fun SunMoonTimesGraphic(
                 cap = StrokeCap.Round
             )
 
-            rotate(currentTime.angleFrom(midnight, timeZone)) {
+            rotate(state.currentTime.angleFrom(midnight, state.timeZone)) {
                 drawLine(
                     color = colors.onSurface,
                     start = center,

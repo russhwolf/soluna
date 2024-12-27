@@ -31,10 +31,12 @@ fun SunTimesGraphic_Daily(
     SolunaTheme {
         Surface {
             SunMoonTimesGraphic(
-                currentTime,
-                sunTimes,
-                moonTimes,
-                TimeZone.UTC,
+                SunMoonTimesGraphicState(
+                    currentTime,
+                    sunTimes,
+                    moonTimes,
+                    TimeZone.UTC
+                ),
                 modifier = Modifier
                     .width(300.dp)
                     .padding(16.dp)
@@ -54,11 +56,13 @@ fun SunTimesGraphic_Next(
     SolunaTheme {
         Surface {
             SunMoonTimesGraphic(
-                currentTime,
-                sunTimes,
-                moonTimes,
-                TimeZone.UTC,
-                mode = SunMoonTimesGraphicMode.Next,
+                SunMoonTimesGraphicState(
+                    currentTime,
+                    sunTimes,
+                    moonTimes,
+                    TimeZone.UTC,
+                    SunMoonTimesGraphicState.Mode.Next
+                ),
                 modifier = Modifier
                     .width(300.dp)
                     .padding(16.dp)
@@ -81,10 +85,12 @@ fun SunTimesGraphic_DST() {
     SolunaTheme {
         Surface {
             SunMoonTimesGraphic(
-                currentTime,
-                calculator.sunTimes,
-                calculator.moonTimes,
-                timeZone,
+                SunMoonTimesGraphicState(
+                    currentTime,
+                    calculator.sunTimes,
+                    calculator.moonTimes,
+                    timeZone
+                ),
                 modifier = Modifier
                     .width(300.dp)
                     .padding(16.dp)

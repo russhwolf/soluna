@@ -75,10 +75,12 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
 
+                implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.ktor.client.mock)
                 implementation(libs.koin.test)
                 implementation(libs.settings.test)
                 implementation(libs.turbine)
+                implementation(libs.molecule)
             }
         }
         androidMain {
@@ -154,5 +156,9 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    testOptions {
+        unitTests.isReturnDefaultValues = true
     }
 }
