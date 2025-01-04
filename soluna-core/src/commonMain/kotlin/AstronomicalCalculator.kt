@@ -1,3 +1,13 @@
+// Using names to match references (either Explanatory Supplement to the Astronomical Almanac, or others noted inline),
+// so don't warn on naming
+@file:Suppress(
+    "LocalVariableName",
+    "PropertyName",
+    "PrivatePropertyName",
+    "UnnecessaryVariable",
+    "FloatingPointLiteralPrecision"
+)
+
 package com.russhwolf.soluna
 
 import com.russhwolf.soluna.math.Degree
@@ -188,10 +198,8 @@ internal fun lunarEphemeris(
     val y = r * m
     val z = r * n
 
-    @Suppress("UnnecessaryVariable")
     val phi_prime = latitude
 
-    @Suppress("UnnecessaryVariable")
     val lambda_prime = longitude
 
     val T_nu = (JD - 0.5 - 2451545.0) / 36_525

@@ -1,3 +1,7 @@
+// Using names to match references (either Explanatory Supplement to the Astronomical Almanac, or others noted inline),
+// so don't warn on naming
+@file:Suppress("LocalVariableName")
+
 package com.russhwolf.soluna
 
 import kotlin.test.Test
