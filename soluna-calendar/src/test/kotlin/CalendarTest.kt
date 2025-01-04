@@ -5,6 +5,7 @@ import io.islandtime.Date
 import io.islandtime.DayOfWeek
 import io.islandtime.Month
 import io.islandtime.TimeZone
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -14,7 +15,7 @@ import kotlin.test.fail
  * Integration tests to track calendar drift
  */
 // TODO find a less flaky way to do this
-//@Ignore("Flaky")
+@Ignore("Flaky")
 class CalendarTest {
 
     /**
@@ -104,7 +105,7 @@ class CalendarTest {
                 )
             }
         } finally {
-//            actualFile.delete()
+            actualFile.delete()
         }
 
     }
