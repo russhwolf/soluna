@@ -276,14 +276,14 @@ private fun moonPhase(
     JD: Int,
     offset: HourAngle
 ): MoonPhase? {
-    val UTstart = (-12).hour + offset
-    val UTend = 12.hour + offset
+    val UTstart = 0.hour + offset
+    val UTend = 24.hour + offset
 
-    val phaseStart = moonPhaseTable(JD, UTstart, latitude, longitude)
     val phaseEnd = moonPhaseTable(JD, UTend, latitude, longitude)
+    val phaseStart = moonPhaseTable(JD, UTstart, latitude, longitude)
+        .let { if (it > phaseEnd) it - Degree.MAX else it }
 
-    if (phaseEnd < phaseStart) return MoonPhase.NEW
-    for (phase in MoonPhase.entries.minus(MoonPhase.NEW)) {
+    for (phase in MoonPhase.entries) {
         if (phase.angle in phaseStart..phaseEnd) {
             return phase
         }
