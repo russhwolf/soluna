@@ -255,7 +255,7 @@ private fun timeAtAltitude(
         // Update guess (eq. 12.10)
         UT = (UT0 + -(GHA + lambda + sign * t).toHourAngle() + offset).coerceInRange() - offset
         if (abs(UT0 - UT) < 0.008.hour) {
-            converged = cos_t > -1 && cos_t < 1 // Only mark as converged if we had a valid angle
+            converged = true
             break
         }
     }
@@ -263,10 +263,10 @@ private fun timeAtAltitude(
     // TODO add correction described in 12.13 for high latitudes
 
     return when {
-        converged -> EventResult.Value((UT + offset).coerceInRange())
+        !converged -> EventResult.Error
         cos_t > 1 -> EventResult.TooLow // Likely down all day
         cos_t < -1 -> EventResult.TooHigh // Likely up all day
-        else -> EventResult.Error // We failed to converge but are in a range where we should have a value
+        else -> EventResult.Value((UT + offset).coerceInRange())
     }
 }
 
