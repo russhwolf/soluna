@@ -18,7 +18,7 @@
     <string name="event_unknown">No %1$s events</string>
     <string name="event_up_always">%1$s up all day</string>
     <string name="event_down_always">%1$s down all day</string>
-    <string name="footer_about">Copyright © 2024 Russell Wolf. All rights reserved.</string>
+    <string name="footer_about">Copyright © 2025 Russell Wolf. All rights reserved.</string>
     <string name="footer_location">Times computed for %1$s, %2$s using timezone %3$s</string>
     <string name="moon_phase_new">\uD83C\uDF11</string>
     <string name="moon_phase_first_quarter">\uD83C\uDF13</string>

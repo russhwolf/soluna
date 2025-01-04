@@ -38,7 +38,7 @@ fun CalendarMonthData<Time, Month, DayOfWeek, TimeZone>.toCalendarMonthContent()
             longitude.longitudeString(),
             timeZone.id
         ),
-        aboutText = "Copyright © 2024 Russell Wolf. All rights reserved."
+        aboutText = "Copyright © 2025 Russell Wolf. All rights reserved."
     )
 }
 
