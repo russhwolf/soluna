@@ -1,0 +1,36 @@
+import com.russhwolf.soluna.mobile.db.ReminderType;
+import kotlin.Boolean;
+import kotlin.Int;
+
+CREATE TABLE reminder (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    type TEXT AS ReminderType NOT NULL,
+    minutesBefore INTEGER AS Int NOT NULL,
+    enabled INTEGER AS Boolean NOT NULL
+);
+
+selectAllReminders:
+SELECT * FROM reminder;
+
+insertReminder:
+INSERT INTO reminder(type, minutesBefore, enabled)
+VALUES (?, ?, ?);
+
+deleteReminderById:
+DELETE FROM reminder
+WHERE id = ?;
+
+updateReminderMinutesBeforeById:
+UPDATE reminder
+SET minutesBefore = ?
+WHERE id = ?;
+
+updateReminderEnabledById:
+UPDATE reminder
+SET enabled = ?
+WHERE id = ?;
+
+updateReminderTypeById:
+UPDATE reminder
+SET type = ?
+WHERE id = ?;

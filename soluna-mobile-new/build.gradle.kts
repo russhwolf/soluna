@@ -37,6 +37,11 @@ kotlin {
                 withNative()
                 withJvm()
             }
+
+            group("jvmCommon") {
+                withAndroidTarget()
+                withJvm()
+            }
         }
     }
 
@@ -127,6 +132,11 @@ kotlin {
             dependencies {
             }
         }
+        val jvmCommonTest by getting {
+            dependencies {
+                implementation(libs.sqlDelight.jvm)
+            }
+        }
     }
 }
 
@@ -139,7 +149,7 @@ buildkonfig {
 
 sqldelight {
     databases.create("SolunaDb") {
-        packageName.set("com.russhwolf.soluna.mobile.db")
+        packageName.set("com.russhwolf.soluna.mobile.db.sqldelight")
     }
 }
 
