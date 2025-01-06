@@ -1,4 +1,4 @@
-package com.russhwolf.soluna.mobile
+package com.russhwolf.soluna.mobile.graphics
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -27,10 +27,6 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.russhwolf.soluna.RiseSetResult
-import com.russhwolf.soluna.mobile.graphics.ArcTextBaseline
-import com.russhwolf.soluna.mobile.graphics.ArcTextDirection
-import com.russhwolf.soluna.mobile.graphics.drawArcStroke
-import com.russhwolf.soluna.mobile.graphics.drawArcText
 import com.russhwolf.soluna.mobile.theme.SolunaTheme
 import com.russhwolf.soluna.mobile.util.formatTime
 import com.russhwolf.soluna.riseOrNull

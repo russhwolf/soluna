@@ -1,4 +1,4 @@
-package com.russhwolf.soluna.mobile
+package com.russhwolf.soluna.mobile.graphics
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState

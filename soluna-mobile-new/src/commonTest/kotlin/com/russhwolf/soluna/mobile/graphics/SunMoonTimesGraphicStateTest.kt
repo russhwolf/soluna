@@ -1,4 +1,4 @@
-package com.russhwolf.soluna.mobile
+package com.russhwolf.soluna.mobile.graphics
 
 import app.cash.molecule.RecompositionMode
 import app.cash.molecule.moleculeFlow
@@ -23,40 +23,41 @@ class SunMoonTimesGraphicStateTest {
     @Test
     fun nextTimes() = runTest {
         val currentTimes = listOf(
-            LocalDateTime(2000, 1, 1, 4, 0).toInstant(TimeZone.UTC),
-            LocalDateTime(2000, 1, 1, 12, 0).toInstant(TimeZone.UTC),
-            LocalDateTime(2000, 1, 1, 20, 0).toInstant(TimeZone.UTC)
+            LocalDateTime(2000, 1, 1, 4, 0).toInstant(TimeZone.Companion.UTC),
+            LocalDateTime(2000, 1, 1, 12, 0).toInstant(TimeZone.Companion.UTC),
+            LocalDateTime(2000, 1, 1, 20, 0).toInstant(TimeZone.Companion.UTC)
         )
 
-        val currentTimesFlow = currentTimes.asFlow().drop(1).stateIn(this, SharingStarted.Lazily, currentTimes.first())
+        val currentTimesFlow =
+            currentTimes.asFlow().drop(1).stateIn(this, SharingStarted.Companion.Lazily, currentTimes.first())
 
         moleculeFlow(RecompositionMode.Immediate) {
             sunMoonTimesGraphicState(
                 currentTimesFlow,
-                TimeZone.UTC,
+                TimeZone.Companion.UTC,
                 0.0,
                 0.0,
                 SunMoonTimesGraphicState.Mode.Next,
                 TestAstronomicalCalculatorFactory { day ->
                     RiseSetResult.RiseThenSet(
-                        riseTime = LocalDateTime(2000, 1, day, 8, day).toInstant(TimeZone.UTC),
-                        setTime = LocalDateTime(2000, 1, day, 16, day).toInstant(TimeZone.UTC)
+                        riseTime = LocalDateTime(2000, 1, day, 8, day).toInstant(TimeZone.Companion.UTC),
+                        setTime = LocalDateTime(2000, 1, day, 16, day).toInstant(TimeZone.Companion.UTC)
                     )
                 }
             )
         }.test {
             val expectedTimes = arrayOf<RiseSetResult<Instant>>(
                 RiseSetResult.RiseThenSet(
-                    riseTime = LocalDateTime(2000, 1, 1, 8, 1).toInstant(TimeZone.UTC),
-                    setTime = LocalDateTime(2000, 1, 1, 16, 1).toInstant(TimeZone.UTC)
+                    riseTime = LocalDateTime(2000, 1, 1, 8, 1).toInstant(TimeZone.Companion.UTC),
+                    setTime = LocalDateTime(2000, 1, 1, 16, 1).toInstant(TimeZone.Companion.UTC)
                 ),
                 RiseSetResult.SetThenRise(
-                    setTime = LocalDateTime(2000, 1, 1, 16, 1).toInstant(TimeZone.UTC),
-                    riseTime = LocalDateTime(2000, 1, 2, 8, 2).toInstant(TimeZone.UTC)
+                    setTime = LocalDateTime(2000, 1, 1, 16, 1).toInstant(TimeZone.Companion.UTC),
+                    riseTime = LocalDateTime(2000, 1, 2, 8, 2).toInstant(TimeZone.Companion.UTC)
                 ),
                 RiseSetResult.RiseThenSet(
-                    riseTime = LocalDateTime(2000, 1, 2, 8, 2).toInstant(TimeZone.UTC),
-                    setTime = LocalDateTime(2000, 1, 2, 16, 2).toInstant(TimeZone.UTC)
+                    riseTime = LocalDateTime(2000, 1, 2, 8, 2).toInstant(TimeZone.Companion.UTC),
+                    setTime = LocalDateTime(2000, 1, 2, 16, 2).toInstant(TimeZone.Companion.UTC)
                 )
             )
 
@@ -66,7 +67,7 @@ class SunMoonTimesGraphicStateTest {
                         currentTime = currentTimes[i],
                         sunTimes = expectedTimes[i],
                         moonTimes = expectedTimes[i],
-                        timeZone = TimeZone.UTC,
+                        timeZone = TimeZone.Companion.UTC,
                         mode = SunMoonTimesGraphicState.Mode.Next
                     ),
                     actual = awaitItem()
