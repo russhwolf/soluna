@@ -3,17 +3,16 @@ package com.russhwolf.soluna.mobile.graphics
 import app.cash.molecule.RecompositionMode
 import app.cash.molecule.moleculeFlow
 import app.cash.turbine.test
-import com.russhwolf.soluna.AstronomicalCalculator
-import com.russhwolf.soluna.MoonPhase
 import com.russhwolf.soluna.RiseSetResult
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.stateIn
+import com.russhwolf.soluna.mobile.repository.AstronomicalTimesRepository
+import com.russhwolf.soluna.mobile.repository.CurrentTimeRepository
+import com.russhwolf.soluna.mobile.repository.SelectableLocation
+import com.russhwolf.soluna.mobile.test.TestAstronomicalCalculatorFactory
+import com.russhwolf.soluna.mobile.test.TestClock
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlin.test.Test
@@ -28,22 +27,26 @@ class SunMoonTimesGraphicStateTest {
             LocalDateTime(2000, 1, 1, 20, 0).toInstant(TimeZone.Companion.UTC)
         )
 
-        val currentTimesFlow =
-            currentTimes.asFlow().drop(1).stateIn(this, SharingStarted.Companion.Lazily, currentTimes.first())
+        val location = SelectableLocation(0L, "Test Location", 0.0, 0.0, "UTC", false)
+        val clock = TestClock(currentTimes)
+        val currentTimeRepository = CurrentTimeRepository(clock)
+        val astronomicalTimesRepository = AstronomicalTimesRepository(
+            currentTimeRepository,
+            TestAstronomicalCalculatorFactory { day ->
+                RiseSetResult.RiseThenSet(
+                    riseTime = LocalDateTime(2000, 1, day, 8, day).toInstant(TimeZone.Companion.UTC),
+                    setTime = LocalDateTime(2000, 1, day, 16, day).toInstant(TimeZone.Companion.UTC)
+                )
+            },
+            StandardTestDispatcher(testScheduler),
+        )
 
         moleculeFlow(RecompositionMode.Immediate) {
             sunMoonTimesGraphicState(
-                currentTimesFlow,
-                TimeZone.Companion.UTC,
-                0.0,
-                0.0,
+                location,
+                currentTimeRepository,
+                astronomicalTimesRepository,
                 SunMoonTimesGraphicState.Mode.Next,
-                TestAstronomicalCalculatorFactory { day ->
-                    RiseSetResult.RiseThenSet(
-                        riseTime = LocalDateTime(2000, 1, day, 8, day).toInstant(TimeZone.Companion.UTC),
-                        setTime = LocalDateTime(2000, 1, day, 16, day).toInstant(TimeZone.Companion.UTC)
-                    )
-                }
             )
         }.test {
             val expectedTimes = arrayOf<RiseSetResult<Instant>>(
@@ -67,27 +70,13 @@ class SunMoonTimesGraphicStateTest {
                         currentTime = currentTimes[i],
                         sunTimes = expectedTimes[i],
                         moonTimes = expectedTimes[i],
-                        timeZone = TimeZone.Companion.UTC,
+                        timeZone = TimeZone.of("UTC"), // Note: this is different from TimeZone.UTC
                         mode = SunMoonTimesGraphicState.Mode.Next
                     ),
                     actual = awaitItem()
                 )
+                clock.tick()
             }
-        }
-    }
-}
-
-class TestAstronomicalCalculatorFactory(private val resultBuilder: (Int) -> RiseSetResult<Instant>) :
-        (Int, Month, Int) -> AstronomicalCalculator<Instant> {
-    override fun invoke(
-        year: Int,
-        month: Month,
-        day: Int
-    ): AstronomicalCalculator<Instant> {
-        return object : AstronomicalCalculator<Instant> {
-            override val sunTimes: RiseSetResult<Instant> = resultBuilder(day)
-            override val moonTimes: RiseSetResult<Instant> = resultBuilder(day)
-            override val moonPhase: MoonPhase? = null
         }
     }
 }
