@@ -53,12 +53,19 @@ fun SunMoonTimesGraphic(
     val colors = SolunaTheme.colorScheme
     val typography = SolunaTheme.typography
 
-    val midnight = state.currentTime.midnightBefore(state.timeZone)
-    val startTime = when (state.mode) {
-        SunMoonTimesGraphicState.Mode.Daily -> midnight
-        SunMoonTimesGraphicState.Mode.Next -> state.currentTime
+    val midnight = when (state) {
+        is SunMoonTimesGraphicState.Daily -> LocalDateTime(state.date, LocalTime(0, 0)).toInstant(state.timeZone)
+        is SunMoonTimesGraphicState.Next -> state.currentTime.midnightBefore(state.timeZone)
     }
-    val currentLocalTime = state.currentTime.toLocalDateTime(state.timeZone).time
+    val startTime = when (state) {
+        is SunMoonTimesGraphicState.Daily -> midnight
+        is SunMoonTimesGraphicState.Next -> state.currentTime
+    }
+    val currentLocalTime = when (state) {
+        is SunMoonTimesGraphicState.Daily -> LocalTime(0, 0) // Will not be used
+        is SunMoonTimesGraphicState.Next -> state.currentTime.toLocalDateTime(state.timeZone).time
+    }
+    val currentTimeString = currentLocalTime.formatTime()
 
     val timesArcThickness = 32.dp
     val innerPadding = 8.dp
@@ -74,7 +81,6 @@ fun SunMoonTimesGraphic(
     val moonrisePainter = rememberVectorPainter(Icons.Filled.DarkMode)
     val moonsetPainter = rememberVectorPainter(Icons.Outlined.DarkMode)
 
-    val currentTimeString = currentLocalTime.formatTime()
     val midnightString = stringResource(Res.string.midnight)
     val noonString = stringResource(Res.string.noon)
 
@@ -123,15 +129,20 @@ fun SunMoonTimesGraphic(
                 radius = labelRadius
             )
 
-            val isCurrentTimeOnBottom = currentLocalTime in LocalTime(6, 0)..LocalTime(18, 0)
-            drawArcText(
-                text = currentTimeString,
-                direction = if (isCurrentTimeOnBottom) ArcTextDirection.Up else ArcTextDirection.Down,
-                baseline = ArcTextBaseline.Outside,
-                style = timeStyle,
-                radius = timeRadius,
-                rotation = state.currentTime.angleFrom(midnight, state.timeZone) + if (isCurrentTimeOnBottom) 180 else 0
-            )
+            if (state is SunMoonTimesGraphicState.Next) {
+                val isCurrentTimeOnBottom = currentLocalTime in LocalTime(6, 0)..LocalTime(18, 0)
+                drawArcText(
+                    text = currentTimeString,
+                    direction = if (isCurrentTimeOnBottom) ArcTextDirection.Up else ArcTextDirection.Down,
+                    baseline = ArcTextBaseline.Outside,
+                    style = timeStyle,
+                    radius = timeRadius,
+                    rotation = state.currentTime.angleFrom(
+                        midnight,
+                        state.timeZone
+                    ) + if (isCurrentTimeOnBottom) 180 else 0
+                )
+            }
 
             rotate(-90f) {
                 drawTimesArc(
@@ -197,14 +208,16 @@ fun SunMoonTimesGraphic(
                 cap = StrokeCap.Round
             )
 
-            rotate(state.currentTime.angleFrom(midnight, state.timeZone)) {
-                drawLine(
-                    color = colors.onSurface,
-                    start = center,
-                    end = Offset(center.x, center.y - backgroundRadius),
-                    strokeWidth = handWidth.toPx(),
-                    cap = StrokeCap.Round
-                )
+            if (state is SunMoonTimesGraphicState.Next) {
+                rotate(state.currentTime.angleFrom(midnight, state.timeZone)) {
+                    drawLine(
+                        color = colors.onSurface,
+                        start = center,
+                        end = Offset(center.x, center.y - backgroundRadius),
+                        strokeWidth = handWidth.toPx(),
+                        cap = StrokeCap.Round
+                    )
+                }
             }
         }
     }

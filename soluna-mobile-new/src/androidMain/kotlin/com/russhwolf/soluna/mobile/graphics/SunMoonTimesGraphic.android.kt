@@ -14,6 +14,7 @@ import com.russhwolf.soluna.RiseSetResult
 import com.russhwolf.soluna.mobile.theme.SolunaTheme
 import com.russhwolf.soluna.time.InstantAstronomicalCalculator
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -26,13 +27,13 @@ fun SunTimesGraphic_Daily(
     @PreviewParameter(TimesResultPreviewProviderDaily::class)
     times: Pair<RiseSetResult<Instant>, RiseSetResult<Instant>>
 ) {
-    val currentTime = LocalDateTime(2000, 1, 1, 18, 30).toInstant(TimeZone.Companion.UTC)
+    val date = LocalDate(2000, 1, 1)
     val (sunTimes, moonTimes) = times
     SolunaTheme {
         Surface {
             SunMoonTimesGraphic(
-                SunMoonTimesGraphicState(
-                    currentTime,
+                SunMoonTimesGraphicState.Daily(
+                    date,
                     sunTimes,
                     moonTimes,
                     TimeZone.Companion.UTC
@@ -56,12 +57,11 @@ fun SunTimesGraphic_Next(
     SolunaTheme {
         Surface {
             SunMoonTimesGraphic(
-                SunMoonTimesGraphicState(
+                SunMoonTimesGraphicState.Next(
                     currentTime,
                     sunTimes,
                     moonTimes,
-                    TimeZone.Companion.UTC,
-                    SunMoonTimesGraphicState.Mode.Next
+                    TimeZone.Companion.UTC
                 ),
                 modifier = Modifier.Companion
                     .width(300.dp)
@@ -85,7 +85,7 @@ fun SunTimesGraphic_DST() {
     SolunaTheme {
         Surface {
             SunMoonTimesGraphic(
-                SunMoonTimesGraphicState(
+                SunMoonTimesGraphicState.Next(
                     currentTime,
                     calculator.sunTimes,
                     calculator.moonTimes,

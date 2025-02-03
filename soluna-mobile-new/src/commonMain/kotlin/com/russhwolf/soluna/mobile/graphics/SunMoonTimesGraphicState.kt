@@ -7,58 +7,68 @@ import com.russhwolf.soluna.mobile.repository.AstronomicalTimesRepository
 import com.russhwolf.soluna.mobile.repository.CurrentTimeRepository
 import com.russhwolf.soluna.mobile.repository.SelectableLocation
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration.Companion.seconds
 
-data class SunMoonTimesGraphicState(
-    val currentTime: Instant,
-    val sunTimes: RiseSetResult<Instant>,
-    val moonTimes: RiseSetResult<Instant>,
-    val timeZone: TimeZone,
-    val mode: Mode = Mode.Daily
-) {
-    enum class Mode {
-        Daily, Next
+sealed interface SunMoonTimesGraphicState {
+    val sunTimes: RiseSetResult<Instant>
+    val moonTimes: RiseSetResult<Instant>
+    val timeZone: TimeZone
+
+    data class Daily(
+        val date: LocalDate,
+        override val sunTimes: RiseSetResult<Instant>,
+        override val moonTimes: RiseSetResult<Instant>,
+        override val timeZone: TimeZone
+    ) : SunMoonTimesGraphicState
+
+    data class Next(
+        val currentTime: Instant,
+        override val sunTimes: RiseSetResult<Instant>,
+        override val moonTimes: RiseSetResult<Instant>,
+        override val timeZone: TimeZone
+    ) : SunMoonTimesGraphicState
+
+    sealed interface Mode {
+        data class Daily(val date: LocalDate) : Mode
+        data object Next : Mode
     }
 }
 
 @Composable
-fun sunMoonTimesGraphicState(
+fun sunMoonTimesGraphicStateNext(
     location: SelectableLocation,
     currentTimeRepository: CurrentTimeRepository,
     astronomicalTimesRepository: AstronomicalTimesRepository,
-    mode: SunMoonTimesGraphicState.Mode
-): SunMoonTimesGraphicState {
+): SunMoonTimesGraphicState.Next {
     val timeZone = TimeZone.of(location.timeZone)
+    val astronomicalData =
+        astronomicalTimesRepository.getUpcomingTimes(location, 1.seconds).collectAsState().value
+    val currentTime = currentTimeRepository.getCurrentTime()
 
-    return when (mode) {
-        SunMoonTimesGraphicState.Mode.Next -> {
-            val astronomicalData =
-                astronomicalTimesRepository.getUpcomingTimes(location, 1.seconds).collectAsState().value
-            val currentTime = currentTimeRepository.getCurrentTime()
-
-            SunMoonTimesGraphicState(
-                currentTime = currentTime,
-                sunTimes = astronomicalData.sunTimes,
-                moonTimes = astronomicalData.moonTimes,
-                timeZone = timeZone,
-                mode = mode
-            )
-        }
-
-        SunMoonTimesGraphicState.Mode.Daily -> {
-            val currentTime = currentTimeRepository.getCurrentTime()
-            val date = currentTime.toLocalDateTime(timeZone).date
-            val astronomicalData = astronomicalTimesRepository.getTimesForDate(date, location)
-
-            SunMoonTimesGraphicState(
-                currentTime = currentTime,
-                sunTimes = astronomicalData.sunTimes,
-                moonTimes = astronomicalData.moonTimes,
-                timeZone = timeZone,
-                mode = mode
-            )
-        }
-    }
+    return SunMoonTimesGraphicState.Next(
+        currentTime = currentTime,
+        sunTimes = astronomicalData.sunTimes,
+        moonTimes = astronomicalData.moonTimes,
+        timeZone = timeZone
+    )
 }
+
+@Composable
+fun sunMoonTimesGraphicStateDaily(
+    location: SelectableLocation,
+    astronomicalTimesRepository: AstronomicalTimesRepository,
+    date: LocalDate
+): SunMoonTimesGraphicState.Daily {
+    val timeZone = TimeZone.of(location.timeZone)
+    val astronomicalData = astronomicalTimesRepository.getTimesForDate(date, location)
+
+    return SunMoonTimesGraphicState.Daily(
+        date = date,
+        sunTimes = astronomicalData.sunTimes,
+        moonTimes = astronomicalData.moonTimes,
+        timeZone = timeZone
+    )
+}
+
