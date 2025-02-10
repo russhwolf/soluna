@@ -29,11 +29,6 @@ sealed interface SunMoonTimesGraphicState {
         override val moonTimes: RiseSetResult<Instant>,
         override val timeZone: TimeZone
     ) : SunMoonTimesGraphicState
-
-    sealed interface Mode {
-        data class Daily(val date: LocalDate) : Mode
-        data object Next : Mode
-    }
 }
 
 @Composable
