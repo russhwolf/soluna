@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
+    <string name="action_cancel">Cancel</string>
+
     <string name="noon">Noon</string>
     <string name="midnight">Midnight</string>
+    <string name="unknown">Unknown</string>
+
+    <string name="abbr_north">N</string>
+    <string name="abbr_south">S</string>
+    <string name="abbr_east">E</string>
+    <string name="abbr_west">W</string>
+    <string name="location_coordinate">%1$s°%2$s</string>
+
+    <string name="home_empty">No location selected.</string>
+    <string name="home_sunrise">Sunrise: %1$s</string>
+    <string name="home_sunset">Sunset: %1$s</string>
+    <string name="home_moonrise">Moonrise: %1$s</string>
+    <string name="home_moonset">Moonset: %1$s</string>
+    <string name="home_no_sunrise">No sunrise</string>
+    <string name="home_no_sunset">No sunset</string>
+    <string name="home_no_moonrise">No moonrise</string>
+    <string name="home_no_moonset">No moonset</string>
+    <string name="home_sun_down">Sun down all day</string>
+    <string name="home_sun_up">Sun up all day</string>
+    <string name="home_moon_down">Moon down all day</string>
+    <string name="home_moon_up">Moon up all day</string>
+    <string name="home_about_date">Showing times for %1$s.</string>
+    <string name="home_about_upcoming">Showing upcoming times.</string>
+    <string name="home_about_location">Location: %1$s (%2$s, %3$s)</string>
+    <string name="home_about_timezone">Time zone: %1$s</string>
+    <string name="home_button_upcoming">Show Upcoming Times</string>
+    <string name="home_button_date">Select Date</string>
+    <string name="home_dialog_button_date">Use Selected Date</string>
 </resources>

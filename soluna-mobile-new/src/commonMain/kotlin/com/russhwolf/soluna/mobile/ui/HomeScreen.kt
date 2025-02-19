@@ -29,6 +29,35 @@ import com.russhwolf.soluna.mobile.util.formatTime
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
+import soluna.soluna_mobile_new.generated.resources.Res
+import soluna.soluna_mobile_new.generated.resources.abbr_east
+import soluna.soluna_mobile_new.generated.resources.abbr_north
+import soluna.soluna_mobile_new.generated.resources.abbr_south
+import soluna.soluna_mobile_new.generated.resources.abbr_west
+import soluna.soluna_mobile_new.generated.resources.action_cancel
+import soluna.soluna_mobile_new.generated.resources.home_about_date
+import soluna.soluna_mobile_new.generated.resources.home_about_location
+import soluna.soluna_mobile_new.generated.resources.home_about_timezone
+import soluna.soluna_mobile_new.generated.resources.home_about_upcoming
+import soluna.soluna_mobile_new.generated.resources.home_button_date
+import soluna.soluna_mobile_new.generated.resources.home_button_upcoming
+import soluna.soluna_mobile_new.generated.resources.home_dialog_button_date
+import soluna.soluna_mobile_new.generated.resources.home_empty
+import soluna.soluna_mobile_new.generated.resources.home_moon_down
+import soluna.soluna_mobile_new.generated.resources.home_moon_up
+import soluna.soluna_mobile_new.generated.resources.home_moonrise
+import soluna.soluna_mobile_new.generated.resources.home_moonset
+import soluna.soluna_mobile_new.generated.resources.home_no_moonrise
+import soluna.soluna_mobile_new.generated.resources.home_no_moonset
+import soluna.soluna_mobile_new.generated.resources.home_no_sunrise
+import soluna.soluna_mobile_new.generated.resources.home_no_sunset
+import soluna.soluna_mobile_new.generated.resources.home_sun_down
+import soluna.soluna_mobile_new.generated.resources.home_sun_up
+import soluna.soluna_mobile_new.generated.resources.home_sunrise
+import soluna.soluna_mobile_new.generated.resources.home_sunset
+import soluna.soluna_mobile_new.generated.resources.location_coordinate
+import soluna.soluna_mobile_new.generated.resources.unknown
 import kotlin.math.abs
 
 @Composable
@@ -48,7 +77,7 @@ fun HomeScreen(
             HomeScreenState.NoLocationSelected -> {
                 Box(modifier.fillMaxSize()) {
                     // TODO design more interesting empty state
-                    Text("No location selected", Modifier.align(Alignment.Center))
+                    Text(stringResource(Res.string.home_empty), Modifier.align(Alignment.Center))
                 }
             }
 
@@ -68,7 +97,7 @@ fun HomeScreenPopulated(
     Box(Modifier.fillMaxSize()) {
         Column(modifier = modifier.align(Alignment.TopCenter).padding(16.dp)) {
             Row {
-                val text = state.sunTimes.toStrings("Sun", state.timeZone)
+                val text = state.sunTimes.toSunStrings(state.timeZone)
                 Text(
                     text.first,
                     Modifier.weight(if (text.first.isEmpty()) 0f else 1f),
@@ -81,7 +110,7 @@ fun HomeScreenPopulated(
                 )
             }
             Row {
-                val text = state.moonTimes.toStrings("Moon", state.timeZone)
+                val text = state.moonTimes.toMoonStrings(state.timeZone)
                 Text(
                     text.first,
                     Modifier.weight(if (text.first.isEmpty()) 0f else 1f),
@@ -98,8 +127,8 @@ fun HomeScreenPopulated(
             )
             Column(Modifier.align(Alignment.CenterHorizontally)) {
                 val modeText = when (state) {
-                    is HomeScreenState.Daily -> "Showing times for ${state.date.formatDate()}."
-                    is HomeScreenState.Next -> "Showing upcoming times."
+                    is HomeScreenState.Daily -> stringResource(Res.string.home_about_date, state.date.formatDate())
+                    is HomeScreenState.Next -> stringResource(Res.string.home_about_upcoming)
                 }
                 Text(
                     text = modeText,
@@ -107,15 +136,31 @@ fun HomeScreenPopulated(
                     style = SolunaTheme.typography.bodyMedium
                 )
 
-                val latitudeDirection = if (state.latitude >= 0) "N" else "S"
-                val longitudeDirection = if (state.longitude >= 0) "E" else "W"
+                // TODO this may not localize well
+                val latitudeDirection = if (state.latitude >= 0) Res.string.abbr_north else Res.string.abbr_south
+                val longitudeDirection = if (state.longitude >= 0) Res.string.abbr_east else Res.string.abbr_west
+                val latitudeText = stringResource(
+                    Res.string.location_coordinate,
+                    abs(state.latitude),
+                    stringResource(latitudeDirection)
+                )
+                val longitudeText = stringResource(
+                    Res.string.location_coordinate,
+                    abs(state.longitude),
+                    stringResource(longitudeDirection)
+                )
                 Text(
-                    text = "Location: ${state.locationName} (${abs(state.latitude)}°$latitudeDirection, ${abs(state.longitude)}°$longitudeDirection)",
+                    text = stringResource(
+                        Res.string.home_about_location,
+                        state.locationName,
+                        latitudeText,
+                        longitudeText
+                    ),
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     style = SolunaTheme.typography.bodyMedium,
                 )
                 Text(
-                    text = "Time zone: ${state.timeZone.id}",
+                    text = stringResource(Res.string.home_about_timezone, state.timeZone.id),
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     style = SolunaTheme.typography.bodyMedium,
                 )
@@ -143,11 +188,11 @@ fun HomeScreenPopulated(
             }
             Row(Modifier.align(Alignment.CenterHorizontally)) {
                 TextButton(
-                    content = { Text("Show Upcoming Times") },
+                    content = { Text(stringResource(Res.string.home_button_upcoming)) },
                     onClick = { onEvent(HomeScreenEvent.ModeChange(HomeScreenState.Mode.Next)) }
                 )
                 TextButton(
-                    content = { Text("Select Date") },
+                    content = { Text(stringResource(Res.string.home_button_date)) },
                     onClick = { onEvent(HomeScreenEvent.DatePickerVisibilityChange(true)) }
                 )
             }
@@ -159,7 +204,7 @@ fun HomeScreenPopulated(
             DatePickerDialog(
                 confirmButton = {
                     TextButton(
-                        content = { Text("Use Selected Date") },
+                        content = { Text(stringResource(Res.string.home_dialog_button_date)) },
                         onClick = {
                             val selectedMillis = datePickerState.selectedDateMillis
                                 ?: return@TextButton // TODO feedback to user about unselected date?
@@ -172,7 +217,7 @@ fun HomeScreenPopulated(
                 },
                 dismissButton = {
                     TextButton(
-                        content = { Text("Cancel") },
+                        content = { Text(stringResource(Res.string.action_cancel)) },
                         onClick = { onEvent(HomeScreenEvent.DatePickerVisibilityChange(false)) }
                     )
                 },
@@ -185,25 +230,41 @@ fun HomeScreenPopulated(
     }
 }
 
-// TODO move to resources and don't depend on concatenation
 @Composable
-private fun RiseSetResult<Instant>.toStrings(body: String, timeZone: TimeZone): Pair<String, String> = when (this) {
-    is RiseSetResult.RiseThenSet -> "${body}rise: ${riseTime.formatTime(timeZone)}" to "${body}set: ${
-        setTime.formatTime(
-            timeZone
-        )
-    }"
+private fun RiseSetResult<Instant>.toSunStrings(timeZone: TimeZone): Pair<String, String> = when (this) {
+    is RiseSetResult.RiseThenSet -> stringResource(Res.string.home_sunrise, riseTime.formatTime(timeZone)) to
+            stringResource(Res.string.home_sunset, setTime.formatTime(timeZone))
 
-    is RiseSetResult.SetThenRise -> "${body}set: ${setTime.formatTime(timeZone)}" to "${body}rise: ${
-        riseTime.formatTime(
-            timeZone
-        )
-    }"
+    is RiseSetResult.SetThenRise -> stringResource(Res.string.home_sunset, setTime.formatTime(timeZone)) to
+            stringResource(Res.string.home_sunrise, riseTime.formatTime(timeZone))
 
-    is RiseSetResult.RiseOnly -> "${body}rise: ${riseTime.formatTime(timeZone)}" to "No ${body}rise"
-    is RiseSetResult.SetOnly -> "${body}set: ${setTime.formatTime(timeZone)}" to "No ${body}set"
-    RiseSetResult.UpAllDay -> "Up all day" to ""
-    RiseSetResult.DownAllDay -> "Down all day" to ""
-    RiseSetResult.Unknown -> "Unknown" to ""
+    is RiseSetResult.RiseOnly -> stringResource(Res.string.home_sunrise, riseTime.formatTime(timeZone)) to
+            stringResource(Res.string.home_no_sunset)
+
+    is RiseSetResult.SetOnly -> stringResource(Res.string.home_sunset, setTime.formatTime(timeZone)) to
+            stringResource(Res.string.home_no_sunrise)
+
+    RiseSetResult.UpAllDay -> stringResource(Res.string.home_sun_up) to ""
+    RiseSetResult.DownAllDay -> stringResource(Res.string.home_sun_down) to ""
+    RiseSetResult.Unknown -> stringResource(Res.string.unknown) to ""
+}
+
+@Composable
+private fun RiseSetResult<Instant>.toMoonStrings(timeZone: TimeZone): Pair<String, String> = when (this) {
+    is RiseSetResult.RiseThenSet -> stringResource(Res.string.home_moonrise, riseTime.formatTime(timeZone)) to
+            stringResource(Res.string.home_moonset, setTime.formatTime(timeZone))
+
+    is RiseSetResult.SetThenRise -> stringResource(Res.string.home_moonset, setTime.formatTime(timeZone)) to
+            stringResource(Res.string.home_moonrise, riseTime.formatTime(timeZone))
+
+    is RiseSetResult.RiseOnly -> stringResource(Res.string.home_moonrise, riseTime.formatTime(timeZone)) to
+            stringResource(Res.string.home_no_moonset)
+
+    is RiseSetResult.SetOnly -> stringResource(Res.string.home_moonset, setTime.formatTime(timeZone)) to
+            stringResource(Res.string.home_no_moonrise)
+
+    RiseSetResult.UpAllDay -> stringResource(Res.string.home_moon_up) to ""
+    RiseSetResult.DownAllDay -> stringResource(Res.string.home_moon_down) to ""
+    RiseSetResult.Unknown -> stringResource(Res.string.unknown) to ""
 }
 
