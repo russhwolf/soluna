@@ -6,6 +6,7 @@ import com.russhwolf.soluna.mobile.db.sqldelight.LocationSummary
 import com.russhwolf.soluna.mobile.db.sqldelight.Reminder
 import com.russhwolf.soluna.mobile.db.sqldelight.SolunaDb
 import com.russhwolf.soluna.mobile.test.createInMemorySqlDriver
+import kotlinx.datetime.TimeZone
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -32,7 +33,7 @@ class SolunaDbTest {
             label = "Test Location",
             latitude = 42.3956001,
             longitude = -71.1387674,
-            timeZone = "America/New_York"
+            timeZone = TimeZone.of("America/New_York")
         )
 
         val updatedLocations = database.locationQueries.selectAllLocations().executeAsList()
@@ -52,7 +53,7 @@ class SolunaDbTest {
                 label = "Test Location",
                 latitude = 42.3956001,
                 longitude = -71.1387674,
-                timeZone = "America/New_York"
+                timeZone = TimeZone.of("America/New_York")
             ),
             actual = location
         )
@@ -66,7 +67,7 @@ class SolunaDbTest {
                 label = "Updated Location",
                 latitude = 42.3956001,
                 longitude = -71.1387674,
-                timeZone = "America/New_York"
+                timeZone = TimeZone.of("America/New_York")
             ),
             actual = updatedLocation
         )
@@ -82,13 +83,13 @@ class SolunaDbTest {
             label = "Location 1",
             latitude = 42.3956001,
             longitude = -71.1387674,
-            timeZone = "America/New_York"
+            timeZone = TimeZone.of("America/New_York")
         )
         database.locationQueries.insertLocation(
             label = "Location 2",
             latitude = 27.7790026,
             longitude = -82.7949071,
-            timeZone = "America/New_York"
+            timeZone = TimeZone.of("America/New_York")
         )
 
         val initialReminders = database.reminderQueries.selectAllReminders().executeAsList()

@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Preview
@@ -40,8 +41,8 @@ fun demo() {
     runBlocking {
         var locations = locationRepository.getLocations().first()
         if (locations.isEmpty()) {
-            locationRepository.addLocation("Somerville, MA", 42.388, -71.100, "America/New_York")
-            locationRepository.addLocation("Kotlin Island", 60.002, 29.678, "Europe/Moscow")
+            locationRepository.addLocation("Somerville, MA", 42.388, -71.100, TimeZone.of("America/New_York"))
+            locationRepository.addLocation("Kotlin Island", 60.002, 29.678, TimeZone.of("Europe/Moscow"))
             locations = locationRepository.getLocations().first()
         }
         val aLocation = locations.first()

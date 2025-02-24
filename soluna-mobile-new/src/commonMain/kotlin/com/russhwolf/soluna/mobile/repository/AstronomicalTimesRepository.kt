@@ -48,7 +48,7 @@ class AstronomicalTimesRepository(
         location: SelectableLocation
     ): AstronomicalTimes {
         val astronomicalCalculator = calculatorFactoryBuilder(
-            TimeZone.of(location.timeZone),
+            location.timeZone,
             location.latitude,
             location.longitude
         ).invoke(
@@ -63,15 +63,18 @@ class AstronomicalTimesRepository(
         currentTime: Instant,
         selectedLocation: SelectableLocation
     ): AstronomicalTimes {
-        val timeZone = TimeZone.of(selectedLocation.timeZone)
-        val localDateTime = currentTime.toLocalDateTime(timeZone)
+        val localDateTime = currentTime.toLocalDateTime(selectedLocation.timeZone)
 
         val dateToday = localDateTime.date
-        val dateTomorrow = dateToday.plus(1, DateTimeUnit.Companion.DAY)
-        val currentTimeTomorrow = dateTomorrow.atTime(localDateTime.time).toInstant(timeZone)
+        val dateTomorrow = dateToday.plus(1, DateTimeUnit.DAY)
+        val currentTimeTomorrow = dateTomorrow.atTime(localDateTime.time).toInstant(selectedLocation.timeZone)
 
         val calculatorFactory =
-            calculatorFactoryBuilder.invoke(timeZone, selectedLocation.latitude, selectedLocation.longitude)
+            calculatorFactoryBuilder.invoke(
+                selectedLocation.timeZone,
+                selectedLocation.latitude,
+                selectedLocation.longitude
+            )
 
         val timesToday = calculatorFactory(dateToday.year, dateToday.month, dateToday.dayOfMonth)
         val timesTomorrow = calculatorFactory(dateTomorrow.year, dateTomorrow.month, dateTomorrow.dayOfMonth)

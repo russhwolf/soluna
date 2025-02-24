@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.TimeZone
 
 class LocationRepository(
     private val database: SolunaDb,
@@ -46,7 +47,7 @@ class LocationRepository(
             .distinctUntilChanged()
             .flowOn(backgroundDispatcher)
 
-    suspend fun addLocation(label: String, latitude: Double, longitude: Double, timeZone: String) =
+    suspend fun addLocation(label: String, latitude: Double, longitude: Double, timeZone: TimeZone) =
         withContext(backgroundDispatcher) {
             database.locationQueries
                 .insertLocation(label, latitude, longitude, timeZone)

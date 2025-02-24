@@ -10,6 +10,7 @@ import com.russhwolf.soluna.mobile.repository.LocationRepository.Companion.KEY_S
 import com.russhwolf.soluna.mobile.test.createInMemorySqlDriver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.TimeZone
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -113,7 +114,7 @@ class LocationRepositoryTest {
             label = "Test Location 1",
             latitude = 42.3956001,
             longitude = -71.1387674,
-            timeZone = "America/New_York"
+            timeZone = TimeZone.of("America/New_York")
         )
 
         val dbLocation = database.locationQueries.selectLocationById(1).executeAsOne()
@@ -203,7 +204,7 @@ private val dummyLocation = SelectableLocation(
     label = "Test Location 1",
     latitude = 42.3956001,
     longitude = -71.1387674,
-    timeZone = "America/New_York",
+    timeZone = TimeZone.of("America/New_York"),
     selected = false
 )
 
@@ -212,7 +213,7 @@ private fun SolunaDb.insertDummyLocation(id: Long = 1) {
         label = "Test Location $id",
         latitude = 42.3956001,
         longitude = -71.1387674,
-        timeZone = "America/New_York"
+        timeZone = TimeZone.of("America/New_York")
     )
 }
 

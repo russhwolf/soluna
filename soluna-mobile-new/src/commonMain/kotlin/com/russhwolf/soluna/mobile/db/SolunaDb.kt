@@ -3,11 +3,18 @@ package com.russhwolf.soluna.mobile.db
 import app.cash.sqldelight.ColumnAdapter
 import app.cash.sqldelight.EnumColumnAdapter
 import app.cash.sqldelight.db.SqlDriver
+import com.russhwolf.soluna.mobile.db.sqldelight.Location
 import com.russhwolf.soluna.mobile.db.sqldelight.Reminder
 import com.russhwolf.soluna.mobile.db.sqldelight.SolunaDb
+import kotlinx.datetime.TimeZone
 
 operator fun SolunaDb.Companion.invoke(driver: SqlDriver) =
-    SolunaDb(driver, Reminder.Adapter(EnumColumnAdapter(), LongAsIntAdapter))
+    SolunaDb(driver, Location.Adapter(TimeZoneAdapter), Reminder.Adapter(EnumColumnAdapter(), LongAsIntAdapter))
+
+private object TimeZoneAdapter : ColumnAdapter<TimeZone, String> {
+    override fun decode(databaseValue: String): TimeZone = TimeZone.of(databaseValue)
+    override fun encode(value: TimeZone): String = value.id
+}
 
 enum class ReminderType {
     Sunrise, Sunset, Moonrise, Moonset

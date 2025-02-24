@@ -37,7 +37,7 @@ fun sunMoonTimesGraphicStateNext(
     currentTimeRepository: CurrentTimeRepository,
     astronomicalTimesRepository: AstronomicalTimesRepository,
 ): SunMoonTimesGraphicState.Next {
-    val timeZone = TimeZone.of(location.timeZone)
+    val timeZone = location.timeZone
     val astronomicalData =
         astronomicalTimesRepository.getUpcomingTimes(location, 1.seconds).collectAsState().value
     val currentTime = currentTimeRepository.getCurrentTime()
@@ -56,7 +56,7 @@ fun sunMoonTimesGraphicStateDaily(
     astronomicalTimesRepository: AstronomicalTimesRepository,
     date: LocalDate
 ): SunMoonTimesGraphicState.Daily {
-    val timeZone = TimeZone.of(location.timeZone)
+    val timeZone = location.timeZone
     val astronomicalData = astronomicalTimesRepository.getTimesForDate(date, location)
 
     return SunMoonTimesGraphicState.Daily(

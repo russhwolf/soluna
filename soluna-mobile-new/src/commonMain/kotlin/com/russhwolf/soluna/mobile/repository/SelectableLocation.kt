@@ -2,13 +2,14 @@ package com.russhwolf.soluna.mobile.repository
 
 import com.russhwolf.soluna.mobile.db.sqldelight.Location
 import com.russhwolf.soluna.mobile.db.sqldelight.LocationSummary
+import kotlinx.datetime.TimeZone
 
 data class SelectableLocation(
     val id: Long,
     val label: String,
     val latitude: Double,
     val longitude: Double,
-    val timeZone: String,
+    val timeZone: TimeZone,
     val selected: Boolean
 )
 

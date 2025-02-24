@@ -25,12 +25,12 @@ class SunMoonTimesGraphicStateTest {
 
     val date = LocalDate(2000, Month.JANUARY, 1)
     val currentTimes = listOf(
-        LocalDateTime(date, LocalTime(4, 0)).toInstant(TimeZone.Companion.UTC),
-        LocalDateTime(date, LocalTime(12, 0)).toInstant(TimeZone.Companion.UTC),
-        LocalDateTime(date, LocalTime(20, 0)).toInstant(TimeZone.Companion.UTC)
+        LocalDateTime(date, LocalTime(4, 0)).toInstant(TimeZone.of("UTC")),
+        LocalDateTime(date, LocalTime(12, 0)).toInstant(TimeZone.of("UTC")),
+        LocalDateTime(date, LocalTime(20, 0)).toInstant(TimeZone.of("UTC"))
     )
 
-    val location = SelectableLocation(0L, "Test Location", 0.0, 0.0, "UTC", false)
+    val location = SelectableLocation(0L, "Test Location", 0.0, 0.0, TimeZone.of("UTC"), false)
     val clock = TestClock(currentTimes)
     val currentTimeRepository = CurrentTimeRepository(clock)
 
@@ -40,8 +40,8 @@ class SunMoonTimesGraphicStateTest {
             currentTimeRepository,
             TestAstronomicalCalculatorFactory { day ->
                 RiseSetResult.RiseThenSet(
-                    riseTime = LocalDateTime(2000, 1, day, 8, day).toInstant(TimeZone.Companion.UTC),
-                    setTime = LocalDateTime(2000, 1, day, 16, day).toInstant(TimeZone.Companion.UTC)
+                    riseTime = LocalDateTime(2000, 1, day, 8, day).toInstant(TimeZone.of("UTC")),
+                    setTime = LocalDateTime(2000, 1, day, 16, day).toInstant(TimeZone.of("UTC"))
                 )
             },
             StandardTestDispatcher(testScheduler),
@@ -56,16 +56,16 @@ class SunMoonTimesGraphicStateTest {
         }.test {
             val expectedTimes = arrayOf<RiseSetResult<Instant>>(
                 RiseSetResult.RiseThenSet(
-                    riseTime = LocalDateTime(2000, 1, 1, 8, 1).toInstant(TimeZone.Companion.UTC),
-                    setTime = LocalDateTime(2000, 1, 1, 16, 1).toInstant(TimeZone.Companion.UTC)
+                    riseTime = LocalDateTime(2000, 1, 1, 8, 1).toInstant(TimeZone.of("UTC")),
+                    setTime = LocalDateTime(2000, 1, 1, 16, 1).toInstant(TimeZone.of("UTC"))
                 ),
                 RiseSetResult.SetThenRise(
-                    setTime = LocalDateTime(2000, 1, 1, 16, 1).toInstant(TimeZone.Companion.UTC),
-                    riseTime = LocalDateTime(2000, 1, 2, 8, 2).toInstant(TimeZone.Companion.UTC)
+                    setTime = LocalDateTime(2000, 1, 1, 16, 1).toInstant(TimeZone.of("UTC")),
+                    riseTime = LocalDateTime(2000, 1, 2, 8, 2).toInstant(TimeZone.of("UTC"))
                 ),
                 RiseSetResult.RiseThenSet(
-                    riseTime = LocalDateTime(2000, 1, 2, 8, 2).toInstant(TimeZone.Companion.UTC),
-                    setTime = LocalDateTime(2000, 1, 2, 16, 2).toInstant(TimeZone.Companion.UTC)
+                    riseTime = LocalDateTime(2000, 1, 2, 8, 2).toInstant(TimeZone.of("UTC")),
+                    setTime = LocalDateTime(2000, 1, 2, 16, 2).toInstant(TimeZone.of("UTC"))
                 )
             )
 
@@ -90,8 +90,8 @@ class SunMoonTimesGraphicStateTest {
             currentTimeRepository,
             TestAstronomicalCalculatorFactory { day ->
                 RiseSetResult.RiseThenSet(
-                    riseTime = LocalDateTime(2000, 1, day, 8, day).toInstant(TimeZone.Companion.UTC),
-                    setTime = LocalDateTime(2000, 1, day, 16, day).toInstant(TimeZone.Companion.UTC)
+                    riseTime = LocalDateTime(2000, 1, day, 8, day).toInstant(TimeZone.of("UTC")),
+                    setTime = LocalDateTime(2000, 1, day, 16, day).toInstant(TimeZone.of("UTC"))
                 )
             }
         )
@@ -104,8 +104,8 @@ class SunMoonTimesGraphicStateTest {
             )
         }.test {
             val expectedTimes = RiseSetResult.RiseThenSet(
-                riseTime = LocalDateTime(2000, 1, 1, 8, 1).toInstant(TimeZone.Companion.UTC),
-                setTime = LocalDateTime(2000, 1, 1, 16, 1).toInstant(TimeZone.Companion.UTC)
+                riseTime = LocalDateTime(2000, 1, 1, 8, 1).toInstant(TimeZone.of("UTC")),
+                setTime = LocalDateTime(2000, 1, 1, 16, 1).toInstant(TimeZone.of("UTC"))
             )
 
             assertEquals(

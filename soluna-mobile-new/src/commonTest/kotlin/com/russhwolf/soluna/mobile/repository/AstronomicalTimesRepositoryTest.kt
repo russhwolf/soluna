@@ -22,7 +22,7 @@ class AstronomicalTimesRepositoryTest {
         LocalDateTime(2000, 1, 2, 4, 0).toInstant(TimeZone.UTC)
     )
 
-    val location = SelectableLocation(0L, "Test Location", 0.0, 0.0, "UTC", false)
+    val location = SelectableLocation(0L, "Test Location", 0.0, 0.0, TimeZone.UTC, false)
     val clock = TestClock(currentTimes)
     val currentTimeRepository = CurrentTimeRepository(clock)
 

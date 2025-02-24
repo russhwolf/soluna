@@ -105,7 +105,7 @@ fun homeScreenState(
             HomeScreenState.Daily(
                 mode.date,
                 location.label,
-                TimeZone.of(location.timeZone),
+                location.timeZone,
                 location.latitude,
                 location.longitude,
                 astronomicalTimes.sunTimes,
@@ -123,7 +123,7 @@ fun homeScreenState(
             HomeScreenState.Next(
                 currentTimeRepository.getCurrentTime(),
                 location.label,
-                TimeZone.of(location.timeZone),
+                location.timeZone,
                 location.latitude,
                 location.longitude,
                 astronomicalTimesState.value.sunTimes,
