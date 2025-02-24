@@ -15,13 +15,13 @@ internal fun LocalTime.formatTime(): String {
     val is24h = LocaleUtils.is24h()
     val timeFormat = remember(is24h) {
         if (is24h) {
-            LocalTime.Companion.Format {
+            LocalTime.Format {
                 hour(padding = Padding.NONE)
                 char(':')
                 minute(padding = Padding.ZERO)
             }
         } else {
-            LocalTime.Companion.Format {
+            LocalTime.Format {
                 amPmHour(padding = Padding.NONE)
                 char(':')
                 minute(padding = Padding.ZERO)

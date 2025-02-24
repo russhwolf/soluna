@@ -151,14 +151,14 @@ private fun LocationDetailAppBar(
 
 @Composable
 private fun ColumnScope.Loading() {
-    Box(Modifier.Companion.weight(1f), contentAlignment = Alignment.Center) {
+    Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
         CircularProgressIndicator()
     }
 }
 
 @Composable
 private fun ColumnScope.InvalidLocation() {
-    Box(Modifier.Companion.weight(1f), contentAlignment = Alignment.Center) {
+    Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
         Text(stringResource(R.string.locationdetail_invalid))
     }
 }
@@ -174,7 +174,7 @@ private fun ColumnScope.Populated(state: LocationDetailViewModel.State.Populated
         moonsetTime = state.moonsetTime,
         timeZone = state.timeZone
     )
-    Spacer(Modifier.Companion.weight(1f))
+    Spacer(Modifier.weight(1f))
 }
 
 @Composable
