@@ -6,7 +6,6 @@ import com.russhwolf.soluna.riseOrNull
 import com.russhwolf.soluna.setOrNull
 import com.russhwolf.soluna.time.InstantAstronomicalCalculator
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -20,8 +19,6 @@ import kotlinx.datetime.atTime
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -29,13 +26,14 @@ class AstronomicalTimesRepository(
     private val currentTimeRepository: CurrentTimeRepository,
     // TODO make this less terrible
     private val calculatorFactoryBuilder: (TimeZone, Double, Double) -> (Int, Month, Int) -> AstronomicalCalculator<Instant> =
-        InstantAstronomicalCalculator::factory,
-    private val context: CoroutineContext = EmptyCoroutineContext,
+        InstantAstronomicalCalculator::factory
 ) {
-    private val coroutineScope = CoroutineScope(SupervisorJob() + context)
-
-    fun getUpcomingTimes(location: SelectableLocation, period: Duration = 1.seconds): StateFlow<AstronomicalTimes> =
-        currentTimeRepository.getCurrentTimeFlow(period)
+    fun getUpcomingTimes(
+        coroutineScope: CoroutineScope,
+        location: SelectableLocation,
+        period: Duration = 1.seconds
+    ): StateFlow<AstronomicalTimes> =
+        currentTimeRepository.getCurrentTimeFlow(coroutineScope, period)
             .map { computeUpcomingTimes(it, location) }
             .stateIn(
                 coroutineScope,

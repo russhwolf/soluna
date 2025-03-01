@@ -26,12 +26,10 @@ class CurrentTimeRepositoryTest {
         val clock = TestClock()
         val repository = CurrentTimeRepository(clock)
 
-        repository.getCurrentTimeFlow(1.seconds).test {
-            assertEquals(0L, awaitItem().toEpochMilliseconds())
+        repository.getCurrentTimeFlow(backgroundScope, 1.seconds).test {
             assertEquals(0L, awaitItem().toEpochMilliseconds())
 
             clock.tick()
-            assertEquals(1L, awaitItem().toEpochMilliseconds())
             assertEquals(1L, awaitItem().toEpochMilliseconds())
         }
     }

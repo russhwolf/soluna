@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import com.russhwolf.soluna.RiseSetResult
 import com.russhwolf.soluna.mobile.graphics.SunMoonTimesGraphicState
 import com.russhwolf.soluna.mobile.graphics.sunMoonTimesGraphicStateDaily
@@ -118,7 +119,8 @@ fun homeScreenState(
         }
 
         is HomeScreenState.Mode.Next -> {
-            val astronomicalTimesState = astronomicalTimesRepository.getUpcomingTimes(location).collectAsState()
+            val scope = rememberCoroutineScope()
+            val astronomicalTimesState = astronomicalTimesRepository.getUpcomingTimes(scope, location).collectAsState()
 
             HomeScreenState.Next(
                 currentTimeRepository.getCurrentTime(),

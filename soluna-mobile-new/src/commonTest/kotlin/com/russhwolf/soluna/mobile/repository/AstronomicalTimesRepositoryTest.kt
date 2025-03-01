@@ -4,7 +4,6 @@ import app.cash.turbine.test
 import com.russhwolf.soluna.RiseSetResult
 import com.russhwolf.soluna.mobile.test.TestAstronomicalCalculatorFactory
 import com.russhwolf.soluna.mobile.test.TestClock
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -37,11 +36,10 @@ class AstronomicalTimesRepositoryTest {
     fun upcomingTimes() = runTest {
         val astronomicalTimesRepository = AstronomicalTimesRepository(
             currentTimeRepository,
-            calculatorFactoryBuilder,
-            StandardTestDispatcher(testScheduler),
+            calculatorFactoryBuilder
         )
 
-        astronomicalTimesRepository.getUpcomingTimes(location).test {
+        astronomicalTimesRepository.getUpcomingTimes(backgroundScope, location).test {
             val expectedTimes = arrayOf<RiseSetResult<Instant>>(
                 RiseSetResult.RiseThenSet(
                     riseTime = LocalDateTime(2000, 1, 1, 8, 1).toInstant(TimeZone.UTC),

@@ -9,7 +9,6 @@ import com.russhwolf.soluna.mobile.repository.CurrentTimeRepository
 import com.russhwolf.soluna.mobile.repository.SelectableLocation
 import com.russhwolf.soluna.mobile.test.TestAstronomicalCalculatorFactory
 import com.russhwolf.soluna.mobile.test.TestClock
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -43,8 +42,7 @@ class SunMoonTimesGraphicStateTest {
                     riseTime = LocalDateTime(2000, 1, day, 8, day).toInstant(TimeZone.of("UTC")),
                     setTime = LocalDateTime(2000, 1, day, 16, day).toInstant(TimeZone.of("UTC"))
                 )
-            },
-            StandardTestDispatcher(testScheduler),
+            }
         )
 
         moleculeFlow(RecompositionMode.Immediate) {
