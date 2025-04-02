@@ -72,8 +72,10 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.material3)
                 implementation(compose.materialIconsExtended)
+                implementation(compose.material3AdaptiveNavigationSuite)
                 implementation(compose.components.resources)
                 implementation(compose.components.uiToolingPreview)
+                implementation("org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha10")
             }
         }
         commonTest {
